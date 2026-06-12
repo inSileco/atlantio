@@ -1,0 +1,16 @@
+Code,Index,IsTurnedOn,Name,LongName,NumCohorts,NumGeneTypes,NumStages,NumSpawns,NumAgeClassSize,NumStocks,VerticallyMigrates,HorizontallyMigrates,NumMigrations,MultiYrMigrations,ExternalReproduction,RecruitType,IsFished,IsImpacted,isTAC,GroupType,IsPredator,IsCover,IsSiliconDep,IsAssessed,IsCatchGrazer,OverWinters,isCultured,isHabDepend,numMoveEntries,iBioEroder,isSupplemented
+WAE,0,1,Walleye,Walleye,8,1,2,1,1,1,1,1,0,0,0,1,0,1,0,FISH,1,0,0,1,0,0,0,0,2,0,0
+YPH,1,1,Yellow_Perch,Yellow Perch,7,1,2,1,1,1,1,1,0,0,0,1,0,1,0,FISH,1,0,0,1,0,0,0,0,2,0,0
+GZS,2,1,Gizzard_Shad,Gizzard Shad,5,1,2,1,1,1,1,1,0,0,0,1,0,0,0,FISH,1,0,0,1,0,0,0,0,2,0,0
+RDG,3,1,Round_Goby,Round Goby,5,1,2,1,1,1,1,1,0,0,0,1,0,0,0,FISH,1,0,0,1,0,0,0,0,2,0,0
+DRE,4,1,Dressenids,Other benthic filter feeder_dressenids Mussels,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,SED_EP_FF,1,0,0,1,0,0,0,0,0,0,0
+CHI,5,1,Chironomids,Shallow macrozoobenthos_Chironomids,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,MOB_EP_OTHER,1,0,0,1,0,0,0,0,0,0,0
+DIA,6,1,Diatom,Diatom,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,SM_PHY,0,0,1,1,0,0,0,0,0,0,0
+GRN,7,1,Chlorophyta,Pico-phytoplankton_Chlorophyta,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,SM_PHY,0,0,0,1,0,0,0,0,0,0,0
+CAL,8,1,Calanoid,Mesozooplankton_Calanoid,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,MED_ZOO,1,0,0,1,0,0,0,0,0,0,0
+ROT,9,1,Rotifer_nauplii,Microzooplankton_Rotifer and nauplii ,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,SM_ZOO,1,0,0,1,0,0,0,0,0,0,0
+PB,10,1,Pelagic_Bacteria,Pelagic Bacteria,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,PL_BACT,0,0,0,0,0,0,0,0,0,0,0
+BB,11,1,Sediment_Bacteria,Sediment Bacteria,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,SED_BACT,0,0,0,0,0,0,0,0,0,0,0
+DL,12,1,Labile_detritus,Labile detritus,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,LAB_DET,0,0,0,1,0,0,0,0,0,0,0
+DR,13,1,Refractory_detritus,Refractory detritus,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,REF_DET,0,0,0,1,0,0,0,0,0,0,0
+DC,14,1,Carrion3,Carrion3,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,CARRION,0,0,0,1,0,0,0,0,0,0,0

@@ -1,0 +1,37 @@
+# tinyAtlantis forcing: a zero-flux hydro file (Atlantis requires >=1),
+# constant temp/salt from the init nc, and a looping seasonal solar series.
+nhdfiles 1
+hd0.name tiny_hydro.nc
+npointss 0
+
+Solar_radiation tiny_solar.ts
+Solar_radiation_rewind 1
+
+use_tempfiles 0
+ntempfiles 0
+use_saltfiles 0
+nsaltfiles 0
+
+ts_on_hydro_time 0
+inputs_tout 43200 seconds
+
+nMultRects 0
+typeMultRects 0
+nCatchts 0
+typeCatchts 0
+nDiscardts 0
+typeDiscardts 0
+nResidualsts 0
+typeResidualsts 0
+nEconts 0
+typeEconts 0
+nMPAts 0
+typeMPAts 0
+use_phFiles 0
+use_VertMixFiles 0
+use_force_tracers 0
+use_pollutantfiles 0
+nforceTracers 0
+use_move_entries 0
+nforceMoveGroups 0
+MoveGroupCodes 0

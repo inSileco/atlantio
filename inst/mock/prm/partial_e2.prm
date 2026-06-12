@@ -1,0 +1,2 @@
+# the line below should trigger an error 
+missing_value 

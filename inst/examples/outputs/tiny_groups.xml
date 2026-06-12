@@ -1,0 +1,527 @@
+<?xml version="1.0"?>
+<AttributeGroup AttributeGroupName="AtlantisFunctionalGroups">
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="WAE"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Walleye"/>
+    <Attribute AttributeName="LongName" AttributeValue="Walleye"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="8"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="2"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="1"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="1"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="FISH">
+      <Lookup>
+        <LookupValue LookupValue="LG_PHY" LookupDescription="Large Phytoplankton"/>
+        <LookupValue LookupValue="SM_PHY" LookupDescription="Small Phytoplankton"/>
+        <LookupValue LookupValue="SM_ZOO" LookupDescription="Small Zooplankton"/>
+        <LookupValue LookupValue="MED_ZOO" LookupDescription="Medium Zooplankton"/>
+        <LookupValue LookupValue="LG_ZOO" LookupDescription="Large Zooplankton"/>
+        <LookupValue LookupValue="CEP" LookupDescription="Cephalopod"/>
+        <LookupValue LookupValue="PWN" LookupDescription="Prawns"/>
+        <LookupValue LookupValue="PL_BACT" LookupDescription="Pelagic Bacteria"/>
+        <LookupValue LookupValue="SED_BACT" LookupDescription="Sediment Bacteria"/>
+        <LookupValue LookupValue="ICE_BACT" LookupDescription="Ice Bacteria"/>
+        <LookupValue LookupValue="SM_INF" LookupDescription="Small Infauna"/>
+        <LookupValue LookupValue="LG_INF" LookupDescription="Large Infauna"/>
+        <LookupValue LookupValue="SED_EP_FF" LookupDescription="Sediment Epibethic Filter Feeders"/>
+        <LookupValue LookupValue="SED_EP_OTHER" LookupDescription="Sediment Epibethic Others"/>
+        <LookupValue LookupValue="MOB_EP_OTHER" LookupDescription="Mobile Epibethic Others"/>
+        <LookupValue LookupValue="PHYTOBEN" LookupDescription="Phytoben"/>
+        <LookupValue LookupValue="TURF" LookupDescription="Turf"/>
+        <LookupValue LookupValue="LAB_DET" LookupDescription="Labile Detritus"/>
+        <LookupValue LookupValue="REF_DET" LookupDescription="Refractory detritus"/>
+        <LookupValue LookupValue="CARRION" LookupDescription="Carrion"/>
+        <LookupValue LookupValue="DINOFLAG" LookupDescription="Dinoflagellates"/>
+        <LookupValue LookupValue="SEAGRASS" LookupDescription="Seagrass"/>
+        <LookupValue LookupValue="FISH" LookupDescription="Fish"/>
+        <LookupValue LookupValue="FISH_INVERT" LookupDescription="Fished invertebrate"/>
+        <LookupValue LookupValue="MAMMAL" LookupDescription="Mammal"/>
+        <LookupValue LookupValue="SHARK" LookupDescription="Shark"/>
+      </Lookup>
+    </Attribute>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="2"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="YPH"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Yellow_Perch"/>
+    <Attribute AttributeName="LongName" AttributeValue="Yellow Perch"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="7"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="2"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="1"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="1"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="FISH"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="2"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="GZS"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Gizzard_Shad"/>
+    <Attribute AttributeName="LongName" AttributeValue="Gizzard Shad"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="5"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="2"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="1"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="FISH"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="2"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="RDG"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Round_Goby"/>
+    <Attribute AttributeName="LongName" AttributeValue="Round Goby"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="5"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="2"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="1"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="FISH"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="2"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="DRE"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Dressenids"/>
+    <Attribute AttributeName="LongName" AttributeValue="Other benthic filter feeder_dressenids Mussels"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="SED_EP_FF"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="CHI"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Chironomids"/>
+    <Attribute AttributeName="LongName" AttributeValue="Shallow macrozoobenthos_Chironomids"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="MOB_EP_OTHER"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="DIA"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Diatom"/>
+    <Attribute AttributeName="LongName" AttributeValue="Diatom"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="SM_PHY"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="1"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="GRN"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Chlorophyta"/>
+    <Attribute AttributeName="LongName" AttributeValue="Pico-phytoplankton_Chlorophyta"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="SM_PHY"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="CAL"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Calanoid"/>
+    <Attribute AttributeName="LongName" AttributeValue="Mesozooplankton_Calanoid"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="MED_ZOO"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="ROT"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Rotifer_nauplii"/>
+    <Attribute AttributeName="LongName" AttributeValue="Microzooplankton_Rotifer and nauplii"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="1"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="SM_ZOO"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="1"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="PB"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Pelagic_Bacteria"/>
+    <Attribute AttributeName="LongName" AttributeValue="Pelagic Bacteria"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="PL_BACT"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="0"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="BB"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Sediment_Bacteria"/>
+    <Attribute AttributeName="LongName" AttributeValue="Sediment Bacteria"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="SED_BACT"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="0"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="DL"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Labile_detritus"/>
+    <Attribute AttributeName="LongName" AttributeValue="Labile detritus"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="LAB_DET"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="DR"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Refractory_detritus"/>
+    <Attribute AttributeName="LongName" AttributeValue="Refractory detritus"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="REF_DET"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+  <AttributeSubGroup AttributeGroupName="FunctionalGroup" AttributeDescription="The defintion of a functional group">
+    <Attribute AttributeName="GroupCode" AttributeValue="DC"/>
+    <Attribute AttributeName="IsTurnedOn" AttributeValue="1"/>
+    <Attribute AttributeName="Name" AttributeValue="Carrion3"/>
+    <Attribute AttributeName="LongName" AttributeValue="Carrion3"/>
+    <Attribute AttributeName="NumCohorts" AttributeValue="1"/>
+    <Attribute AttributeName="NumGeneTypes" AttributeValue="1"/>
+    <Attribute AttributeName="NumStages" AttributeValue="1"/>
+    <Attribute AttributeName="NumSpawns" AttributeValue="1"/>
+    <Attribute AttributeName="NumAgeClassSize" AttributeValue="1"/>
+    <Attribute AttributeName="NumStocks" AttributeValue="1"/>
+    <Attribute AttributeName="VerticallyMobile" AttributeValue="0"/>
+    <Attribute AttributeName="Mobile" AttributeValue="0"/>
+    <Attribute AttributeName="NumMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="MultiYrMigrations" AttributeValue="0"/>
+    <Attribute AttributeName="ExternalReproduction" AttributeValue="0"/>
+    <Attribute AttributeName="RecruitType" AttributeValue="1"/>
+    <Attribute AttributeName="IsFished" AttributeValue="0"/>
+    <Attribute AttributeName="IsImpacted" AttributeValue="0"/>
+    <Attribute AttributeName="IsTAC" AttributeValue="0"/>
+    <Attribute AttributeName="GroupType" AttributeValue="CARRION"/>
+    <Attribute AttributeName="IsPredator" AttributeValue="0"/>
+    <Attribute AttributeName="IsCover" AttributeValue="0"/>
+    <Attribute AttributeName="IsSiliconDep" AttributeValue="0"/>
+    <Attribute AttributeName="IsAssessed" AttributeValue="1"/>
+    <Attribute AttributeName="IsCatchGrazer" AttributeValue="0"/>
+    <Attribute AttributeName="OverWinters" AttributeValue="0"/>
+    <Attribute AttributeName="isCultured" AttributeValue="0"/>
+    <Attribute AttributeName="isHabDepend" AttributeValue="0"/>
+    <Attribute AttributeName="numMoveEntries" AttributeValue="0"/>
+    <Attribute AttributeName="isBioEroder" AttributeValue="0"/>
+    <Attribute AttributeName="isSupplemented" AttributeValue="0"/>
+  </AttributeSubGroup>
+</AttributeGroup>

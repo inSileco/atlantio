@@ -1,0 +1,90 @@
+# INPUT
+
+- name: "geometry"
+  desc: "Boxes and layers defining the geometry of the model"
+  type: input
+  fext: ".bgm"
+
+- name: "run"
+  desc: "Run file"
+  type: input
+  fext: ".prm"
+
+- name: "biology"
+  desc: "Biological characteritics and biological interactions"
+  type: input
+  fext: ".prm"
+
+- name: "group"
+  desc: "List of functional group and their key charcateristics"
+  type: input
+  fext: ".csv"
+
+- name: "initial"
+  desc: "Initial conditions (concentration, distribution of model value)"
+  type: input
+  fext: ".nc"
+
+- name: "fisheries"
+  desc: "Fisheries description"
+  type: input
+  fext: ".csv"
+
+- name: "harvest"
+  desc: "Parameter for the harvest submodule"
+  type: input
+  fext: ".prm"
+
+
+# OUTPUT
+
+## MAIN OUTPUT
+
+- name: "main_output"
+  desc: "Main output file"
+  type: output
+  fext: ".nc"
+
+
+## BIOMASS OUTPUT
+
+- name: "biomass_all"
+  desc: "Snapshots of biomasses across the entire model domain"
+  type: output
+  fext: "BiomIndx.txt"
+
+- name: "biomass_box"
+  desc: "Snapshots of biomasses per box"
+  type: output
+  fext: "BoxBiomass.txt"
+
+- name: "biomass_age"
+  desc: "Snapshot of biomass at age"
+  type: output
+  fext: "AgeBiomass.txt"
+
+- name: "biomass_age_annual"
+  desc: "Snapshots of biomasses per age annual"
+  type: output
+  fext: "AgeBiomassAnnual.txt"
+
+
+## DIET OUTPUT
+
+- name: "diet"
+  desc: "Diet check"
+  type: output
+  fext: "DietCheck.txt"
+
+- name: "detail_diet"
+  desc: "Detailed diet check"
+  type: output
+  fext: "DetailedDietCheck.txt"
+
+
+## 
+
+- name: "yoy"
+  desc: "Biomass of recruits per year"
+  type: output
+  fext: "YOY.txt"

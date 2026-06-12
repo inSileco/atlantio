@@ -1,0 +1,55 @@
+Package: atlantio
+Title: Read, Write and Manipulate Atlantis Model Inputs and Outputs
+Version: 0.0.0.9000
+Authors@R:
+    c(
+    person(given = "Kevin",
+           family = "Cazelles",
+           role = c("aut", "cre"),
+           email = "kevin.cazelles@insileco.io",
+           comment = c(ORCID = "0000-0001-6619-9874")
+        ),
+    person(
+        given = "Zhao",
+        family = "Yingming",
+        role = "aut",
+        email = "yingming.zhao@ontario.ca"
+    )
+    )
+Description: Facilitate data wrangling and ecosystem analysis with Atlantis
+    model inputs and outputs. Provides an S7 class 'Atlantis' that represents
+    an Atlantis model, functions to read and write Atlantis files, and methods
+    to extract diet tables, food webs and time series from a model.
+URL: https://github.com/McCannLab/atlantio
+BugReports: https://github.com/McCannLab/atlantio/issues
+Depends: R (>= 4.2.0)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    cli,
+    dplyr (>= 1.1),
+    fs,
+    igraph (>= 2.0),
+    ncdf4 (>= 1.22),
+    rbgm (>= 0.1.0),
+    rlang,
+    S7 (>= 0.2.0),
+    sf (>= 1.0.15),
+    stringr,
+    tidyr (>= 1.3.1),
+    utils,
+    vroom,
+    xml2,
+    yaml12
+Suggests:
+    ggplot2 (>= 3.5),
+    kableExtra,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr (>= 3.0.0)
+License: MIT + file LICENSE
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

@@ -1,0 +1,3 @@
+# should trigger a warning and the last occurrence will be used
+flag_ok 1
+flag_ok 0

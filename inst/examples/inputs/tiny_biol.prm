@@ -1,0 +1,2472 @@
+# The parameter files was modified by yzhao on Oct 2022 to using new bgm files and initial condition files
+# UNLESS OTHERWISE STATED ALL PARAMETERS TAKEN FROM NSW MODEL (OCTOBER 2006 NSW version)
+# adapted from NSW version for VMPA model from latest version of vmpa_biol.txt
+# Sept 6
+## Biological parameter file for use with the NSW version of the Boxmodel (Atlantis) model
+# modified from Hongyan's file
+## For reference, the following are the codenames for each biological component.
+# Those marked with a + also have Si pool too. Those marked special have three pools, a structural N
+# (mg N individual-1), reserve N (mg N individual-1) and numbers (per box)
+# Description Symbol Units
+###########################
+# Gizzard_Shad GZS
+# Alewife ALE
+# Burbot BBT
+# Walleye WAE
+# Salmons STH
+# Lake_Trout LKT
+# Rainbow_Smelt RSM
+# Round_Goby RDG
+# White_Bass WBS
+# White_Perch WPH
+# Lake_Whitefish LWF
+# Yellow_Perch YPH
+# Rock_SM bass SBS
+# Silver_Chub ESH
+# Channel_Catfish CAT
+# White_Sucker SKR
+# Freshwater_Drum FDM
+##############################
+# Dressenids DRE mg N m-2
+# Amphipods AMP mg N m-2
+# Chironomids CHI mg N m-2
+# Oligochaetes OLI mg N m-2
+# Protozoa (Nametoda) PRO mg N m-3
+# Hexagenia HEX mg N m-2
+##########################
+# Diatoms DIA mg N m-3 +
+# Blue Green Algae (Cyanobacteria) BLU mg N m-3
+# Green Algae GRN mg N m-3
+# ##########################
+# Calanoida CAL mg N m-3
+# Cyclopoida CYC mg N m-3
+# Cladocerans (Daphnia) CLA mg N m-3
+# Small cladocerans SCL (Bosmina) mg N m-3
+# Bythotrephes BYT mg N m-3
+# Rotifers ROT mg N m-3
+######################################
+# Pelagic associated bacteria PB mg N m-2
+# Sedimentary bacteria BB mg N m-2
+#################################
+# Labile detritus DL mg N m-3
+# Refractory detritus DR mg N m-3
+# Carrion (detritus) DC mg N m-3
+##########################################
+# Dissolved organic nitrogen DON mg N m-3
+# Ammonia NH mg N m-3
+# Nitrate NO mg N m-3
+# Dissolved silica Si mg Si m-3
+# Biogenic silica DSi mg Si m-3
+# Dissolved oxygen O2 mg O m-3
+# Light IRR W m-2
+#########################
+## Flags and switches
+# Those determining set-up and recording
+ecotest 0 Messages: 0=no, 1=part, 2=more, 3=all, 4=fluxs, 5= do 1 iter only 2
+availflag 1 Switch to filter flows based on active groups 1
+flagrandom 0 Flag indicating whether add random wobble in aging/spawning dates (0=no, 1=yes)
+# Parameters defining the numbers of certain types of groups (needed to define parameter arrays in the
+# initialisation section of the model, best left untouched for now)
+K_num_invmig 9 Maximum number of vertically migrating invertebrate groups 9
+readin_popratio 0 Switch to indicate whether loading pre-existing age distributions or not 0
+# If fish respiration is off then the fish model is essentially/very similar to a Deriso-Schnute
+flagresp 0 Switch to turn fish respiration on/off: off=0, on=1
+flag_benthos_sediment_link 0
+UseHardFeedingWindow 1
+flagavgmig 0 Switch to turn averaging of migrant sizes on/off: off=0, on=1 1
+flagkdrop 0 Switch to turn cubic bacterial growth on/off: off=0, on=1 0
+flagbactstim 0 Switch to turn stimulation of bacterial growth on/off: off=0, on=1 0
+flagBOlim 1 Switch to turn OB population limitation on/off: off=0, on=1 0
+flagBDlim 1 Switch to turn BD population limitation on/off: off=0, on=1 0
+flagBGlim 1 Switch to turn BG population limitation on/off: off=0, on=1 (1) 0
+flagBFlim 1 Switch to identify filter feeding crowding used: simple=0, ERSEM=1 0
+flagSiLim 0
+flagCHIlim 0 Switch to turn CHI population limitation on/off: off=0, on=1 0
+flagDRElim 1 Switch to identify filter feeding crowding used: simple=0, ERSEM=1 0
+flagSPHlim 0
+# Those determining which environmental
+# interaction formulations used
+flagtrackpops 1 Flag to indicate whether yearly stock value required 1
+flagseason 1 Flag of seasonal change, 0 for no, 1 yes 1
+flaglight 0 Light adaptation: 1 = on, 0 = off 1
+flagIsEstuary 0
+flaglightopt 0 Light model: 0=orig, 1=bottom, 2=top, 3=mid-depth of cell 3
+flagmodeltemp 0 Temperature model used: 1 = regression, 0 = from data 1
+flagmodelpH 0
+flagmodelArag 0 #added rmf 060817
+flagq10 1 Q10 corrections used in the model: 1 = yes, 0 = no 1
+O2case 3 Oxygen limitation used: 0 = ambient O2, 1 = based on depth, 2 = IGBEM, 3 = quadratic lim 3
+flagnut 0 Nutrient lim used: 0=Leibig (min), 1=multiplicative, 2=WQI 0
+flagmicro 0 Nutrient lim by micronutrient: 0 = no, 1 = yes 0
+flagtempchange 0 Mean temperature changes: 0 = no, 1 = yes 0
+flagsaltchange 0 Mean salinity changes: 0 = no, 1 = yes 0
+flagstarve 1 Give starvation notices: 0 = no, 1 = yes 0
+flagdegrade 0 Degrade coastal habitats (effects growth of MA, SG and OLI) 0
+flagroc 0 Density dependent drop off option: 0 = none, 1 = ratio drop off, 2 = exponential decline 0
+flaghomog_sp 1 Body condition homogenised across the entire area: 0 = no, 1 = yes 0
+flagagestruct 1 Age structure option: 0 = homogeneous cohorts, 1 = track cohorts 0
+flagsenesce 0 Oldest sub-part of final age group senesces, 1 = yes, 0 = no 0
+flagtsforcerecruit 0 Force recruitment of 1+ groups with environmental forcing 0
+lim_sun_hours 0 Whether using limted hours of sun oer day or the default assumption of half the day is "day"
+flag_macro_model 0
+flag_fine_ontogenetic_diets 0
+flag_olddiet 1
+# the following are added on Dec 6-2023 running 6698 based on atlantisboxmodel code--zhao
+flaggape 0 Wheather reporting gape limitation
+flagchecksize 0 whether want to output current size vs initial conditions
+flagagecheck 0 check age structure when reporting on size of verbrates (flagchecksize)
+flagenviro_warn 0 Flag indicating that whether want earnings anout environmental constraints on movement recorded to the logfile
+flagenviro_kill 0 0 = animals leave the domain, 1 = die in place
+flagenviro_displace 0 0 = redistribute over eeh entire domain, 1 = moe to adjacent only
+flagtempdepend_move 0
+flagtempdepend_reprod 0
+# Groups functioning
+##
+##
+flagRDG 1 RDG: 1 = on, 0 = off 1
+flagWAE 1 WAE: 1 = on, 0 = off 1
+flagYPH 1 YPH: 1 = on, 0 = off 1
+flagGZS 1 GZS: 1 = on, 0 = off 1
+flagDRE 1 DRE: 1 = on, 0 = off 1
+flagCHI 1 CHI: 1 = on, 0 = off 1
+flagROT 1 ROT: 1 = on, 0 = off 1
+flagCAL 1 CAL: 1 = on, 0 = off 1
+flagPB 1 PB: 1 = on, 0 = off 1
+flagBB 1 BB: 1 = on, 0 = off 1
+flagDIA 1 DIA: 1 = on, 0 = off 1
+flagGRN 1 GRN: 1 = on, 0 = off 1
+flagDL 1
+flagDC 1
+flagDR 1
+# Preferred location trend (whether to weight vertical distributions towards surface or bottom
+# layers when in depths where there were less than complete set of depth layers. 0 is top, 1 is demersal (?))
+flagdemRDG 1 RDG: 1 = on, 0 = off 1
+flagdemYPH 0 YPH: 1 = on, 0 = off 1
+flagdemWAE 0 WAE: 1 = on, 0 = off 1
+flagdemGZS 0 GZS: 1 = on, 0 = off 1
+flagdemDRE 1 DRE: 1 = on, 0 = off 1
+flagdemCHI 1 CHI: 1 = on, 0 = off 1
+flagdemROT 0 ROT: 1 = on, 0 = off 1
+flagdemCAL 0 CAL: 1 = on, 0 = off 1
+flagdemPB 0 PB: 1 = on, 0 = off 1
+flagdemBB 1 BB: 1 = on, 0 = off 1
+flagdemDIA 0 DIA: 1 = on, 0 = off 1
+flagdemGRN 0 GRN: 1 = on, 0 = off 1
+# Flag indicating whether or not the vertebrate is a planktivore
+flagplankfishRDG 0 RDG: 1 = yes, 0 = no 1
+flagplankfishYPH 0 YPH: 1 = yes, 0 = no 1
+flagplankfishWAE 0 WAE: 1 = yes, 0 = no 1
+flagplankfishGZS 1 GZS: 1 = yes, 0 = no 1
+# Identifier indicating whether vertebrate group is parametrized as a bird (1 = yes, 0 = no)
+isbirdCMT 1 CMT: 1 = yes, 0 = no 1
+isbirdMGR 1 MGR: 1 = yes, 0 = no 1
+# Recruitment flags
+flagtrecruitdistrib 1 0=humped recruit arrival distrib, 1=flat distrib of recruits 1
+# Vertebrate reproduction related flags. The flagrecruit entries refer to the recruitment function used.
+# 1=const, 2=dependent on prim producers (Chla), 3=Beverton-Holt, 4=lognormal, 5=dependent on all plankton
+# groups not just Chla, 6=Bev-Holt with lognormal variation added, 7=Bev-Holt with encourage recovery
+# 8=Bev-Holt with perscribed recovery, 9=Ricker, 10=Standard Bev-Holt (no explict use of spawn included)
+# 11=pupping/calving linearly dependent on maternal condition, 12=pupping/calving a fixed number per adult
+# spawning, 13=forced timeseries of recruitment; Baltic_Ricker=17; 18=multiple recruitment tiem series turning up in different boxes;
+flagrecruitRDG 3
+flagrecruitYPH 3
+flagrecruitWAE 3
+flagrecruitGZS 3
+#flagstocking- Flag indicating where functional group XX has input time series of stocking. 0=off, 1=on.
+#If set to 1 it triggers the same code as if flagrecruit is set to option 18. This stocking will happen in addition to any natural recruitment.
+flagstockingRDG 0
+flagstockingYPH 0
+flagstockingWAE 0
+flagstockingSLP 0
+flagstockingGZS 0
+# External reproduction - spawn is based on adult population within model domain, but actual reproduction
+# occurs outside model domain (0 = no, 1 = yes)
+flagext_reprodRDG 0
+flagext_reprodYPH 0
+flagext_reprodWAE 0
+flagext_reprodGZS 0
+flagext_reprodCMC 0
+# Vertebrate reproduction strength flags (1=very strong year classes possible, relative strength
+# set using recruitRange and 0=only moderate variation in year class strength possible, mainly
+# for top predators with few young per reproductive event, relative strength set using recruitRangeFlat)
+flagrecpeakRDG 1
+flagrecpeakYPH 1
+flagrecpeakWAE 1
+flagrecpeakSLP 1
+flagrecpeakGZS 1
+# Local recruitment (1 = demersal and piscivorous fish recruit at parental locations, 0 = independent distribution)
+flaglocalrecruitRDG 0
+flaglocalrecruitYPH 0
+flaglocalrecruitWAE 1
+flaglocalrecruitGZS 0
+flaglocalrecruitSSH 0
+# Flag indicating whether the vertebrate group bears live young (0 = no, 1 = yes)
+flagbearliveRDG 0
+flagbearliveYPH 0
+flagbearliveWAE 0
+flagbearliveGZS 0
+flagbearliveSSH 0
+# Flag indicating whether the vertebrate group provides parental care for young until maturity
+# (0 = no, 1 = yes, -1 = semelparous so die after reproduction)
+#modified yzhao oct25, 2022
+flagmotherRDG 0
+flagmotherYPH 0
+flagmotherWAE 0
+flagmotherGZS 0
+flagmotherCMC 0
+# Flag indicating whether feed during the spawning period (0 = no, 1 = yes)
+feed_while_spawnRDG 1
+feed_while_spawnYPH 1
+feed_while_spawnWAE 1
+feed_while_spawnGZS 1
+feed_while_spawnSSH 1
+UseBiLogisticFeedingWindow 0
+# Switch indicating whether or not efficiency of assimilation is temperature dependent
+# 0 = no (same efficiency regardless), 1 = poorer when cooler, 2 = poorer when warmer
+## NOT DONE, need to actually determine values for groups below line (others taken from LM)
+flagq10effRDG 1
+flagq10effYPH 1
+flagq10effWAE 1
+flagq10effGZS 1
+flagq10receffRDG 1
+flagq10receffYPH 1
+flagq10receffWAE 1
+flagq10receffSLP 1
+flagq10receffGZS 1
+# Temperature sensitivity of vertebrates: 0 = no, 1 = yes
+flagtempsensitiveRDG 0
+flagtempsensitiveYPH 0
+flagtempsensitiveWAE 0
+flagtempsensitiveGZS 0
+flagtempsensitiveCAL 0
+flagtempsensitiveGRN 0
+flagtempsensitiveDIA 0
+flagtempsensitiveDRE 0
+flagtempsensitiveCHI 0
+flagtempsensitiveROT 0
+flagtempsensitivePB 0
+flagtempsensitiveBB 0
+flagfecundsensitive_RDG 0
+flagfecundsensitive_YPH 0
+flagfecundsensitive_WAE 0
+flagfecundsensitive_GZS 0
+flagfecundsensitive_CAL 0
+flagfecundsensitive_GRN 0
+flagfecundsensitive_DIA 0
+flagfecundsensitive_CHI 0
+flagfecundsensitive_ROT 0
+flagfecundsensitive_PB 0
+flagfecundsensitive_BB 0
+flagSaltSensitive_RDG 0
+flagSaltSensitive_YPH 0
+flagSaltSensitive_WAE 0
+flagSaltSensitive_GZS 0
+flagSaltSensitive_CAL 0
+flagSaltSensitive_GRN 0
+flagSaltSensitive_DIA 0
+flagSaltSensitive_CHI 0
+flagSaltSensitive_ROT 0
+flagSaltSensitive_PB 0
+flagSaltSensitive_BB 0
+flagSaltSensitive_DRE 0
+salt_correction_GZS 0
+salt_correction_RDG 0
+salt_correction_YPH 0
+salt_correction_WAE 0
+salt_correction_CAL 0
+salt_correction_GRN 0
+salt_correction_DIA 0
+salt_correction_CHI 0
+salt_correction_ROT 0
+salt_correction_PB 0
+salt_correction_BB 0
+salt_correction_DRE 0
+# Habitat dependency (1st one just to know if it is necessary to read the whole list of dependency par)
+flaghabdepend 0 #general vertebrate demersal habitat dependency: 0 = no, 1 = yes
+flag_rel_cover 0 #use the average cover option 1 (more sensitive); use the base cumulative habitat version 0 (old standard version)
+RDG_habdepend 0
+YPH_habdepend 0
+WAE_habdepend 0
+GZS_habdepend 0
+ROT_habdepend 0
+CAL_habdepend 0
+LEP_habdepend 0
+CHI_habdepend 0
+DRE_habdepend 0
+GRN_habdepend 0
+DIA_habdepend 0
+# Vertebrate density dependent movement related flags
+# LM 7/27/2015: No O2 dependancy for initial debugging purposes
+flagtempdepend 0 0 = off, 1 = temperature preferences used
+flagsaltdepend 0 0 = off, 1 = salinity preferences used
+flagO2depend 0 0 = off, 1 = oxygen preferences used
+RDG_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+YPH_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+WAE_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+SLP_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+SLC_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+BHC_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+GZS_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+TPH_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+CMC_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+SSH_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+RBS_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+PNF_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+OPV_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+CMT_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+MGR_ddepend_move 0 0 = off, 1 = sedentary, 2 = on, 3 = sticky 0
+# Identifier indicating whether vertebrate group seeks channels during low tide - in tidal models
+flagchannelRDG 0
+flagchannelYPH 0
+flagchannelWAE 0
+flagchannelSLP 0
+flagchannelSLC 0
+flagchannelBHC 0
+flagchannelGZS 0
+flagchannelTPH 0
+flagchannelCMC 0
+flagchannelSSH 0
+flagchannelRBS 0
+flagchannelPNF 0
+flagchannelOPV 0
+flagchannelCMT 0
+flagchannelMGR 0
+# Flags for invertebrate migration out of model domain
+flagMYSMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagROTMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+# Flags for migration out of model domain (maximum number of times juvenile OR
+# adult stages must leave the model domain). For example if juvenile WAE leave once,
+# but adults leave 3 times then enter 3 here
+flagRDGMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagYPHMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagWAEMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagSLPMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagSLCMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagBHCMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagGZSMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagTPHMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagCMCMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagSSHMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagRBSMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagPNFMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagOPVMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagCMTMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+flagMGRMigrate 0 0=always remain within the model domain, 1+=migrate in/out of the model
+# Predation formulation switches. 0=Holling type II, 1=Holling type I, 2=Holling type III,
+# 3=ECOSIM (currently disabled), 4=min-max, 5=Size specific Holling type III
+predcase_RDG 0
+predcase_YPH 0
+predcase_WAE 0
+predcase_GZS 0
+predcase_CHI 0
+predcase_DRE 0
+predcase_ROT 0
+predcase_CAL 0
+# Flags indicating whether large mammals steal from fisheries catches
+RDG_catcheater 0 Eat catch from nets: 1 = yes, 0 = no 0
+YPH_catcheater 0 Eat catch from nets: 1 = yes, 0 = no 0
+WAE_catcheater 0 Eat catch from nets: 1 = yes, 0 = no 0
+SLC_catcheater 0 Eat catch from nets: 1 = yes, 0 = no 0
+GZS_catcheater 0 Eat catch from nets: 1 = yes, 0 = no 0
+# Period of activity for consumer groups
+flagRDGday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagWAEday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagYPHday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagGZSday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagCMCday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagROTday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagCALday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagCHIday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagDREday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagPBday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flagBBday 2 Active: 2 = no preference, 1 = day, 0 = night 2
+flag_report_water_detritus 0 #rmf turned to 1 061517 to see how much is in wc
+## PHYSICAL AND CHEMICAL PARAMETERS
+##Currently Dummy Values
+K_MAX_TUR 200
+Enviro_turb 0.000002 Background level of bioturbation (physcial mixing) 0.000002
+K_TUR 116 Half saturation of bioturbation 116
+KTUR_CHI 1 Bioturbation contribution by deposit feeders 1
+KTUR_DRE 0.5
+K_TUR_DEP 0.02 Bioturbation depth m 0.02
+# Bioirrigation
+##Currently Dummy Values
+K_IRR 101 Half saturation of bioirrigation 101
+KIRR_CHI 1 Bioirrigation contribution by deposit feeders 1
+K_MAX_IRR 10 Maximum contributions to bioirrigation 10
+K_MIN_IRR 2 Minimum contributions to bioirrigation 2
+# Detrital breakdown (DL and DR breakdown not used if bacteria groups are on)
+r_DC_T15 0.5 Rate of carrion breakdown to detritus at 15 deg C d-1 0.5
+r_DL_T15 0.1 Rate of labile detrital breakdown at 15 deg C d-1 0.1
+r_DR_T15 0.008 Rate of ref detrital breakdown at 15 deg C d-1 0.008
+r_DON_T15 0.00176 Rate of DON breakdown at 15 deg C d-1 0.00176
+#r_DSi_T15 0.033 Rate of detrital Si breakdown at 15 deg C d-1 0.05 -0.04
+r_DSi_T15 0.05
+FDR_DC 0.2 Fraction of carrion that breaks down to refractory detrit 0.1
+FDR_DL 0.2 Fraction of lab detrit that breaks down to refractory detrit 0.2
+FDON_D 0.05 Fraction od DON breakdown that becomes detritus 0.05
+# Nitrification and denitrification
+R_0_T15 200 Minimum rate of sediment respiration that supports nitrification 200 - 250
+R_D_T15 20 Peak of nitrification-denitrification curve 10 - 20
+Dmax 0.25 Maximum rate of denitrification 0.25
+K_nit_T15 0.01 Rate of nitrification by free bacteria 0.01
+K_conc 2000 Half concentration level for nitrification by PFB mg N m-3 2000
+# Adsorption
+p_NH_anad 3 Proportion of NH4 adsorped to NH4 dissolved 3
+# Redfield
+X_ON 16 Redfield ratio of O:N 16
+X_CN 5.7 Redfield ratio of C:N 5.7
+X_CHLN 7 Ratio of chla to N 7
+X_SiN 3 Redfield ratio of Si:N 3
+X_FeN 30000 Redfield ratio of Fe:N 30000
+#AFDW to wet weight
+k_wetdry 20 Ratio of Wet weight to AFDW 20
+# Light penetration through the water column
+k_w_depth 55 Bottom depth marking estuarine vs oceanic water (for light absorp) m 55
+k_w_cdepth 205 Bottom depth marking coastal from oceanic water (for light absorp) m 205
+k_w_deep 0.014 Coefficient of background light absorption due to oceanic water 0.005 - 0.016
+k_w_shallow 0.03 Coefficient of background light absorption due to coastal water 0.016 - 0.078
+k_PN 0.0035 Coefficient of light absorption due to particulate matter 0.0035
+k_DON 0.0005 Coefficient of light absorption due to DON 0.0009
+k_DL 0.0038 Coefficient of light absorption due to labile detritus 0.0038
+k_IS 0.05 Basic coefficient of light absorption 0.05
+k_SED 0.05 Coefficient of light absoption due to sediment. Only used if flagIsEstuary is on.*
+KIOP_min 4 Minimum level of light adaptation 4
+KIOP_shift 0.25 Minimum rate of shift under light adaptation 0.25
+KI_avail 0.5 Available light 0.5
+K_addepth 10 Depth down to which adaptation occurs 10
+## Temperature effects
+Q10 2.0 Exponent in temperature effect on rate parameters 2.0
+temp_coefftB 1.066 Coefficient B in Gary Griffith temperature function 1.066
+temp_coefftC 0.5 Coefficient C in Gary Griffith temperature function 1.0
+temp_exp 1.0 Exponent in Gary Griffith temperature function 3.0
+# temp_coefftA is a Coefficient A in Gary Griffith temperature function originally 0.851 overall
+temp_coefftA_RDG 0.851
+temp_coefftA_YPH 0.851
+temp_coefftA_WAE 0.851
+temp_coefftA_GZS 0.851
+temp_coefftA_CHI 0.851
+temp_coefftA_DRE 0.851
+temp_coefftA_ROT 0.851
+temp_coefftA_CAL 0.851
+temp_coefftA_DIA 0.851
+temp_coefftA_GRN 0.851
+temp_coefftA_PB 0.851
+temp_coefftA_BB 0.851
+# Exponent in temperature effect on rate parameters 2
+q10_RDG 2.0
+q10_YPH 2.0
+q10_WAE 2.0
+q10_GZS 2.0
+q10_CHI 2.0
+q10_DRE 2.0
+q10_ROT 2.0
+q10_CAL 2.0
+q10_DIA 2.0
+q10_GRN 2.0
+q10_PB 2.0
+q10_BB 2.0
+# The method of calculating Q10 0 is the 'normal' way of calculating it. 1 is the 'new' climate change method from Gary G.
+q10_method_RDG 0
+q10_method_YPH 0
+q10_method_WAE 0
+q10_method_GZS 0
+# added on Dec 10 running 6698
+q10_method_CHI 0
+q10_method_DRE 0
+q10_method_ROT 0
+q10_method_CAL 0
+q10_method_DIA 0
+q10_method_GRN 0
+q10_method_PB 0
+q10_method_BB 0
+# The optimum temperature of each functional group - this is only read in for groups where the q10_method is 1.'
+q10_optimal_temp_RDG 0
+q10_optimal_temp_YPH 0
+q10_optimal_temp_WAE 0
+q10_optimal_temp_GZS 0
+q10_optimal_temp_CHI 0
+q10_optimal_temp_DRE 0
+q10_optimal_temp_ROT 0
+q10_optimal_temp_CAL 0
+q10_optimal_temp_GRN 0
+q10_optimal_temp_DIA 0
+q10_optimal_temp_PB 0
+q10_optimal_temp_BB 0
+# The q10 correction factor for each functional group - this is only read in for groups where the q10_method is 1.
+q10_correction_RDG 0
+q10_correction_YPH 0
+q10_correction_WAE 0
+q10_correction_GZS 0
+q10_correction_CHI 0
+q10_correction_DRE 0
+q10_correction_ROT 0
+q10_correction_CAL 0
+q10_correction_GRN 0
+q10_correction_DIA 0
+q10_correction_PB 0
+q10_correction_BB 0
+Tchange_max_num 1 Number of changes in average base temperature 1
+# Day changes in base temperature begins (must have same number of entries as given by Tchange_num)
+Tchange_start 1
+0
+# Period of time changes in base temperature take (must have same number of entries as given by Tchange_num)
+Tchange_period 1
+1
+# Scale of change in base temperature (must have same number of entries as given by Tchange_num)
+Tchange_mult 1
+1
+# Differential scaling with depth (must be as many entries as number of water column layers * number of changes)
+# modified yzhao oct 25, 2022
+vertTchange_mult 4
+1 1 1 1
+#Salinity effects (How to ignore salinity since we are doing freshwater??)
+Schange_max_num 1 Number of changes in average base salinity 1
+# Day changes in base salinity begins (must have same number of entries as given by Schange_num)
+Schange_start 1
+0
+# Period of time changes in base salinity take (must have same number of
+# entries as given by Schange_num)
+Schange_period 1
+1
+# Scale of change in base salinity (must have same number of entries as given by Schange_num)
+Schange_mult 1
+1
+# Differential scaling with depth (must be as many entries as
+# number of water column layers * number of changes)
+# modified yzhao oct 25, 2022
+vertSchange_mult 4
+1 1 1 1
+## Tolerances and boundaries
+RelTol 0.1 Relative tolerance of the adaptive differentiation scheme 0.1
+Flux_tol 0.2 Tolerance of mass balance assumption per cell mg N m-3 0.1
+min_pool 0.0025 Minimum pool size 0.00000001
+min_dens 1e-17 Minimum density of top predators and fish 0.0001
+min_channel_depth 0.001 Minimum depth of estuarine channels
+## Biological parameters
+# Primary producer growth
+mum_GRN_T15 1.0 #0.75 Maximum growth rate, small (pico) phytoplankton d-1 1 - 1.24
+mum_DIA_T15 1.0 #0.8 Maximum growth rate, diatoms d-1 0.3 - 0.8
+# Primary producer light requirements
+KI_GRN_T15 10 Light saturation, small phytoplankton W m-2 180 10 - 20
+KI_DIA_T15 10 Light saturation, diatoms W m-2 120 10 - 20
+eddy_scale 1 Coefficient scaling eddy strength impact on phytoplankton growth 1
+# Primary producer nutrient requirements
+KN_GRN 1.5 Half-sat const for GRN growth on DIN mg N m-3 117.18 4
+KN_DIA 1.8 Half-sat const for DIA growth on DIN mg N m-3 30
+KS_GRN 1e-7 Half-sat const for GRN growth on Si mg Si m-3 0
+KS_DIA 1e-7 Half-sat const for DIA growth on Si mg Si m-3 0
+KF_GRN 0 Half-sat const for GRN growth on Micro-nutrient mg Fe m-3 0
+KF_DIA 0 Half-sat const for DIA growth on Micro-nutrient mg Fe m-3 0
+KP_GRN 4 #18.231 Half-sat const for GRN growth on Phosphorus mg P m-3 4
+KP_DIA 10 #71.07 Half-sat const for DIA growth on Phosphorus mg P m-3 30
+#KC was added on Aug 24 2023 using setas example
+KC_GRM 1.31 From ERGOM,Half-sat const for PS growth on P mg P m-3 0
+KC_DIA 3.49 From ERGOM,Half-sat const for PC growth on P mg P m-3 0
+# Bacterial nutrient requirements
+KN_BB 5 Half-sat const for sediment bacteria NH uptake mg N m-3 0 - 10
+# Bacterial population parameters (how much bacterial biomass detritus can support)
+XPB_DL 0.27 Maximum ratio of PB to DL biomass 0.3 - 0.4
+XBB_DL 0.18 Maximum ratio of BB to DL biomass 0.15 - 0.2
+XPB_DR 0.012 Maximum ratio of PB to DR biomass 0.01 - 0.015
+XBB_DR 0.008 Maximum ratio of BB to DR biomass 0.005 - 0.01
+k_PB 3 Shape of PB growth eq'n, 1 = linear, 3 = drop before max, 5 = drop at max 3
+k_BB 3 Shape of BB growth eq'n, 1 = linear, 3 = drop before max, 5 = drop at max 3
+BBthresh 10 Threshold BB flux level where damping starts mg N m-2 s-1 0.1
+BBdamp 0.85 Damping coefficient for BB fluxes 0.75
+# Space restrictions for basal (epibenthic and some infauna) groups
+CHImax 20000 Maximum deposit feeder biomass mg N m-2 500000
+DREmax 20000 Maximum deep filter feeder biomass mg N m-2 1000
+## pH effects
+flagpHchange 0 Whether the pH values change through time following a forced trend - yes = 1, no = 0
+# Threshold spatial factors for filter feeders if using ERSEM formulation
+DRE_low 200 Little space limitation (pop too small) mg.N.m-2 2000
+DRE_sat 30000 Interference to uptake due to shading mg.N.m-2 2500
+DREthresh 8000 mg.N.m-2 1000
+-------
+#SPH_low 500 Little space limitation (pop too small) mg.N.m-2 2500
+#SPH_sat 3000 Interference to uptake due to shading mg.N.m-2 3000
+#SPHthresh 5000 mg.N.m-2 1000
+#DIP_low 200 Little space limitation (pop too small) mg.N.m-2 2000
+#DIP_sat 3000 Interference to uptake due to shading mg.N.m-2 2500
+#DIPthresh 5000 mg.N.m-2 1000
+#CHI_low 2000 Little space limitation (pop too small) mg.N.m-2 2000
+#CHI_sat 30000 Interference to uptake due to shading mg.N.m-2 2500
+#CHIthresh 50000 mg.N.m-2 1000
+----------
+# HABITAT DEPENDENCY PARAMETERS
+# Vectors indicating which habitats each group prefers. 1=group lives on the habitat, 0=not present.
+# The list of habitats are living habitats defined in group.csv file by order and followed by
+# reef, flat, soft, canyo. if no living (ie isCover=1) then just four defaults
+habitat_DRE 4
+1 1 1 1
+habitat_CHI 4
+1 0 1 1
+ad_habitat_RDG 4
+1 1 1 1
+ad_habitat_YPH 4
+1 1 1 1
+ad_habitat_WAE 4
+1 1 1 1
+ad_habitat_GZS 4
+1 1 1 1
+juv_habitat_RDG 4
+1 1 1 1
+juv_habitat_YPH 4
+1 1 1 1
+juv_habitat_WAE 4
+1 1 1 1
+juv_habitat_GZS 4
+1 1 1 1
+Kcov_juv_RDG 3 Exponent of refuge relationship with biogenic habitat for juv RDG 3
+Kcov_juv_YPH 3 Exponent of refuge relationship with biogenic habitat for juv YPH 3
+Kcov_juv_WAE 3 Exponent of refuge relationship with biogenic habitat for juv WAE 3
+Kcov_juv_GZS 3 Exponent of refuge relationship with biogenic habitat for juv GZS 3
+Bcov_juv_RDG 0.6 Coefft of refuge relationship with biogenic habitat for juv RDG 0.6
+Bcov_juv_YPH 0.6 Coefft of refuge relationship with biogenic habitat for juv YPH 0.6
+Bcov_juv_WAE 0.6 Coefft of refuge relationship with biogenic habitat for juv WAE 0.6
+Bcov_juv_GZS 0.6 Coefft of refuge relationship with biogenic habitat for juv BZS 0.6
+Acov_juv_RDG 1.0 Coefft of refuge relationship with biogenic habitat for juv RDG 1.0
+Acov_juv_YPH 1.0 Coefft of refuge relationship with biogenic habitat for juv YPH 1.0
+Acov_juv_WAE 1.0 Coefft of refuge relationship with biogenic habitat for juv WAE 1.0
+Acov_juv_GZS 1.0 Coefft of refuge relationship with biogenic habitat for juv GZS 1.0
+# Orange are groups with transferred species, but no new species (ASK BETH WHAT THESE' Kcov and Bcov' PARAMETER MEANS)
+Kcov_ad_RDG 3 Exponent of refuge relationship with biogenic habitat for adult RDG 3
+Kcov_ad_YPH 3 Exponent of refuge relationship with biogenic habitat for adult YPH 3
+Kcov_ad_WAE 3 Exponent of refuge relationship with biogenic habitat for adult WAE 3
+Kcov_ad_GZS 3 Exponent of refuge relationship with biogenic habitat for adult GZS 3
+Kcov_ad_TPH 3 Exponent of refuge relationship with biogenic habitat for adult TPH 3
+Bcov_ad_RDG 0.6 Coefft of refuge relationship with biogenic habitat for adult RDG 0.6
+Bcov_ad_YPH 0.6 Coefft of refuge relationship with biogenic habitat for adult YPH 0.6
+Bcov_ad_WAE 0.6 Coefft of refuge relationship with biogenic habitat for adult WAE 0.6
+Bcov_ad_GZS 0.6 Coefft of refuge relationship with biogenic habitat for adult GZS 0.6
+Acov_ad_RDG 1.0 Coefft of refuge relationship with biogenic habitat for adult RDG 1
+Acov_ad_YPH 1.0 Coefft of refuge relationship with biogenic habitat for adult YPH 1
+Acov_ad_WAE 1.0 Coefft of refuge relationship with biogenic habitat for adult WAE 1
+Acov_ad_GZS 1.0 Coefft of refuge relationship with biogenic habitat for adult GZS 1
+# Benthic depth stratification markers
+## Parameters to use with home range movement
+# Minimum depth (m) for each group
+RDG_mindepth 0
+WAE_mindepth 0
+YPH_mindepth 0
+GZS_mindepth 0
+CHI_mindepth 3
+DRE_mindepth 3
+ROT_mindepth 0
+CAL_mindepth 0
+GRN_mindepth 0
+DIA_mindepth 0
+PB_mindepth 0
+BB_mindepth 0
+DL_mindepth 0
+DR_mindepth 0
+DC_mindepth 0
+# Maximum depth (m) for each group
+#using 2021 partnership data vertical distribution yzhao
+RDG_maxdepth 30
+WAE_maxdepth 25
+YPH_maxdepth 25
+GZS_maxdepth 25
+CHI_maxdepth 64
+DRE_maxdepth 64
+ROT_maxdepth 64
+CAL_maxdepth 64
+PB_maxdepth 64
+BB_maxdepth 64
+GRN_maxdepth 64
+DIA_maxdepth 64
+DL_maxdepth 64
+DR_maxdepth 64
+DC_maxdepth 64
+RDG_maxtotdepth 100
+WAE_maxtotdepth 100
+YPH_maxtotdepth 100
+GZS_maxtotdepth 100
+CHI_maxtotdepth 300
+DRE_maxtotdepth 300
+ROT_maxtotdepth 300
+CAL_maxtotdepth 300
+PB_maxtotdepth 300
+BB_maxtotdepth 300
+GRN_maxtotdepth 300
+DIA_maxtotdepth 300
+DL_maxtotdepth 300
+DR_maxtotdepth 300
+DC_maxtotdepth 300
+# Home range radius (m) for each group
+RDG_homerangerad 1
+YPH_homerangerad 1
+WAE_homerangerad 1
+GZS_homerangerad 1
+CHI_homerangerad 1
+DRE_homerangerad 1
+ROT_homerangerad 1
+CAL_homerangerad 1
+# Whether home ranges overlap for each group
+RDG_overlap 0
+YPH_overlap 0
+WAE_overlap 0
+GZS_overlap 0
+CHI_overlap 0
+DRE_overlap 0
+ROT_overlap 0
+CAL_overlap 0
+## Habitat degradation parameters - this represents effects on suitable bottom types used by
+# macroalgae, seagrass and benthic filter feeders due to human activities (e.g. reef removal, dredging)
+REEFchange_max_num 1 Number of changes in area of available reef habitat per coastal cell
+FLATchange_max_num 1 Number of changes in area of available flat bottom per coastal cell
+SOFTchange_max_num 1 Number of changes in area of available soft bottom per coastal cell
+# Arrays to indicate start of change in available habitat for each bed type.
+# There must be as many entries in this array as there are number
+# of changes in area for that bed type.
+REEFchange_start 1
+0
+FLATchange_start 1
+0
+SOFTchange_start 1
+0
+# Arrays to indicate period of change of available habitat for each bed type takes.
+# There must be as many entries in this array as there are number
+# of changes in area for that bed type.
+REEFchange_period 1
+0
+FLATchange_period 1
+0
+SOFTchange_period 1
+0
+# Arrays to indicate proportional change in available habitat for each bed type.
+# There must be as many entries in this array as there are number
+# of changes in area for that bed type.
+REEFchange_mult 1
+0
+FLATchange_mult 1
+0
+SOFTchange_mult 1
+0
+# Array indicating cells effected by coastal degradation
+Box_degraded 11
+0 0 0 0 0 0 0 0 0 0 0
+## Vertebrate movement options
+roc_wgt 10000 Wgt factor for density dependent fish move 10000
+k_roc_food 0.5 Percent of body mass needed as food before disperse (ddepend move on) 0.5
+#Distribution of adult stages of each vertebrate group
+#proportional distribution for each box
+#modified by yzhao oct 26 2022
+FRDG_S1 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S1 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S1 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S1 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S2 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S2 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S2 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S2 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S3 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S3 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S3 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S3 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+#FSSH_S3 82
+#0 0.022054649 0.06932856 0.002539351 0.013764605 0.004947373 0.041607427 0.013902716 0.008254806 0.008761282 0.000815577 0.004429704 0.003233055 0.054610823 0.143896199 0.113106902 0.000772139 0.000737437 0.000508987 0.001737145 0.003538766 0.010658553 0.003450416 0.001531559 0.014704276 0.048566901 0.001820031 0.000677337 0.001501639 0.00308373 0.013240693 0.003155474 0.001004435 0.000205968 8.34206E-05 0.000313467 0.000106561 7.67227E-06 0.000182503 0.00027695 0.000100997 0.000198265 0.000397307 0.000642611 0.000212811 0.000354798 0.000255949 0.002806362 0.001455467 0.003521581 0.011370596 0.003181389 0.002033151 0.002459798 0.006072874 0.036759307 0.001699656 0.001266556 0.000419339 0.00064439 0 0.002459719 0.004919438 0.032500657 0.071417376 0.068060977 0.03505649 0.031730693 0.01371816 0.001399772 0.012646942 0.005724133 0.011714347 0.007138209 0.008540792 0 0 0 0 0 0 0
+FRDG_S4 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S4 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S4 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S4 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S1juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S1juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S1juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S1juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S2juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S2juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S2juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+#FSLP_S2juv 82
+#0 0.022054649 0.06932856 0.002539351 0.013764605 0.004947373 0.041607427 0.013902716 0.008254806 0.008761282 0.000815577 0.004429704 0.003233055 0.054610823 0.143896199 0.113106902 0.000772139 0.000737437 0.000508987 0.001737145 0.003538766 0.010658553 0.003450416 0.001531559 0.014704276 0.048566901 0.001820031 0.000677337 0.001501639 0.00308373 0.013240693 0.003155474 0.001004435 0.000205968 8.34206E-05 0.000313467 0.000106561 7.67227E-06 0.000182503 0.00027695 0.000100997 0.000198265 0.000397307 0.000642611 0.000212811 0.000354798 0.000255949 0.002806362 0.001455467 0.003521581 0.011370596 0.003181389 0.002033151 0.002459798 0.006072874 0.036759307 0.001699656 0.001266556 0.000419339 0.00064439 0 0.002459719 0.004919438 0.032500657 0.071417376 0.068060977 0.03505649 0.031730693 0.01371816 0.001399772 0.012646942 0.005724133 0.011714347 0.007138209 0.008540792 0 0 0 0 0 0 0
+FGZS_S2juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S3juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S3juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S3juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S3juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FRDG_S4juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FYPH_S4juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FWAE_S4juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+FGZS_S4juv 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+# Vertical distribution for invertebrate consumers (proportion in each water column layer in day and night). First entry for each vector refers to water column layer closest to the sediment and then up through the watercolumn to surface most layer on the extreme right
+##WHAT INVERTEBRATES TO INCLUDE? INCLUDE PRO,ROT,CAL,SCL,LEP,and CYC?
+#modifed by yzhao Oct 26, 2022
+VERTday_ROT 3
+0.250 0.375 0.375
+VERTnight_ROT 3
+0.3333333 0.3333333 0.3333333
+VERTday_CAL 3
+0.250 0.375 0.375
+VERTnight_CAL 3
+0.3333333 0.3333333 0.3333333
+VERTday_RDG1 3
+0.250 0.375 0.375
+VERTnight_RDG1 3
+0.250 0.375 0.375
+VERTday_RDG2 3
+0.250 0.375 0.375
+VERTnight_RDG2 3
+0.250 0.375 0.375
+VERTday_YPH1 3
+0.250 0.375 0.375
+VERTnight_YPH1 3
+0.250 0.375 0.375
+VERTday_YPH2 3
+0.250 0.375 0.375
+VERTnight_YPH2 3
+0.250 0.375 0.375
+VERTday_WAE1 3
+0.250 0.375 0.375
+VERTnight_WAE1 3
+0.250 0.375 0.375
+VERTday_WAE2 3
+0.250 0.375 0.375
+VERTnight_WAE2 3
+0.250 0.375 0.375
+VERTday_GZS1 3
+0.250 0.375 0.375
+VERTnight_GZS1 3
+0.250 0.375 0.375
+VERTday_GZS2 3
+0.250 0.375 0.375
+VERTnight_GZS2 3
+0.250 0.375 0.375
+# Swimming speed weighted averages for VMPA are not that different from those in the NSW
+Speed_RDG 12500 Swimming speed of RDG m.hr-1 12500
+Speed_YPH 12500 Swimming speed of YPH m.hr-1 12500
+Speed_WAE 12500 Swimming speed of WAE m.hr-1 12500
+Speed_GZS 12500 Swimming speed of GZS m.hr-1 12500
+# Minimum and maximum tolerated temperatures weighted averages for VMPA are not that different from those in the NSW
+RDG_min_move_temp 2
+YPH_min_move_temp 2
+WAE_min_move_temp 2
+GZS_min_move_temp 2
+RDG_max_move_temp 30
+YPH_max_move_temp 30
+WAE_max_move_temp 30
+BHC_max_move_temp 30
+GZS_max_move_temp 30
+# Minimum and maximum tolerated salinity
+RDG_min_move_salt 0.0
+YPH_min_move_salt 0.0
+WAE_min_move_salt 0.0
+GZS_min_move_salt 0.0
+RDG_max_move_salt 40.0
+YPH_max_move_salt 40.0
+WAE_max_move_salt 40.0
+GZS_max_move_salt 40.0
+## Migration out of (or into) model domain parameters.
+# Migration dates for those groups moving out of model domain - must be as many entries
+# in these arrays as there are in the flagjXXXMigrate entry for that group.
+# Note an entry of 0 for the flag still requires a single
+# entry for the array, along the lines of
+# XX_Migrate_Time 1
+# 0
+# XX_Migrate_Return 1
+# 364
+# Day of year large zoobenthoes leave the model domain
+CHI_Migrate_Time 3
+364 364 364
+DRE_Migrate_Time 3
+364 364 364
+# zooplankton migrate time
+ROT_Migrate_Time 1
+364
+CAL_Migrate_Time 7
+364 364 364 364 364 364 364
+jRDG_Migrate_Time 1
+364
+jYPH_Migrate_Time 1
+364
+jWAE_Migrate_Time 2
+364 364
+jSLP_Migrate_Time 3
+364 364 364
+jSLC_Migrate_Time 1
+364
+jBHC_Migrate_Time 1
+364
+jGZS_Migrate_Time 3
+364 364 364
+jTPH_Migrate_Time 4
+364 364 364 364
+jCMC_Migrate_Time 3
+364 364 364
+jSSH_Migrate_Time 2
+364 364
+jRBS_Migrate_Time 1
+364
+jPNF_Migrate_Time 1
+364
+jOPV_Migrate_Time 1
+364
+jCMT_Migrate_Time 1
+364
+jMGR_Migrate_Time 3
+364 364 364
+RDG_Migrate_Time 1
+364
+YPH_Migrate_Time 1
+364
+WAE_Migrate_Time 2
+364 364
+SLP_Migrate_Time 3
+364 364 364
+SLC_Migrate_Time 1
+364
+BHC_Migrate_Time 1
+364
+GZS_Migrate_Time 3
+364 364 364
+TPH_Migrate_Time 4
+364 364 364 364
+CMC_Migrate_Time 3
+364 364 364
+SSH_Migrate_Time 2
+364 364
+RBS_Migrate_Time 1
+364
+PNF_Migrate_Time 1
+364
+OPV_Migrate_Time 1
+364
+CMT_Migrate_Time 1
+364
+MGR_Migrate_Time 1
+364
+# Day of year large zooplankton return to the model domain
+# Day of year large zoobenthoes return the model domain
+CHI_Migrate_Return 3
+0 0 0
+DRE_Migrate_Return 3
+0 0 0
+# zooplankton migrate time
+ROT_Migrate_Return 1
+0
+CAL_Migrate_Return 7
+0 0 0 0 0 0 0
+jRDG_Migrate_Return 1
+0
+jYPH_Migrate_Return 1
+0
+jWAE_Migrate_Return 2
+0 0
+jSLP_Migrate_Return 3
+0 0 0
+jSLC_Migrate_Return 1
+0
+jBHC_Migrate_Return 1
+0
+jGZS_Migrate_Return 6
+0 0 0 0 0 0
+jCMC_Migrate_Return 3
+0 0 0
+jSSH_Migrate_Return 4
+0 0 0 0
+RDG_Migrate_Return 1
+0
+YPH_Migrate_Return 1
+0
+WAE_Migrate_Return 2
+0 0
+SLP_Migrate_Return 3
+0 0 0
+SLC_Migrate_Return 1
+0
+GZS_Migrate_Return 8
+0 0 0 0 0 0 0 0
+SSH_Migrate_Return 4
+0 0 0 0
+jRDG_Migrate_Period 1
+0
+jYPH_Migrate_Period 1
+0
+jWAE_Migrate_Period 2
+0 0
+jSLP_Migrate_Period 3
+0 0 0
+jSLC_Migrate_Period 1
+0
+jBHC_Migrate_Period 1
+0
+jGZS_Migrate_Period 3
+0 0 0
+jTPH_Migrate_Period 4
+0 0 0 0
+jCMC_Migrate_Period 3
+0 0 0
+jSSH_Migrate_Period 2
+0 0
+jRBS_Migrate_Period 1
+0
+jPNF_Migrate_Period 1
+0
+jOPV_Migrate_Period 1
+0
+jCMT_Migrate_Period 1
+0
+jMGR_Migrate_Period 3
+0 0 0
+RDG_Migrate_Period 1
+0
+YPH_Migrate_Period 1
+0
+WAE_Migrate_Period 2
+0 0
+SLP_Migrate_Period 3
+0 0 0
+SLC_Migrate_Period 1
+0
+BHC_Migrate_Period 1
+0
+GZS_Migrate_Period 3
+0 0 0
+TPH_Migrate_Period 4
+0 0 0 0
+CMC_Migrate_Period 3
+0 0 0
+SSH_Migrate_Period 2
+0 0
+k_migslow 2
+0 0
+jRDG_ReturnStock 1
+0
+jYPH_ReturnStock 1
+0
+jWAE_ReturnStock 2
+0 0
+jSLP_ReturnStock 3
+0 0 0
+jSLC_ReturnStock 1
+0
+jBHC_ReturnStock 1
+0
+jGZS_ReturnStock 3
+0 0 0
+jTPH_ReturnStock 4
+0 0 0 0
+jCMC_ReturnStock 3
+0 0 0
+jSSH_ReturnStock 4
+0 0 0 0
+RDG_ReturnStock 1
+0
+YPH_ReturnStock 1
+0
+WAE_ReturnStock 2
+0 0
+SLP_ReturnStock 3
+0 0 0
+SLC_ReturnStock 1
+0
+BHC_ReturnStock 1
+0
+GZS_ReturnStock 3
+0 0 0
+TPH_ReturnStock 4
+0 0 0 0
+CMC_ReturnStock 3
+0 0 0
+SSH_ReturnStock 4
+0 0 1 1
+jRDG_FSM 1
+1
+jYPH_FSM 1
+1
+jWAE_FSM 2
+1 1
+jSLP_FSM 3
+1 1 1
+jSLC_FSM 1
+1
+jBHC_FSM 1
+1
+jGZS_FSM 3
+1 1 1
+jTPH_FSM 4
+1 1 1 1
+jCMC_FSM 3
+1 1 1
+jSSH_FSM 2
+1 1
+jRBS_FSM 1
+1
+jPNF_FSM 1
+1
+jOPV_FSM 1
+1
+jCMT_FSM 1
+1
+jMGR_FSM 3
+1 1 1
+RDG_FSM 1
+1
+YPH_FSM 1
+1
+WAE_FSM 2
+1 1
+SLP_FSM 3
+1 1 1
+SLC_FSM 1
+1
+BHC_FSM 1
+1
+GZS_FSM 3
+1 1 1
+TPH_FSM 4
+1 1 1 1
+CMC_FSM 3
+1 1 1
+SSH_FSM 4
+1 1 0 0
+jRDG_FSMG 1
+0
+jYPH_FSMG 1
+0
+jWAE_FSMG 2
+0 0
+jSLP_FSMG 3
+0 0 0
+jSLC_FSMG 1
+0
+jBHC_FSMG 1
+0
+jGZS_FSMG 3
+0 0 0
+jTPH_FSMG 4
+0 0 0 0
+jCMC_FSMG 3
+0 0 0
+jSSH_FSMG 4
+0 0 0 0
+RDG_FSMG 1
+0
+YPH_FSMG 1
+0
+WAE_FSMG 2
+0 0
+SLP_FSMG 3
+0 0 0
+SLC_FSMG 1
+0
+BHC_FSMG 1
+0
+GZS_FSMG 3
+0 0 0
+TPH_FSMG 4
+0 0 0 0
+CMC_FSMG 3
+0 0 0
+SSH_FSMG 2
+0 0
+# Proportion from each box in the model that exit when group migrates out of the model domain (default value will be 0 except for the few cells along the boundary where the group can flow out of the model. Juv stands for juveniles and ad for adults (treated seperately in the model so separate entries for them are given here)
+# Juvenile migration
+MigIOBox_RDGjuv 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_YPHjuv 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_WAEjuv 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_GZSjuv 11
+0 0 0 0 0 0 0 0 0 0 0
+#MigIOBox_CMCjuv 82
+#0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+# Adult migrations
+MigIOBox_RDGad 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_YPHad 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_WAEad 11
+0 0 0 0 0 0 0 0 0 0 0
+MigIOBox_GZSad 11
+0 0 0 0 0 0 0 0 0 0 0
+#MigIOBox_CMCad 82
+#0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+# # Numbers and weights of each group that begin outside the model domain and must migrate in during the first year.
+# Treat it these as part of the initial conditions when setting up initial stock sizes (i.e. adjust numbers inside
+# the model domain accordingly). There is one entry per cohort and the sn and rn entries are the structural and
+# reserve weight values for those to migrate in.
+# Invertebrate migration parameters - biomass beginning outside model domain
+KMIGa_INVERT_CAL 4
+0 0 0 0
+KMIGa_INVERT_ROT 2
+0 0
+KMIGa_INVERT_DRE 2
+0 0
+KMIGa_INVERT_CHI 4
+0 0 0 0
+# Numbers and weights of each group that begin outside the model domain and must migrate in during the first year. Treat it these as part of the initial conditions when setting up initial stock sizes (i.e. adjust numbers inside the model domain accordingly). There is one entry per cohort and the sn and rn entries are the structural and reserve weight values for those to migrate in.
+# Invertebrate migration parameters - biomass beginning outside model domain
+# Numbers per age group
+KMIGa_RDG 5
+0 0 0 0 0
+KMIGa_YPH 7
+0 0 0 0 0 0 0
+KMIGa_WAE 8
+0 0 0 0 0 0 0 0
+KMIGa_GZS 5
+0 0 0 0 0
+# Reserve weights for each age group
+KMIGa_RDGrn 5
+0 0 0 0 0
+KMIGa_YPHrn 7
+0 0 0 0 0 0 0
+KMIGa_WAErn 8
+0 0 0 0 0 0 0 0
+KMIGa_GZSrn 5
+0 0 0 0 0
+# Structural weights for each age group
+KMIGa_RDGsn 5
+0 0 0 0 0
+KMIGa_YPHsn 7
+0 0 0 0 0 0 0
+KMIGa_WAEsn 8
+0 0 0 0 0 0 0 0
+KMIGa_GZSsn 5
+0 0 0 0 0
+# Vertebrate body form and aging details
+X_RS 2.65 Ratio reserve to structure tissue in well fed vertebrates 2.2 - 2.7
+Kthresh1 0.99 Threshhold rel. reserve when handother deep demersal time is reduced 0.99
+Kthresh2 0.92 Threshhold rel. reserve when costs reduce + handother deep demersal time inc 0.92
+KHTD 0.5 Factor handother deep demersal time reduced by for thresh2<relres<thesh1 0.5
+KHTI 1.5 Factor handother deep demersal time increased by for relres<thresh2 1.5
+# Food availabilty (exploitable fractions) - note that a zero entry may signify a food group that is either
+# unavailable or not a part of the diet. Note that explicit exploitable fractions are not generally given
+# for PB and BB as they're consumed with DL and DR. All populations on the consumed DL or DR are considered grazed.
+# pPREY1FY1 is the availability of juvenile prey groups to juvenile group FY, similarly pPREY1FY2 is
+# the availability of juvenile prey groups to adult group FY and so on the order of prey groups is assumed to be:
+# GZS ALE BBT WAE SAL LKT RSM RDG WBS WPH LWF YPH SBS ESH CAT SKR FDM DRE AMP CHI OLI HEX PRO DIA BLU GRN CAL CYC CLA SCL BYT ROT PB BB DL DR DC DLsed DRsed DCsed
+#modified by yzhao Oct 26, 2022
+pPREY1GZS1 18
+0.000 0.000 0.000 0.000 0.000 0.050 0.000 0.000 0.005 0.005 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+pPREY2GZS1 18
+0.000 0.000 0.000 0.000 0.000 0.050 0.000 0.000 0.005 0.005 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+pPREY1GZS2 18
+0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.001 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+pPREY2GZS2 18
+0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.050 0.001 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+pPREY1WAE1 18
+0.001 0.100 0.100 0.100 0.000 0.100 0.000 0.000 0.010 0.010 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+pPREY2WAE1 18
+0.00 0.00 0.01 0.00 0.00 0.10 0.00 0.00 0.01 0.01 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+# KC updates.
+pPREY1WAE2 18
+0.05 0.10 0.10 0.10 0.05 0.10 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+pPREY2WAE2 18
+0.0 0.0 0.1 0.1 0.0 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+pPREY1RDG1 18
+0.00 0.00 0.00 0.00 0.02 0.30 0.00 0.00 0.01 0.01 0.00 0.01 0.10 0.10 0.10 0.00 0.00 0.00
+pPREY2RDG1 18
+0.00 0.00 0.00 0.00 0.00 0.30 0.00 0.00 0.00 0.00 0.00 0.01 0.10 0.10 0.10 0.00 0.00 0.00
+pPREY1RDG2 18
+0.0 0.0 0.0 0.0 0.3 0.3 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.1 0.1 0.0 0.0 0.0
+pPREY2RDG2 18
+0.0 0.0 0.0 0.0 0.3 0.3 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.1 0.1 0.0 0.0 0.0
+pPREY1YPH1 18
+0.00 0.00 0.00 0.00 0.01 0.20 0.00 0.00 0.01 0.01 0.00 0.00 0.01 0.01 0.01 0.00 0.00 0.00
+pPREY2YPH1 18
+0.00 0.00 0.00 0.00 0.00 0.20 0.00 0.00 0.01 0.01 0.00 0.00 0.01 0.01 0.01 0.00 0.00 0.00
+pPREY1YPH2 18
+0.01 0.01 0.00 0.01 0.01 0.20 0.00 0.00 0.05 0.05 0.00 0.00 0.01 0.01 0.01 0.00 0.00 0.00
+pPREY2YPH2 18
+0.00 0.00 0.00 0.00 0.01 0.20 0.00 0.00 0.05 0.05 0.00 0.00 0.01 0.01 0.01 0.00 0.00 0.00
+pPREYDRE 18
+0e+00 0e+00 0e+00 0e+00 0e+00 0e+00 5e-04 5e-04 1e-03 1e-03 5e-04 5e-04 5e-04 5e-04 5e-04 0e+00 0e+00 0e+00
+pPREYCHI 18
+0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.10 0.10 0.01 0.01 0.01 0.02 0.02 0.02
+pPREYCAL 18
+0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.2 0.0 0.0 0.1 0.1 0.1 0.1 0.1 0.0 0.0 0.0
+pPREYROT 18
+0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.2 0.0 0.0 0.1 0.1 0.1 0.1 0.1 0.0 0.0 0.0
+p_split_DRE 0
+p_split_ROT 0
+p_split_CAL 0
+p_split_PB 0
+p_split_BB 2
+1 1
+pSTOCK_RDG 4
+1 1 1 1
+pSTOCK_YPH 4
+1 1 1 1
+pSTOCK_WAE 5
+1 1 1 1 1
+pSTOCK_GZS 11
+1 1 1 1 1 1 1 1 1 1 1
+pSTOCK_jRDG 4
+1 1 1 1
+pSTOCK_jYPH 4
+1 1 1 1
+pSTOCK_jWAE 5
+1 1 1 1 1
+pSTOCK_jGZS 9
+1 1 1 1 1 1 1 1 1
+# Availabilty of catch to opportunistic catch grazers (thieves)
+# Although there is no IsCatchGrazer in the model, it is needed to have dummy variable here. HZ 2012/7/11
+#modified by yzhao oct 27, 2022
+pFCWAE 11
+0 0 0 0 0 0 0 0 0 0 0
+# Proportion of the catch in each fishery that can be exploited by the isCatchGrazer groups. Will be read in for groups that have the isCatchGrazer set to 1 in the functional group input file.
+# Although there is no IsCatchGrazer in the Lake Michigan model, it is needed to have dummy variable here. HZ 2012/7/11
+#modifed by yzhao oct 2022
+PropCatch_WAE 11
+0 0 0 0 0 0 0 0 0 0 0
+# Availability of bacteria being cleaned from ingested detritus #
+p_BBfish 0.3 Prop. of sed. bacteria taken when detrit eaten by verts. 0.3 - 1
+p_BBben 0.6 Prop. of sed. bacteria taken when detrit eaten by benthos 0.6 - 1
+p_PBwc 0.9 Prop. of pelag. bacteria taken when detrit eaten in wc 0.6 - 1
+p_PBben 0.95 Prop. of pelag. bact. taken when detrit eaten by benthos 0.6 - 1
+# Gape size for vertebrates, to determine available prey fish groups
+#LOWER
+KLP_RDG 0.001
+KLP_YPH 0.001
+KLP_WAE 0.001
+KLP_GZS 0.0
+KLP_DRE 0
+KLP_CHI 0
+KLP_CAL 0
+KLP_ROT 0
+#UPPER
+KUP_RDG 0.3
+KUP_YPH 0.3
+KUP_WAE 0.3
+KUP_GZS 0.1
+KUP_DRE 0.5
+KUP_CHI 0.5
+KUP_CAL 0.5
+KUP_ROT 0.5
+# Following parameters required for read-in, but as these species don't eat age-structured groups, not used as yet
+ROT_sn 0.9 Ref. AFDW for deep macrozoobenthos so can determine avail fish groups (=10cm prawn)
+CAL_sn 1.0
+DRE_sn 90.0 Ref. AFDW for deep filter feeders so can determine avail fish groups (=10cm prawn)
+CHI_sn 10.0 Ref. AFDW for deposit feeders so can determine avail fish groups (=10cm prawn)
+# Detritus handother deep demersal parameters
+k_trans_CHI 1.0
+k_trans_DRE 1.0
+k_refDL 10 Reference labile detrit. level in water column (if higher availability to omnivores reduced)
+k_refDR 20 Reference refract. detrit. level in water column (if higher availability to omnivores reduced)
+k_refsDL 10000 Reference labile detrit. level in sediments (if higher availability to omnivores reduced)
+# Clearance rates for consumers - this is used by Holling type feeding (predcase 0, 1, 2)
+C_ROT_T15 0.08 Clearance rate of prawns mg3(mg N)-1d-1 0.0002 - 0.004
+C_CAL_T15 0.07
+C_DRE_T15 0.06 Clearance rate of deep filter feeders mg3(mg N)-1 d-1 0.0005 - 0.015
+C_CHI_T15 0.03 Clearance rate of benth deposit feeders mg3(mg N)-1 d-1 0.00055 - 0.02
+# Bacteria need C_ param for read-in but not used - see bacteria colonistation and uptake params above
+C_PB_T15 0.005 Clearance rate of pelagic bacteria mg3(mg N)-1 d-1 0.001 - 0.05
+C_BB_T15 0.005 Clearance rate of benthic bacteria mg3(mg N)-1 d-1 0.001 - 0.05
+# Clearance rate of each vertebrate group, per age class mg3(mg N)-1 d-1
+flagfishrates 1 Switch to show whether clearance and growth rates are absolute=0, or as proportion of body mass=1
+#yzhao 0ct 25, 2022 clearance rate
+C_RDG 5
+0.122687765 0.09732961 0.06045776 0.04573549 0.04573549
+C_YPH 7
+0.65299354 0.027963976 0.014204368 0.009733448 0.007719598 0.006649052 0.006022766
+C_WAE 8
+0.29745083 0.16169146 0.0844355 0.05691954 0.04384824 0.03658684 0.03214626 0.02925348
+C_GZS 5
+0.387853605 0.18416118 0.11932366 0.10031095 0.09302275
+# Consumer growth - this is used by Holling type feeding (predcase 0, 1, 2)
+mum_CAL_T15 0.4 Growth rate of meso-zooplankton mg N d-1
+mum_ROT_T15 0.6 Growth rate of prawns (from AMS was 0.004 in NSW) mg N d-1 0.0015 - 0.015
+mum_DRE_T15 0.5389957 Growth rate of deep filter feeders mg N d-1 0.01
+mum_CHI_T15 0.561019 Growth rate of deposit feeders mg N d-1 0.005 - 0.07
+mum_PB_T15 0.14802094 Growth rate of pelagic bacteria mg N d-1 1.0 - 2.0
+mum_BB_T15 0.14802094 Growth rate of sediment bacteria mg N d-1 1.0 - 2.0
+# Vertebrate growth rates for each group, per age class mg N d-1
+#yzhao oce 25, 2022
+mum_GZS 5
+0.036549944 0.003063438 0.00167827 0.00071767 0.0004755
+mum_WAE 8
+0.00606736 0.003030164 0.001290054 0.001206866 0.000960844 0.000836366 0.000447656 0.000447656
+mum_RDG 5
+0.009661128 0.010931716 0.004078176 0.000495734 0.000682192
+mum_YPH 7
+0.006924034 0.002932394 0.0017007 0.001329388 0.000991212 0.001092176 0.000405316
+# Vertebrate preference for rebuilding reserves over structure
+pR_RDG 2 Shallow piscivore preference for reserve building 2.5
+pR_WAE 2 Tropical piscivore preference for reserve building 2.5
+pR_YPH 2 Other piscivore preference for reserve building 2
+pR_GZS 2
+# Length - weight parameters
+#
+#Coefficient of allometic length-weight relation for a
+li_a_GZS 0.000011
+li_a_WAE 0.000006
+li_a_RDG 0.000006
+li_a_YPH 0.000006
+#Exponent in allometic length-weight relation for b
+li_b_GZS 2.9699
+li_b_WAE 3.0518
+li_b_RDG 3.1091
+li_b_YPH 3.1343
+#modified by yzhao oct 25, 2022
+min_li_mat_RDG 94 minimum length at maturity
+min_li_mat_WAE 350 minimum length at maturity
+min_li_mat_YPH 200 minimum length at maturity
+min_li_mat_GZS 150
+# Depth consumers can dig into, are found down to in the sediment
+#Look at https://wiki.csiro.au/display/Atlantis/Changed+made+to+the+input+files
+KDEP_DRE 0.003 Sediment penetration depth of deep filter feeders m 0.003
+KDEP_CHI 0.1 Sediment penetration depth of deposit feeder m 0.01 - 0.3
+# Sediment penetration depth for vertebrates (m)
+KDEP_RDG 0
+KDEP_WAE 0
+KDEP_YPH 0
+KDEP_GZS 0
+KDEP_SSH 0
+KDEP_GRN 0
+KDEP_DIA 0
+KDEP_PB 0
+KDEP_BB 0
+KDEP_ROT 0
+KDEP_CAL 0
+# Seed bank/population refuge based on consumer intake, if available food below this feeding
+# slows/stops so can't eat out all food. This is used by min-max feeding (predcase 4)
+KL_RDG 1
+KL_WAE 1
+KL_YPH 1
+KL_SLP 0
+KL_BHC 1
+KL_SLC 1
+KL_GZS 1
+KL_TPH 1
+KL_CMC 1
+KL_SSH 1
+KL_RBS 1
+KL_PNF 1
+KL_OPV 1
+KL_CMT 0
+KL_MGR 0
+KL_GRN 0
+KL_DIA 0
+KL_MA 0
+KL_PB 0
+KL_BB 0
+KL_MYS 0
+KL_ROT 0
+KL_CAL 0
+KL_LEP 0
+KL_DRE 0
+KL_SPH 0
+KL_CHI 0
+# Saturation levels for consumer food intake. This is used by min-max feeding (predcase 4)
+KU_RDG 1
+KU_WAE 1
+KU_YPH 1
+KU_SLP 0
+KU_BHC 1
+KU_SLC 1
+KU_GZS 1
+KU_TPH 1
+KU_CMC 1
+KU_SSH 1
+KU_RBS 1
+KU_PNF 1
+KU_OPV 1
+KU_CMT 0
+KU_MGR 0
+KU_GRN 0
+KU_DIA 0
+KU_MA 0
+KU_PB 0
+KU_BB 0
+KU_MYS 0
+KU_ROT 0
+KU_CAL 0
+KU_LEP 0
+KU_DRE 0
+KU_SPH 0
+KU_CHI 0
+# Search volume - used by size specific Holling type III (predcase 5)
+vl_RDG 1
+vl_WAE 1
+vl_YPH 1
+vl_SLP 0
+vl_BHC 1
+vl_SLC 1
+vl_GZS 1
+vl_TPH 1
+vl_CMC 1
+vl_SSH 1
+vl_RBS 1
+vl_PNF 1
+vl_OPV 1
+vl_CMT 0
+vl_MGR 0
+vl_GRN 0
+vl_DIA 0
+vl_MA 0
+vl_PB 0
+vl_BB 0
+vl_MYS 0
+vl_ROT 0
+vl_CAL 0
+vl_LEP 0
+vl_DRE 0
+vl_SPH 0
+vl_CHI 0
+vla_RDG_T15 1
+vla_WAE_T15 1
+vla_YPH_T15 1
+vla_SLP_T15 1
+vla_BHC_T15 1
+vla_SLC_T15 1
+vla_GZS_T15 1
+vla_TPH_T15 1
+vla_CMC_T15 1
+vla_SSH_T15 1
+vla_RBS_T15 1
+vla_PNF_T15 1
+vla_OPV_T15 1
+vla_CMT_T15 1
+vla_MGR_T15 1
+vla_GRN_T15 1
+vla_DIA_T15 1
+vla_MA_T15 1
+vla_PB_T15 1
+vla_BB_T15 1
+vla_MYS_T15 1
+vla_ROT_T15 1
+vla_CAL_T15 1
+vla_LEP_T15 1
+vla_DRE_T15 1
+vla_SPH_T15 1
+vla_CHI_T15 1
+vlb_RDG 1
+vlb_WAE 1
+vlb_YPH 1
+vlb_SLP 0
+vlb_BHC 1
+vlb_SLC 1
+vlb_GZS 1
+vlb_TPH 1
+vlb_CMC 1
+vlb_SSH 1
+vlb_RBS 1
+vlb_PNF 1
+vlb_OPV 1
+vlb_CMT 0
+vlb_MGR 0
+vlb_GRN 0
+vlb_DIA 0
+vlb_MA 0
+vlb_PB 0
+vlb_BB 0
+vlb_MYS 0
+vlb_ROT 0
+vlb_CAL 0
+vlb_LEP 0
+vlb_DRE 0
+vlb_SPH 0
+vlb_CHI 0
+ht_RDG 1
+ht_WAE 1
+ht_YPH 1
+ht_SLP 0
+ht_BHC 1
+ht_SLC 1
+ht_GZS 1
+ht_TPH 1
+ht_CMC 1
+ht_SSH 1
+ht_RBS 1
+ht_PNF 1
+ht_OPV 1
+ht_CMT 0
+ht_MGR 0
+ht_GRN 0
+ht_DIA 0
+ht_MA 0
+ht_PB 0
+ht_BB 0
+ht_MYS 0
+ht_ROT 0
+ht_CAL 0
+ht_LEP 0
+ht_DRE 0
+ht_SPH 0
+ht_CHI 0
+hta_RDG 1
+hta_WAE 1
+hta_YPH 1
+hta_SLP 0
+hta_BHC 1
+hta_SLC 1
+hta_GZS 1
+hta_TPH 1
+hta_CMC 1
+hta_SSH 1
+hta_RBS 1
+hta_PNF 1
+hta_OPV 1
+hta_CMT 0
+hta_MGR 0
+hta_GRN 0
+hta_DIA 0
+hta_MA 0
+hta_PB 0
+hta_BB 0
+hta_MYS 0
+hta_ROT 0
+hta_CAL 0
+hta_LEP 0
+hta_DRE 0
+hta_SPH 0
+hta_CHI 0
+htb_RDG 1
+htb_WAE 1
+htb_YPH 1
+htb_SLP 0
+htb_BHC 1
+htb_SLC 1
+htb_GZS 1
+htb_TPH 1
+htb_CMC 1
+htb_SSH 1
+htb_RBS 1
+htb_PNF 1
+htb_OPV 1
+htb_CMT 0
+htb_MGR 0
+htb_GRN 0
+htb_DIA 0
+htb_MA 0
+htb_PB 0
+htb_BB 0
+htb_MYS 0
+htb_ROT 0
+htb_CAL 0
+htb_LEP 0
+htb_DRE 0
+htb_SPH 0
+htb_CHI 0
+# Assimilation efficiency of invertebrate consumers on live food and carrion
+E_DRE 0.5 Assimilation efficiency of deep filter feeders 0.3 - 0.9
+E_CHI 0.5 Assimilation efficiency of deposit feeder 0.01 - 0.6
+E_ROT 0.6 Assimilation efficiency of prawns 0.5
+E_CAL 0.7
+# Assimilation efficiency of invertebrate consumers on plants
+EPlant_DRE 0.6 Assimilation efficiency of deep filter feeders 0.3 - 0.9
+EPlant_CHI 0.6 Assimilation efficiency of deposit feeder 0.01 - 0.6
+EPlant_ROT 0.8
+EPlant_CAL 0.8
+# Assimilation efficiency of invertebrate consumers on labile detritus
+EDL_CHI 0.4 Assim efficiency of deposit feeder on labile detritus 0.002 - 0.3
+EDL_DRE 0.4 Assim efficiency of deep filter feeder on labile detritus 0.1 - 0.45
+EDL_ROT 0.4
+EDL_CAL 0.4
+EDL_BB 0.5 Assim efficiency of sediment bacteria on labile detritus 0.5
+EDL_PB 0.5 Assim efficiency of pelagic bacteria on labile detritus 0.5
+# Assimilation efficiency of invertebrate consumers on refractory detritus
+EDR_ROT 0.1
+EDR_CAL 0.1
+EDR_PB 0.25 Assim efficiency of pelagic bacteria on refractory detritus 0.25
+EDR_BB 0.25 Assim efficiency of sediemnt bacteria on refractory detritus 0.25
+EDR_CHI 0.1 Assim efficiency of deposit feeder on refractory detritus 0.001 - 0.15
+EDR_DRE 0.1 Assim efficiency of deep filter feeders on refractory detritus 0 - 0.1
+EDR_GRN 0.0
+# Assimilation efficiencies of vertebrate consumers on live food and carrion
+E_RDG 0.5 Assimilation efficiency of shallow piscivores 0.08 - 0.55
+E_WAE 0.5 Assimilation efficiency of tropical piscivores 0.08 - 0.55
+E_YPH 0.5 Assimilation efficiency of other piscivores 0.08 - 0.55
+E_SLP 0.5 Assimilation efficiency of benthopelagics 0.08 - 0.55
+E_SLC 0.5 Assimilation efficiency of herbivorous demersals 0.06 - 0.5
+E_GZS 0.5
+EPlant_RDG 0.2 Assimilation efficiency of shallow piscivores on plants 0.001 - 0.1
+EPlant_WAE 0.2 Assimilation efficiency of tropical piscivores on plants 0.001 - 0.1
+EPlant_YPH 0.2 Assimilation efficiency of other piscivores on plants 0.001 - 0.1
+EPlant_SLP 0.2 Assimilation efficiency of benthopelagics on plants 0.001 - 0.1
+EPlant_GZS 0.6
+EPlant_TPH 0.2
+EDL_RDG 0.2 Assimilation efficiency of shallow piscivores on labile det. 0 - 0.1
+EDL_WAE 0.2 Assimilation efficiency of tropical piscivores on labile det. 0 - 0.1
+EDL_YPH 0.3 Assimilation efficiency of other piscivores on labile det. 0 - 0.1
+EDL_GZS 0.2
+EDL_CMC 0.2
+EDR_RDG 0.2 Assimilation efficiency of shallow piscivores on refract. det. 0 - 0.1
+EDR_WAE 0.2 Assimilation efficiency of tropical piscivores on refract. det. 0 - 0.1
+EDR_YPH 0.2 Assimilation efficiency of other piscivores on refract. det. 0 - 0.1
+EDR_GZS 0.2
+# Fish respiration
+KA_RDG 0.025 Scaling coefft in allometry of resp vs weight for shallow pisciv. 0.025
+KA_WAE 0.025 Scaling coefft in allometry of resp vs weight for tropical pisciv. 0.025
+KA_YPH 0.024 Scaling coefft in allometry of resp vs weight for other piscivores 0.024
+KA_SLP 0.014 Scaling coefft in allometry of resp vs weight for benthopelagics 0.024
+KA_BHC 0.014 Scaling coefft in allometry of resp vs weight for other deep dem 0.014
+KA_SLC 0.018 Scaling coefft in allometry of resp vs weight for herbiv. demersals 0.018
+KA_GZS 0.025
+KA_TPH 0.025
+KA_CMC 0.025
+KA_SSH 0.025
+KA_RBS 0.025
+KA_PNF 0.025
+KA_OPV 0.025
+KA_CMT 0.025
+KA_MGR 0.025
+KB_RDG 0.8 Exponent in respiration vs weight for shallow piscivores 0.8
+KB_WAE 0.8 Exponent in respiration vs weight for tropical piscivores 0.8
+KB_YPH 0.8 Exponent in respiration vs weight for other piscivores 0.85
+KB_SLP 0.8 Exponent in respiration vs weight for benthopelagics 0.85
+KB_BHC 0.8 Exponent in respiration vs weight for other deep demersal 0.8
+KB_SLC 0.8 Exponent in respiration vs weight for herbivorous demersals 0.8
+KB_GZS 0.8
+KB_TPH 0.8
+KB_CMC 0.8
+KB_SSH 0.8
+KB_RBS 0.8
+KB_PNF 0.8
+KB_OPV 0.8
+KB_CMT 0.8
+KB_MGR 0.8
+KST_fish 0.3 Factor respiration reduced by when fish are starved 0.3
+KST_shark 0.3 Factor respiration reduced by when sharks are starved 0.3
+KST_bird 0.3 Factor respiration reduced by when seabirds are starved 0.3
+KST_mammal 0.3 Factor respiration reduced by when mammals are starved 0.3
+Ktmp_fish 0.08 Factor relating temperature to respiration for fish 0.08
+Ktmp_shark 0.075 Factor relating temperature to respiration for sharks 0.075
+Ktmp_bird 0.08 Factor relating temperature to respiration for seabirds 0.08
+Ktmp_mammal 0.08 Factor relating temperature to respiration for mammals 0.08
+# Lysis rate of microalgaes
+KLYS_GRN 0.00001 Lysis rate of picophytoplankton d-1 -0.01 0.01
+KLYS_DIA 0.00001 Lysis rate of diatoms d-1 -0.01 0.01
+# Linear mortality
+GRN_mL 0.00001 Linear mortality rate of picophytopl, 15 deg C d-1 0.14
+DIA_mL 0.00002 Linear mortality rate of diatom
+PB_mL 0.00001 Linear mortality rate of pelagic bact, 15 deg C d-1 0.0 - 0.1
+BB_mL 0.00001 _mLmortality rate of sediment bact, 15 deg C d-1 (0.0001) 0.0 - 0.1
+# KC update
+DRE_mL 0.001 Linear mortality rate of deep filt feed, 15 deg C d-1 (0.000001) 0.0 - 0.001
+CHI_mL 0.001 Linear mortality rate of deposit feeder, 15 deg C d-1 (0.0005) 0.0 - 0.001
+ROT_mL 0.00006 Linear mortality rate of prawns, 15 deg C d-1 (0.002) 0.0 - 0.01
+CAL_mL 0.0001
+# KC updates all
+RDG_mL 2
+0 0
+WAE_mL 2
+0 0
+YPH_mL 2
+0 0
+GZS_mL 2
+0 0
+# Quadratic mortality
+# Invertebrates
+DRE_mQ 1.0e-7 deep filt feed, 15 deg C d-1 0.0 - 0.000002
+CHI_mQ 1.0e-7 deposit feeder, 15 deg C d-1 0.0
+CAL_mQ 1.0e-7
+# Invertebrates with age structure
+ROT_mQ 0 prawns, 15 deg C d-1 0.0 - 0.0001
+# Adult vertebrates
+RDG_mQ 2
+0 0
+WAE_mQ 2
+0 0
+YPH_mQ 2
+0 0
+GZS_mQ 2
+0 0
+# Starvation mortality for fish (based on condition)
+mStarve_RDG 0.0001
+mStarve_YPH 0.0001
+mStarve_WAE 0.0001
+mStarve_SLP 0.0001
+mStarve_GZS 0.0001
+mStarve 0.0001 Starvation mortality of fish d-1 0.005
+Kthreshm 0.5 Threshold starvation level when mort starts 0.7
+# Oxygen mortality (based on depth and the oxygen horizon)
+mD_DIA 0.0 Half oxygen mortality depth for settled dinoflagellate m 0.001 - 0.005
+mD_GRN 0.0 Half oxygen mortality depth for settled picophytoplank m 0.001 - 0.005
+mD_PB 0.001 Half oxygen mortality depth for pelagic bacteria m 0.001 - 0.005
+mD_BB 0.005 Half oxygen mortality depth for sediment bacteria m 0.001 - 0.005
+mD_CHI 0.005 Half oxygen mortality depth for deposit feeder m 0.001 - 0.005
+mD_DRE 0.001 Half oxygen mortality depth for deep filter feed m 0.0 - 0.001
+mD_SPH 0.005
+# Oxygen mortality based on ambient oxygen
+mO_DIA 0.0 Oxygen dependent mortality for settled dinoflagellate d-1 0.1
+mO_GRN 0.0 Oxygen dependent mortality for settled picophytoplank d-1 0.1
+mO_PB 0.001 Oxygen dependent mortality for pelagic bacteria d-1 0.1
+mO_BB 0.001 Oxygen dependent mortality for sediment bacteria d-1 0.3
+mO_CHI 0.0001 Oxygen dependent mortality for deposit feeder d-1 0.1
+mO_DRE 0.0001 Oxygen dependent mort. for deep filter feeder d-1 0.1
+mO_SPH 0.0001
+KO2_DIA 0.0 Lethal oxygen level for settled dinoflagellates mg O2 m-3 0.0
+KO2_GRN 0.0 Lethal oxygen level for settled picophytoplankton mg O2 m-3 0.0
+KO2_PB 0.0 Lethal oxygen level for pelagic bact mg O2 m-3 0.0
+KO2_BB 0.0 Lethal oxygen level for benthic bact mg O2 m-3 0.0
+KO2_CHI 0.1 Lethal oxygen level for deposit feeder mg O2 m-3 0.0
+KO2_DRE 0.1 Lethal oxygen level for deep filter feeder mg O2 m-3 0.0
+KO2_SPH 0.1
+KO2LIM_DIA 0.0 Limiting oxygen level for settled dinoflagellate mg O2 m-3 0.0
+KO2LIM_GRN 0.0 Limiting oxygen level for settled picophytoplank mg O2 m-3 0.0
+KO2LIM_PB 0.0 Limiting oxygen level for pelagic bacteria mg O2 m-3 0.0
+KO2LIM_BB 0.0 Limiting oxygen level for benthic bacteria mg O2 m-3 0.0
+KO2LIM_CHI 1.0 Limiting oxygen level for deposit feeder mg O2 m-3 0.0
+KO2LIM_DRE 1.0 Limiting oxygen level for deep filter feeder mg O2 m-3 0.0
+KO2LIM_SPH 1.0
+# Minimum tolerated oxygen level for age structured groups (typically vertebrates)
+RDG_min_O2 0.0
+WAE_min_O2 0.0
+YPH_min_O2 0.0
+SLP_min_O2 0.0
+BHC_min_O2 0.0
+SLC_min_O2 0.0
+GZS_min_O2 0.0
+TPH_min_O2 0.0
+CMC_min_O2 0.0
+SSH_min_O2 0.0
+RBS_min_O2 0.0
+PNF_min_O2 0.0
+OPV_min_O2 0.0
+CMT_min_O2 0.0
+MGR_min_O2 0.0
+# Mortality rate of each fish group due to the implicit fish, per quarter d-1
+# This represents mortality due to fish not explicitly included in the model.
+mS_FDRDG 4
+0 0 0 0
+mS_FDWAE 4
+0 0 0 0
+mS_FDYPH 4
+0 0 0 0
+mS_FDGZS 4
+0 0 0 0
+# Static seabird and mammal induced mortality of each fish group, per quarter d-1
+mS_SBRDG 4
+0 0 0 0
+mS_SBWAE 4
+0 0 0 0
+mS_SBYPH 4
+0 0 0 0
+mS_SBBHC 4
+0 0 0 0
+mS_SBGZS 4
+0 0 0 0
+mS_SBTPH 4
+0 0 0 0
+mS_SBCMC 4
+0 0 0 0
+mS_SBRBS 4
+0 0 0 0
+mS_SBPNF 4
+0 0 0 0
+mS_SBOPV 4
+0 0 0 0
+mS_SBCMT 4
+0 0 0 0
+mS_SBMGR 4
+0 0 0 0
+# Seabird sloppy feeding
+FSBDR_RDG 0 Proportion of seabird catch of shallow piscivores lost 0.05
+FSBDR_WAE 0 Proportion of seabird catch of tropical piscivores lost 0.05
+FSBDR_YPH 0 Proportion of seabird catch of other piscivores lost 0.05
+FSBDR_GZS 0
+# Demersal fish sloppy feeding
+FFDDR 0.95 Proportion of static demersal fish's planktivore prey that's lost
+#Contribution of detritus from unassim material
+FDG_DRE 0.35 Detrit contrib from unassim material ingested by deep filt feed 0.25 - 0.5
+FDG_CHI 0.35 Detrit contrib from unassim material ingested by deposit feeder 0.25 - 0.5
+FDG_ROT 0.3 Detrit contrib from unassim material ingested by prawns 0.25 - 0.5
+FDG_CAL 0.3
+FDG_RDG 0.2 Detrit contrib from unassim material ingested by shallow piscivores 0.1 - 0.3
+FDG_WAE 0.2 Detrit contrib from unassim mat. ingested by tropical piscivores 0.1 - 0.3
+FDG_YPH 0.2 Detrit contrib from unassim material ingested by other piscivores 0.1 - 0.3
+FDG_GZS 0.2
+# Fraction of non-assimilate from labile detrital food lost to detritus
+FDGDL_DRE 0.5 Detrit contrib from unassim lab detrit ingested by deep filter feed 0.4 - 0.9
+FDGDL_CHI 0.5 Detrit contrib from unassim lab detrit ingested by deposit feeder 0.4 - 0.9
+FDGDL_ROT 0.5 Detrit contrib from unassim lab detrit ingested by prawns 0 - 0.9
+FDGDL_CAL 0.5
+FDGDL_RDG 0.5 Detrit contrib from unassim lab detrit 0.0 - 0.9
+FDGDL_WAE 0.5 Detrit contrib from unassim lab detrit 0.0 - 0.9
+FDGDL_YPH 0.5 Detrit contrib from unassim lab detrit 0.0 - 0.9
+FDGDL_GZS 0.5
+# Fraction of non-assimilate from refractory detrital food lost to detritus
+FDGDR_DRE 0.3 Detrit contrib from unassim ref detrit ingested by deep filter feed 0.5 - 0.95
+FDGDR_CHI 0.3 Detrit contrib from unassim ref detrit ingested by deposit feeder 0.5 - 0.95
+FDGDR_ROT 0.3 Detrit contrib from unassim ref detrit ingested by prawns 0.5 - 0.95
+FDGDR_CAL 0.3
+FDGDR_RDG 0.3 Detrit contrib from unassim ref detrit 0.0 - 0.9
+FDGDR_WAE 0.3 Detrit contrib from unassim ref detrit 0.0 - 0.9
+FDGDR_YPH 0.3 Detrit contrib from unassim ref detrit 0.0 - 0.9
+FDGDR_GZS 0.3
+# Fraction of mortality products lost to detritus
+FDM_DRE 0.5 Detrit contrib from unassim lab detrit ingested by deep filter feed 0.4 - 0.9
+FDM_CHI 0.35 Detrit contrib from mortality of deposit feeder 0.35
+FDM_ROT 0.35 Detrit contrib from mortality of prawns 0.3
+FDM_CAL 0.5
+FDM_PB 0.6 Detrit contrib from mortality of pelagic bacteria 0.6
+FDM_BB 0.6 Detrit contrib from mortality of sediment bacteria 0.6
+FDM_RDG 0.375 Detrit contrib from mortality of shallow piscivores 0.375
+FDM_WAE 0.375 Detrit contrib from mortality of tropical piscivores 0.375
+FDM_YPH 0.35 Detrit contrib from mortality of other piscivores 0.3
+FDM_GZS 0.35
+# Split up of losses to detritus between labile and refractory detritus
+FDL_fish 0.3 Split between DL and DR for fish 0 - 1
+FDL_benth 0.3 Split between DL and DR for benthos 0 - 1
+FDL_top 0.3 Split between DL and DR for top predators 0 - 1
+FDL_wc 0.9 Split between DL and DR for pelagic invertebrates 0 - 1
+# Fraction of bacterial losses sent to detritus
+FPB_DR 0.2 Detrit contrib from pelagic bacteria 0.2
+FBB_DR 0.2 Detrit contrib from sediment bacteria 0.2
+# Fraction of bacterial losses sent to DON
+FPB_DON 0.05 DON contrib from pelagic bacteria 0.05
+FBB_DON 0.05 DON contrib from sediment bacteria 0.05
+# Fraction of infaunal NH involved in denitrificatio
+Fben_den 0.95 Fraction of NH release from OB and CHI used in nitrif etc calcs 0.5 - 0.7
+#from m1
+# Vertebrate age structure parameters
+#modified by yzhao oct 26, 2022
+RDG_AgeClassSize 1 Number of years represented in each age class of
+WAE_AgeClassSize 1 Number of years represented in each age class of
+YPH_AgeClassSize 1 Number of years represented in each age class of
+GZS_AgeClassSize 1 Number of years represented in each age class of
+# Age class of maturity
+#modified by yzhao 2022 october 26
+GZS_age_mat 1 #GZS_age_mat 1
+WAE_age_mat 2 #WAE_age_mat 2
+RDG_age_mat 2 #RDG_age_mat 2
+YPH_age_mat 2 #YPH_age_mat 2
+#interpreted as the time of year that each cohort becomes mature (this is 226 + 'Time_Spawn')
+#Time_Age_MYS 1
+#60
+# Spawning season
+RDG_Time_Spawn 152
+WAE_Time_Spawn 91
+YPH_Time_Spawn 100
+GZS_Time_Spawn 166
+RDG_spawn_period 28
+WAE_spawn_period 28
+YPH_spawn_period 28
+GZS_spawn_period 21
+# Age of recruitment recalculated as a weighted average as usual
+RDG_Recruit_Time 10
+WAE_Recruit_Time 15
+YPH_Recruit_Time 10
+GZS_Recruit_Time 4
+# Recruitment window
+Recruit_Period_RDG 30
+Recruit_Period_WAE 30
+Recruit_Period_YPH 30
+Recruit_Period_GZS 30
+#Recruitment parameter- DON'T NEED
+#Constant in spawning formulation for small planktivores 5.3
+#Constant in spawning formulation for vulnerable piscivores 158.25
+#Constant in spawning formulation for shallow piscivores 569.65
+#Constant in spawning formulation for tropical piscivores 569.65 Constant in spawning formulation for other piscivores 438.60
+#Constant in spawning formulation for other tuna 158.25
+#Constant in spawning formulation for deep demersals 438.6
+#Constant in spawning formulation for shallow demersals 158.25
+KSPA_GZS 16.58239589
+KSPA_WAE 51.16770021
+KSPA_RDG 0.427409567
+KSPA_YPH 7.159875149
+#Recruitment parameter- DON'T NEED
+#Fraction used in spawning formulation for small planktivores 0.246
+#Fraction used in spawning formulation for shallow piscivores 0.425
+#Fraction used in spawning formulation for tropical piscivores 0.425
+#Fraction used in spawning formulation for other planktivores 0.246
+#Fraction used in spawning formulation for other tuna 0.276
+#Fraction used in spawning formulation for deep demersals 0.276
+#Fraction used in spawning formulation for shallow demersals 0.276
+FSP_GZS 0.1
+FSP_WAE 0.1
+FSP_RDG 0.1
+FSP_YPH 0.1
+# Primary production dependent recruitment
+PP_RDG 0
+PP_WAE 0
+PP_YPH 0
+PP_SLP 0
+PP_GZS 0
+## Proportion of the population (per age) spawning
+#modified by yzhao oct 26, 2022
+FSPB_RDG 5
+0 0.85 1 1 1
+FSPB_YPH 7
+0 0 0.85 1 1 1 1
+FSPB_WAE 8
+0 0 0.5 0.85 1 1 1 1
+FSPB_GZS 5
+0 0.85 1 1 1
+# Recruit location spatial distributions
+#modified by yzhao oct 26, 2022
+RDG_recruit_hdistrib 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+WAE_recruit_hdistrib 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+YPH_recruit_hdistrib 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+GZS_recruit_hdistrib 11
+0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+# Recruit location vertical distributions. First entry for each vector refers to water
+# column layer closest to the sediment and then up through the water column to
+# surface most layer on the extreme right (regardless of how many water layers are present)
+#modified by yzhao oct 26, 2022
+RDG_recruit_vdistrib 4
+0.9 0.1 0 0
+WAE_recruit_vdistrib 4
+0.7 0.1 0.1 0.1
+YPH_recruit_vdistrib 4
+0.7 0.1 0.1 0.1
+GZS_recruit_vdistrib 6
+0.7 0.1 0.1 0.1 1 1
+recSTOCK_RDG 4
+1 1 1 1
+recSTOCK_WAE 3
+1 1 1
+recSTOCK_YPH 6
+1 1 1 1 1 1
+recSTOCK_GZS 9
+1 1 1 1 1 1 1 1 1
+# Distribution of recruits within recruitment period
+rec_m 1
+rec_sigma 1
+recruitRange 4.5 max relative cohort strength (multiplicative) for groups with strong year classes
+recruitRangeFlat 2
+1 1
+KDENR_RDG 4
+1 1 1 1
+KDENR_WAE 2
+1 1
+KDENR_YPH 7
+1 1 1 1 1 1 1
+KDENR_GZS 9
+1 1 1 1 1 1 1 1 1
+ref_chl 0.15 Reference level of chla mg Chla m-3 1.5
+# Ricker recruitment- for Baltic Ricker as well
+Ralpha_RDG 0
+Ralpha_WAE 1.724
+Ralpha_YPH 137.4
+Ralpha_GZS 5.361
+Rbeta_RDG 0
+Rbeta_WAE 1.35E-08
+Rbeta_YPH 9.22E-09
+Rbeta_GZS 1.84E-08
+# Beverton-Holt recruitment
+BHalpha_GZS 9.36E+09
+BHalpha_WAE 3.07E+09
+BHalpha_RDG 9.60E+08
+BHalpha_YPH 7.20E+08
+BHbeta_GZS 6.84E+08
+BHbeta_WAE 3.84E+08
+BHbeta_RDG 3.84E+08
+BHbeta_YPH 3.84E+08
+# Recruitment modifiers to encourage recovery of stocks
+recover_mult_RDG 1 Recruitment multiplier for
+recover_mult_WAE 1 Recruitment multiplier for
+recover_mult_YPH 1 Recruitment multiplier for
+recover_mult_GZS 1
+recover_trigger 0 Prop. of init. stock remaining that triggers encourage recovery
+recover_span 31449600000 Number of days from initial trigger until recover_mult used
+recover_subseq 1 Number of years in a row where get increased recruitment
+# Starting time of prescribed recruitment recovery of stocks
+recover_start_RDG 31449600000 Recruitment change start date for shallow piscivores
+recover_start_WAE 31449600000 Recruitment change start date for tropical piscivores
+recover_start_YPH 31449600000 Recruitment change start date for other piscivores
+recover_start_GZS 31449600000
+# Log-normal random recruitment CHECK WITH BETH
+lognorm_mu 0.5 Centre for lognormal distribution of the number of recruits
+lognorm_sigma 0.3 Variation of lognormal distribution of the number of recruits
+RDG_log_mult 9
+WAE_log_mult 12
+YPH_log_mult 14
+GZS_log_mult 10
+# Size of recruits Yzhao 01-29-2023 using age 1 fish sn/rn
+KWSR_GZS 31.92499342
+KWSR_WAE 367.1670677
+KWSR_RDG 3.532464131
+KWSR_YPH 45.44935889
+KWRR_GZS 84.60123255
+KWRR_WAE 972.9927293
+KWRR_RDG 9.361029947
+KWRR_YPH 120.4408011
+# Minimum and maximum spawning temperatures recalculated as a weighted average
+RDG_min_spawn_temp 18
+WAE_min_spawn_temp 5
+YPH_min_spawn_temp 6.7
+GZS_min_spawn_temp 15
+RDG_max_spawn_temp 23
+WAE_max_spawn_temp 15
+YPH_max_spawn_temp 15
+GZS_max_spawn_temp 23
+# Minimum and maximum spawning salinities
+RDG_min_spawn_salt 0.0
+WAE_min_spawn_salt 0.0
+YPH_min_spawn_salt 0.0
+SLP_min_spawn_salt 0.0
+GZS_min_spawn_salt 0.0
+TPH_min_spawn_salt 0.0
+RDG_max_spawn_salt 40.0
+WAE_max_spawn_salt 40.0
+YPH_max_spawn_salt 40.0
+SLP_max_spawn_salt 40.0
+GZS_max_spawn_salt 40.0
+## Stock structure
+# Horizontal stock structure
+# modified by yzhao oct 26 2022
+RDG_stock_struct 11
+0 1 1 1 1 1 1 1 1 1 1
+WAE_stock_struct 11
+0 1 1 1 1 1 1 1 1 1 1
+YPH_stock_struct 11
+0 1 1 1 1 1 1 1 1 1 1
+GZS_stock_struct 11
+0 1 1 1 1 1 1 1 1 1 1
+# Vertical stock structure. First entry for each vector refers to water
+# column layer closest to the sediment and then up through the watercolumn to
+# surface most layer on the extreme right
+# modified by yzhao oct 26, 2022
+RDG_vert_stock_struct 4
+1 1 1 1
+WAE_vert_stock_struct 4
+1 1 1 1
+YPH_vert_stock_struct 4
+1 1 1 1
+GZS_vert_stock_struct 4
+1 1 1 1
+#TPH_vert_stock_struct 4
+#1 1 1 1
+## Regional output information - when want overall Biom.txt file split by region too
+# Biomass reporting regions - give the region each box will be counted in (so if two
+# regions each box must be either in region 0 or 1 etc)
+#chagned to 82 yzhao oct 26, 2022
+regID 24
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#1
+#1
+#1
+#1
+#1
+#1
+#1
+####
+RDG1popratioStock1 1
+1
+RDG2popratioStock1 1
+1
+RDG3popratioStock1 1
+1
+RDG4popratioStock1 1
+1
+RDG5popratioStock1 1
+1
+#####
+YPH1popratioStock1 1
+1
+YPH2popratioStock1 1
+1
+YPH3popratioStock1 1
+1
+YPH4popratioStock1 1
+1
+YPH5popratioStock1 1
+1
+YPH6popratioStock1 1
+1
+YPH7popratioStock1 1
+1
+#YPH8popratioStock1 1
+#1
+#YPH9popratioStock1 1
+#1
+#YPH10popratioStock1 1
+#1
+#YPH11popratioStock1 1
+#1
+#YPH12popratioStock1 1
+#1
+#####
+WAE1popratioStock1 1
+1
+WAE2popratioStock1 1
+1
+WAE3popratioStock1 1
+1
+WAE4popratioStock1 1
+1
+WAE5popratioStock1 1
+1
+WAE6popratioStock1 1
+1
+WAE7popratioStock1 22
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+$1
+$1
+###################
+GZS1popratioStock1 1
+1
+GZS2popratioStock1 1
+1
+GZS3popratioStock1 1
+1
+GZS4popratioStock1 1
+1
+GZS5popratioStock1 39
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+###########
+SSH1popratioStock1 1
+1
+SSH2popratioStock1 1
+1
+SSH3popratioStock1 1
+1
+SSH4popratioStock1 11
+1 1 1 1 1 1 1 1 1 1 1
+# Invading species params - if allowing for invading species
+invading_sp_model 0 Invading species model: 0 = not used, 1 = simple drip feed model, 2 - more complex (not implemented yet)
+InvaderIndex 0 Guild that is invading
+minInvaderAge 0 Minimum age class invading
+maxInvaderAge 0 Maximum age class invading
+InvaderEntryBox 0 Which box invader entering first
+InvaderMinDepth 2000.0 Minimum depth invader tolerates
+InvaderMaxDepth 2000.0 Maximum depth invader tolerates
+InvaderStartDay 36666666660 Day of run invasion begins
+InvaderEndDay 36666666660 Day of run invasion ends
+InvaderScalar 1.0 Proportional scalar to represent drip feed of invaders to existing population
+InvaderSpeed 0.0 Rate of spread of front of the invading species (m hr-1)
+#Flag to indicate that the group uses age structured prey.
+age_structured_prey_RDG 1
+age_structured_prey_YPH 1
+age_structured_prey_WAE 1
+age_structured_prey_GZS 1
+#Added by Bec Gorton 17/12/2010
+****************************************************************************************
+#flagDRElim 1 Switch to identify filter feeding crowding used: simple=0, ERSEM=1 0
+#flagCHIlim 1
+#flagSPHlim 1
+#CHI_remin_contrib 1
+#DRE_remin_contrib 0
+#SPH_remin_contrib 0
+#Add the following parameters to the biol.prm for each group in the model (the valuse below turn off the option) where you have set isOverWinter to 1 in your functional groups definition file.
+# turned off : ie. adding comment signs by Yzhao 2023-01-20
+****************************************************************************************
+#You also need to add the vertical distribution the species will use while overwintering (e.g. do they all dtop to depth or float at the surface etc).
+#This has the same format as VERTday_XX or VERTnight_XX e.g for a model with 7 watercolumn layers it would look like
+#change from 9 layers to 4 yzhao oct26,2022
+#1.0 0.0 0.0 0.0
+#1.0 0.0 0.0 0.0
+# Added by Bec Gorton 23rd April 2013.
+# Jacknife recruitment flagrecruitXXX=15
+# The jack_a_XXX is interpreted as slope of recruitment, usually set as biomass of recruits / SSB.
+# The jack_b_XXX is empirical proxy for a relationship with the carrying capacity
+# (in the North Sea they used 0.3 * long term average total biomass).
+# This recruitment relationship is taken from the North Sea stock assessment -
+# see a more detailed description on the wiki
+jack_a_RDG 0
+jack_a_WAE 0
+jack_a_YPH 0
+jack_a_GZS 0
+jack_a_SSH 0
+jack_b_RDG 0
+jack_b_WAE 0
+jack_b_YPH 0
+jack_b_SLP 0
+jack_b_GZS 0
+jack_b_TPH 0
+# Phosphorus values.
+RTOP 0.005 #rates of transformation from available nutrient forms to available forms in days-1
+# Inorganic carbon exchange rate
+K_Lc 0.5
+# max phosphorus uptake rate per day - read in for each primary producer.
+P_uptake_GRN 0.5 #.05 #18.231
+P_uptake_DIA 0.5 #.05 #1
+# max carbon uptake rate per day - read in for each primary producer.
+C_uptake_GRN 0.5
+C_uptake_DIA 0.5
+# affinity coefficient for phosphorus uptake mechanism - read in for each primary producer.
+P_scale_uptake_GRN 0.318e-03
+P_scale_uptake_DIA 0.518e-03
+# affinity coefficient for carbon uptake mechanism - read in for each primary producer.
+C_scale_uptake_GRN 0.318e-03
+C_scale_uptake_DIA 0.518e-03
+#RMF found that this is NOT read in by the code
+# internal phosphorus concentration factor - read in for each primary producer.
+P_concp_GRN 0.250e6
+P_concp_DIA 0.250e6
+# internal carbon concentration factor - read in for each primary producer.
+C_concp_GRN 0.250e6
+C_concp_DIA 0.250e6
+RMF 070717 found that this is NOT read in by the code
+# Min quota of phosphorus in primary producer cells in moles/mg dry weight
+PSA_min_GRN 1.6e-08
+PSA_min_DIA 1.6e-08
+# Min quota of carbon in primary producer cells in moles/mg dry weight NEEDS TO BE CHANGED TO MG RMF
+C_min_GRN 1.6e-08
+C_min_DIA 1.6e-08
+# Phytoplankton respiration rate per second.(**Represents resp and Linear mortality as of 071117)
+Phyto_Resp_Rate_GRN 0.05 # 0.05 0.01 new value from bowie 1985 RMF (.03-.25)
+Phyto_Resp_Rate_DIA 0.05 #0.01 new value from bowie 1985 RMF (.03-.25) likely on lower end
+# PValue = ((P1 - PRatio)/(P1 - P0)) * (amt_p/(KP_sp + amt_p)); where P1=P_max_interal_XXX and P0=P_min_internal_XXX
+#max phosphorus uptake rate per day
+#New values are in paper RMF
+P_max_storage_uptake_GRN 0.065
+P_max_storage_uptake_DIA 0.065
+#RMF 070717 found that these are NOT read in by the code
+P_min_storage_uptake_GRN 0.06
+P_min_storage_uptake_DIA 0.06
+#This is the value read in as PSA_min, the minimum concentration of phosphorus allowed in the corresponding phytoplankton
+#These values for GRN, DIA, BLU found by RMF in Bierman et al #1980 given as .0005mgP/mg DW was divided by (5.7*2) to get it #into mg P/ mg N
+P_min_internal_GRN 4.386e-05 #RMF 070717 0.06
+P_min_internal_DIA 4.386e-05 #RMF 070717 0.06
+#This is read in as P1
+#RMF 070717 got values from Bowie 1985 p344 range of .013-.03mg/mg DW is given across all phytoplankton (was translated into mgP/DW N by dividing value by (5.7*2)for a range of 1.4e-0.3 to 2.63e-0.3
+#These values may need further calibration
+P_max_internal_GRN 0.065 #0.065
+P_max_internal_DIA 0.065 #0.065
+#added by yzhao following Setas example and error message
+norm_larval_distrib 0
+larvae_connect_only 0
+enviro_independ_larvae 0
+flag_modify_KWSR 0 #Flag indicating whether recruit size will be modified through time based on a forcing file (provided in force.prm) - 0 = no, 1 = yes
+flag_recruit_effect 1 #set to 1 for the environmental effects to be calculated at the time the recruits settle
+flag_dynamicXRS 0 #Flag to indicate whether to use dynamic (1) or static (0) X_RS value
+juv_transition_thresh 0.1
+mat_transition_thresh 0.99
+flag_satiation 0
+flag_shrinkfat 0
+flag_predratiodepend 0
+flag_competing_epiff 0
+flag_invert_biohab 0
+#flag indicating which refugia model to use
+# refuge_model option: 0 = none, 1 = original, 2 is rugosity related
+flag_refuge_model 0
+#flag indicating which rugosity model to use
+# rugosity_model option: 0 = none, 1 = mechanistic, 2 is an empirical relationship from Blackwood
+flag_rugosity_model 0
+flag_georugosity 0
+RugCover_Coefft 1.4613
+RugCover_Const 0.0475
+RugCover_Cap 4
+min_rugosity 1
+max_rugosity 5
+# Bozec model for rugosity
+rugosity_const 1.2 # was 0.88 from Bozec et al 2014 but to allow for box wide effects this has been retuned here.
+rugosity_bozec_a 16.0
+rugosity_bozec_b 1.5
+rugosity_bozec_c 8.0
+rugosity_bozec_d 3.0
+swr_scalar 0.45 # Proportion of shortwave radiation available to photosynthesis
+swr_const 1367.0 # Constant in the equation for the shortwave radiation available to photosynthesis
+swr_cos_coefft 0.034 # Coefficient of the cos term in the equation for the shortwave radiation available to photosynthesis
+swr_cos_offset 0.0 # Offset term in the cos term in the equation for the shortwave radiation available to photosynthesis
+flag_do_var_express 0
+flag_evolvar_capped 0
+flag_do_evolution 0 Whether do evolution (1) or not (0)
+flag_bound_change 0 Whether evolution is effecting bound (1) or impact (0)
+flag_inheritance 1 Flag indicating whether complex (0), simple (1) or straight (2) inheritance model used (1)
+evol_stdev_range 2.0 Range of genotypes in terms of stdev
+max_rate_evol 0.0 Maximum evolutionary shift at any one point in time
+flag_mult_grow_curves 0 Whether using mutiple growth curves not evolution per se (1) or not (0) 0
+flag_move_habdepend 1 setting it to 0 means that habitat is not considered when doing movement, it will still be considering in feeding etc
+flagconstrain_epiwander 0
+li_a_invert 0.01
+li_b_invert 3.0
+intersp_depend_recruit_GZS 0
+intersp_depend_recruit_WAE 0
+intersp_depend_recruit_RDG 0
+intersp_depend_recruit_YPH 0
+intersp_depend_recruit_DRE 0
+intersp_depend_recruit_CHI 0
+intersp_depend_recruit_DIA 0
+intersp_depend_recruit_GRN 0
+intersp_depend_recruit_CAL 0
+intersp_depend_recruit_ROT 0
+intersp_depend_sp_GZS 0
+intersp_depend_sp_WAE 0
+intersp_depend_sp_RDG 0
+intersp_depend_sp_YPH 0
+intersp_depend_sp_DRE 0
+intersp_depend_sp_CHI 0
+intersp_depend_sp_DIA 0
+intersp_depend_sp_GRN 0
+intersp_depend_sp_CAL 0
+intersp_depend_sp_ROT 0
+intersp_depend_scale_GZS 0
+intersp_depend_scale_WAE 0
+intersp_depend_scale_RDG 0
+intersp_depend_scale_YPH 0
+intersp_depend_scale_DRE 0
+intersp_depend_scale_CHI 0
+intersp_depend_scale_DIA 0
+intersp_depend_scale_GRN 0
+intersp_depend_scale_CAL 0
+intersp_depend_scale_ROT 0
+GZS_rec_HabDepend 0
+WAE_rec_HabDepend 0
+RDG_rec_HabDepend 0
+YPH_rec_HabDepend 0
+DRE_rec_HabDepend 0
+CHI_rec_HabDepend 0
+DIA_rec_HabDepend 0
+GRN_rec_HabDepend 0
+CAL_rec_HabDepend 0
+ROT_rec_HabDepend 0
+## Ageing flags
+# Whether keep plus group - especially for migratory groups (1 = yes, 0 = no)
+flagkeep_plusgroupGZS 1
+flagkeep_plusgroupWAE 1
+flagkeep_plusgroupRDG 1
+flagkeep_plusgroupYPH 1
+flagkeep_plusgroupDRE 1
+flagkeep_plusgroupCHI 1
+flagkeep_plusgroupDIA 1
+flagkeep_plusgroupGRN 1
+flagkeep_plusgroupCAL 1
+flagkeep_plusgroupROT 0
+GZS_cohort_recruit_entry 0
+WAE_cohort_recruit_entry 0
+RDG_cohort_recruit_entry 0
+YPH_cohort_recruit_entry 0
+DRE_cohort_recruit_entry 0
+CHI_cohort_recruit_entry 0
+DIA_cohort_recruit_entry 0
+GRN_cohort_recruit_entry 0
+CAL_cohort_recruit_entry 0
+ROT_cohort_recruit_entry 0
+InvadersEntering 0
+MB_wc 0.01
+#added Dec 10 2023 running 6698
+RDG_norm_sigma 0
+YPH_norm_sigma 0
+WAE_norm_sigma 0
+GZS_norm_sigma 0
+RDG_flag_recruit_stochastic 0
+YPH_flag_recruit_stochastic 0
+WAE_flag_recruit_stochastic 0
+GZS_flag_recruit_stochastic 0
+# newest params
+Pads_r_t0 0
+Pads_K 0
+Pads_KO 0
+r_immob_PIP_t0 0
+Tfactor 1

@@ -1,0 +1,67 @@
+---
+title: "Atlantis parameters"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Atlantis parameters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+So far only parameters in the run files have been added, as a proof of concept. The work on the parameters is indeed experimental and the goal is to find a way to collect parameters and use the information to validate parameters file.
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+create_param_table <- function(file) {
+  dt <- system.file(file, package = "atlantio", mustWork = TRUE) |>
+    yaml12::read_yaml() |>
+    lapply(\(x) data.frame(x)) |>
+    dplyr::bind_rows() |>
+    dplyr::mutate(
+      Version = paste0(Version_start, "-", Version_stop),
+      Units = ifelse(is.na(Units), "none", Units)
+    ) |>
+    dplyr::select(
+      Name, Category, Description, Type, Units, Version
+    )
+  rownames(dt) <- dt$Name
+  dt <- dt |> dplyr::select(
+    !c(Name)
+  )
+  dt |>
+    kableExtra::kbl() |>
+    kableExtra::kable_paper() |>
+    kableExtra::scroll_box(width = "100%", height = "500px") |>
+    kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12)
+}
+
+create_categ_table <- function(file) {
+  dt <- system.file(file, package = "atlantio", mustWork = TRUE) |>
+    yaml12::read_yaml() |>
+    lapply(\(x) data.frame(x)) |>
+    dplyr::bind_rows()
+  dt |>
+    kableExtra::kbl() |>
+    kableExtra::kable_paper() |>
+    kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12)
+}
+```
+
+# Run parameters 
+
+## List of parameters
+
+```{r run, echo = FALSE}
+create_param_table("parameters/run.yaml")
+```
+
+## Categories 
+
+```{r categ_run, echo = FALSE}
+create_categ_table("parameters/run_categories.yaml")
+```

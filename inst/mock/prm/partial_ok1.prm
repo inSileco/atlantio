@@ -1,0 +1,8 @@
+ ## Partial file used to test read function 
+verbose      0 	# Detailed logged output  
+flag_sanity_check  1
+   
+# Multiplicative scalar for vertebrate initial densities. Only values for vertebrates used. 
+init_scalar       6
+1 1 1 1 1 1
+

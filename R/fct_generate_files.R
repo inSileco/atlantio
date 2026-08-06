@@ -45,7 +45,7 @@ generate_run_file <- function(version, description, file, ...) {
   args <- list(...)
 
   tmp <- system.file("parameters", "run.yaml", package = "atlantio") |>
-    yaml12::read_yaml() |>
+    yaml::read_yaml() |>
     # ensure field 'Category' exists
     lapply(\(x) {
       x$Category <- x$Category %||% "other"

@@ -40,7 +40,7 @@ Imports:
     utils,
     vroom,
     xml2,
-    yaml12
+    yaml
 Suggests:
     ggplot2 (>= 3.5),
     kableExtra,
@@ -53,3 +53,4 @@ VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

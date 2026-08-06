@@ -7,7 +7,7 @@ validate_file <- function(x, template) {
     file.path("parameters", template),
     package = "atlantio"
   ) |>
-    yaml12::read_yaml()
+    yaml::read_yaml()
 
   # Logic will be more complicated with Atlantis version
   nm_x <- names(x)

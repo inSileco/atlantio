@@ -38,8 +38,8 @@ loaded data are updated; existing properties are preserved unless overwritten.
 \examples{
 \dontrun{
 # Create empty object and load files
-atlantis <- new_atlantis()
-atlantis <- atlantis_load_files(atlantis, c(
+atlantis <- new_atlantis()  |>
+ atlantis_load_files(atlantis, c(
   "model.geometry",
   "biology.prm",
   "run.prm",

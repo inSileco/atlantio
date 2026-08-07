@@ -32,3 +32,11 @@ to_num <- function(x) {
     out
   }
 }
+
+
+#
+path_to_atlantio <- function(...) {
+  file.path(
+    system.file(..., package = "atlantio", mustWork = TRUE)
+  )
+}

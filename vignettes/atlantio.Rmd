@@ -1,0 +1,39 @@
+---
+title: "Get Started with atlantio"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: ../inst/references.bib
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Get Started with atlantio}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(atlantio)
+```
+
+
+# Goal
+
+The goal of atlantio is to easily manipulate Atlantis models [@audzijonyte_AtlantisSpatiallyExplicit_2019]. This means reading, editing and validating Atlantis inputs and outputs (atlantis + i/o = atlantio).
+
+A major initial objective while working on the package was to be able to readily set up a semi-automatic callibration of the Lake Erie model using `calibrar` as described in @morell_ManualSemiautomated_2026.
+
+
+# Reading files
+
+
+
+
+
+
+# References

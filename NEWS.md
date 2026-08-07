@@ -1,9 +1,12 @@
-# atlantio 0.0.0.9000
+# atlantio 0.0.0.9001
 
 * Initial version. The input/output functionalities of the `calypso` package
   have been extracted into this package; the Shiny application now lives in
   `calypso`, which builds on top of `atlantio`.
 * Includes:
+    - `atlantis_parameter_list()` that returns the list of Atlantis
+      parameters for a supported Atlantis version (see the new dataset
+      `atlantis_supported_versions`);
     - the S7 class `Atlantis` that represents an Atlantis model, with the
       constructor `new_atlantis()` and the loader `atlantis_load_files()`;
     - reading functions for Atlantis files: `read_atlantis_files()`,

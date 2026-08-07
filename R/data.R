@@ -14,6 +14,25 @@
 
 "input_files"
 
+#' Atlantis versions supported by atlantio
+#'
+#' @docType data
+#' @keywords datasets
+#' @name atlantis_supported_versions
+#' @usage atlantis_supported_versions
+#' @format
+#' A data frame, each row includes details about one supported Atlantis
+#' version, currently it includes two columns:
+#' * version: Atlantis version, formatted as
+#'   `"<major_version>-<svn_revision>"` (e.g. `"3-6722"`),
+#' * release_date: release date of the version.
+#'
+#' @source Generated from `inst/raw-data/supported_version.R`.
+#'
+#' @seealso [atlantis_parameter_list()]
+
+"atlantis_supported_versions"
+
 #' Parameter Hints for Atlantis Model Configuration
 #'
 #' A list containing parameter names that are used as hints to quickly identify

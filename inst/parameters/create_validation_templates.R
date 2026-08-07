@@ -28,7 +28,7 @@ assign_catgory <- function(x) {
 run_file[[1]]$object |>
   lapply(\(x) list(name = x$name, description = x$comment)) |>
   lapply(\(x) c(x, assign_catgory(x$name))) |>
-  yaml12::write_yaml(file = "inst/parameters/run.yaml")
+  yaml::write_yaml(file = "inst/parameters/run.yaml")
 # Then edit by hand
 
 # Based on a trunk xml
@@ -59,7 +59,7 @@ for (i in seq_along(ls_run[[1]])) {
     )
   }
 }
-yaml12::write_yaml(out, file = "inst/parameters/run.yaml")
+yaml::write_yaml(out, file = "inst/parameters/run.yaml")
 
 
 out_categ <- list()
@@ -74,7 +74,7 @@ for (i in seq_along(ls_run[[1]])) {
   )
 }
 
-yaml12::write_yaml(out_categ, file = "inst/parameters/run_categories.yaml")
+yaml::write_yaml(out_categ, file = "inst/parameters/run_categories.yaml")
 
 # check for replicates if needed
 #   vc_nm <- tmp |> get_field_as_vector("Name")

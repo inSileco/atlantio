@@ -1,6 +1,5 @@
 #' Messages and notifications.
 #'
-#'
 #' @noRd
 
 atlantio_inform <- function(..., .envir = parent.frame()) {

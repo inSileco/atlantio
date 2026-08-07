@@ -1,67 +1,127 @@
 ---
-title: "Atlantis parameters"
+title: "Atlantis parameter set"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Atlantis parameters}
+  %\VignetteIndexEntry{Atlantis parameter set}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-So far only parameters in the run files have been added, as a proof of concept. The work on the parameters is indeed experimental and the goal is to find a way to collect parameters and use the information to validate parameters file.
-
-
 ```{r, include = FALSE}
+library(atlantio)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
 
-create_param_table <- function(file) {
-  dt <- system.file(file, package = "atlantio", mustWork = TRUE) |>
-    yaml12::read_yaml() |>
-    lapply(\(x) data.frame(x)) |>
-    dplyr::bind_rows() |>
-    dplyr::mutate(
-      Version = paste0(Version_start, "-", Version_stop),
-      Units = ifelse(is.na(Units), "none", Units)
+To access the set of parameter included in Atlantis as of version 3-6722, use:
+
+```{r}
+# only version 3-6722 is available
+atl  <- atlantis_parameter_list(version = "3-6722")
+atl$meta[1:3]
+atl$parameters[1:2]
+```
+
+The table below display the entire set of parameters, note that the followwing abbreviations are used:
+- <GRP>: groups abbreviation
+- <f>: fisheries
+- <coh>: cohort
+- <moveGroupCode>: move group code
+- <tracerName>: tracer name
+
+
+```{r, include = FALSE}
+dt <- atl$parameters |>
+    lapply(
+      \(x) data.frame(
+        Name = x$name,
+        Description = x$description,
+        Units = x$units %||% "",
+        Type = x$value_type,
+        File = x$source_file,
+        Dimension = x$dimension
+      )
     ) |>
-    dplyr::select(
-      Name, Category, Description, Type, Units, Version
-    )
-  rownames(dt) <- dt$Name
-  dt <- dt |> dplyr::select(
-    !c(Name)
-  )
-  dt |>
-    kableExtra::kbl() |>
-    kableExtra::kable_paper() |>
-    kableExtra::scroll_box(width = "100%", height = "500px") |>
-    kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12)
-}
+    do.call(what = rbind)
 
-create_categ_table <- function(file) {
-  dt <- system.file(file, package = "atlantio", mustWork = TRUE) |>
-    yaml12::read_yaml() |>
-    lapply(\(x) data.frame(x)) |>
-    dplyr::bind_rows()
-  dt |>
+create_param_table <- function(x, height = "500px") {
+  x |>
     kableExtra::kbl() |>
     kableExtra::kable_paper() |>
-    kableExtra::kable_styling(bootstrap_options = "striped", font_size = 12)
+    kableExtra::scroll_box(width = "100%", height = height) |>
+    kableExtra::kable_styling(bootstrap_options = "striped")
 }
 ```
 
-# Run parameters 
 
-## List of parameters
+# Biology parameters
+
+## Biology
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "biology_prm")  |>
+  dplyr::select(!File) |>
+create_param_table()
+```
+
+## Groups
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "groups_csv")  |>
+   dplyr::select(!File)  |>
+create_param_table()
+```
+
+
+# Physics
+
+## physics.prm
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "physics_prm")  |>
+   dplyr::select(!File)  |>
+create_param_table()
+```
+
+## forcing_prm
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "forcing_prm")  |>
+   dplyr::select(!File)  |>
+create_param_table()
+```
+
+
+# Harvest
+
+## fisheries.csv
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "fisheries_csv")  |>
+create_param_table("300px")
+```
+
+## harvest.prm
+
+```{r, echo = FALSE}
+dt  |>
+  dplyr::filter(File == "harvest_prm")  |>
+create_param_table()
+```
+
+
+# Run parameters (run.prm)
 
 ```{r run, echo = FALSE}
-create_param_table("parameters/run.yaml")
-```
-
-## Categories 
-
-```{r categ_run, echo = FALSE}
-create_categ_table("parameters/run_categories.yaml")
+dt  |>
+  dplyr::filter(File == "biology_prm")  |>
+create_param_table()
 ```

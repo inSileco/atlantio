@@ -2,6 +2,7 @@
 
 export(Atlantis)
 export(atlantis_load_files)
+export(atlantis_parameter_list)
 export(create_diet_table)
 export(create_foodweb)
 export(create_time_series)

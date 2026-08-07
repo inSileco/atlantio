@@ -12,7 +12,12 @@
 #' @details
 #' Generates parameter files using recommended values from the package's internal
 #' parameter database. If recommended values are missing, '<<TO_EDIT>>' is added
-#' as a placeholder that users should replace with appropriate values.
+#' as a placeholder that users should replace with appropriate values. Here are the abbreviations used:
+#' - <GRP>: groups abbreviation
+#' - <f>: fisheries
+#' - <coh>: cohort
+#' - <moveGroupCode>: move group code
+#' - <tracerName>: tracer name
 #'
 #' The function reads parameter specifications from the package's internal YAML
 #' files and organizes them by category in the output file.

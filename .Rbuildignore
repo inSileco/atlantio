@@ -1,3 +1,5 @@
 ^\.claude$
 ^_pkgdown\.yaml$
 ^README\.md$
+^docs$
+^pkgdown$

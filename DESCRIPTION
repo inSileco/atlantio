@@ -20,8 +20,8 @@ Description: Facilitate data wrangling and ecosystem analysis with Atlantis
     model inputs and outputs. Provides an S7 class 'Atlantis' that represents
     an Atlantis model, functions to read and write Atlantis files, and methods
     to extract diet tables, food webs and time series from a model.
-URL: https://github.com/McCannLab/atlantio
-BugReports: https://github.com/McCannLab/atlantio/issues
+URL: https://github.com/inSileco/atlantio
+BugReports: https://github.com/inSileco/atlantio/issues
 Depends: R (>= 4.2.0)
 Encoding: UTF-8
 LazyData: true
@@ -53,4 +53,3 @@ VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3

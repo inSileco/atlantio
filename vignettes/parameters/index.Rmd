@@ -61,7 +61,7 @@ create_param_table <- function(x, height = "500px") {
 
 ## Biology
 
-```{r, echo = FALSE}
+```{r bio, echo = FALSE}
 dt  |>
   dplyr::filter(File == "biology_prm")  |>
   dplyr::select(!File) |>
@@ -70,7 +70,7 @@ create_param_table()
 
 ## Groups
 
-```{r, echo = FALSE}
+```{r grp, echo = FALSE}
 dt  |>
   dplyr::filter(File == "groups_csv")  |>
    dplyr::select(!File)  |>
@@ -91,7 +91,7 @@ create_param_table()
 
 ## forcing_prm
 
-```{r, echo = FALSE}
+```{r forc, echo = FALSE}
 dt  |>
   dplyr::filter(File == "forcing_prm")  |>
    dplyr::select(!File)  |>
@@ -103,7 +103,7 @@ create_param_table()
 
 ## fisheries.csv
 
-```{r, echo = FALSE}
+```{r fish, echo = FALSE}
 dt  |>
   dplyr::filter(File == "fisheries_csv")  |>
 create_param_table("300px")
@@ -111,7 +111,7 @@ create_param_table("300px")
 
 ## harvest.prm
 
-```{r, echo = FALSE}
+```{r harv, echo = FALSE}
 dt  |>
   dplyr::filter(File == "harvest_prm")  |>
 create_param_table()
@@ -124,4 +124,13 @@ create_param_table()
 dt  |>
   dplyr::filter(File == "biology_prm")  |>
 create_param_table()
+```
+
+
+
+# Abbreviations
+
+
+```{r abbr}
+atl$abbreviation
 ```

@@ -75,9 +75,3 @@ for (i in seq_along(ls_run[[1]])) {
 }
 
 yaml::write_yaml(out_categ, file = "inst/parameters/run_categories.yaml")
-
-# check for replicates if needed
-#   vc_nm <- tmp |> get_field_as_vector("Name")
-#   if (any(duplicated(vc_nm))) {
-#       cli::cli_abort("Some Replicates in the templates")
-#   }

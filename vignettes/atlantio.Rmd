@@ -19,6 +19,9 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(atlantio)
+path_to_examples  <- function(...) {
+  system.file("examples", ..., package = "atlantio")
+}
 ```
 
 
@@ -30,6 +33,27 @@ A major initial objective while working on the package was to be able to readily
 
 
 # Reading files
+
+Empty file.
+
+```{r empty}
+mod  <- new_atlantis()
+mod
+```
+
+Add geometry, biology and group files
+
+
+```{r simple}
+mod  <- mod  |>
+  atlantis_load_files(c(
+    path_to_examples("inputs", "tiny.bgm"),
+    path_to_examples("inputs", "tiny_biol.prm"),
+    path_to_examples("inputs", "tiny_groups.csv")
+  ))
+mod
+```
+
 
 
 

@@ -23,6 +23,6 @@ atlantis_supported_versions
 Atlantis versions supported by atlantio
 }
 \seealso{
-\code{\link[=atlantis_parameter_list]{atlantis_parameter_list()}}
+\code{\link[=list_atlantis_parameters]{list_atlantis_parameters()}}
 }
 \keyword{datasets}

@@ -199,7 +199,7 @@ new_atlantis <- function(...) {
 #' \dontrun{
 #' # Create empty object and load files
 #' atlantis <- new_atlantis()  |>
-#'  atlantis_load_files(atlantis, c(
+#'  atlantis_load_files(c(
 #'   "model.geometry",
 #'   "biology.prm",
 #'   "run.prm",

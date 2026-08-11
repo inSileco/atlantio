@@ -29,7 +29,7 @@
 #'
 #' @source Generated from `inst/raw-data/supported_version.R`.
 #'
-#' @seealso [atlantis_parameter_list()]
+#' @seealso [list_atlantis_parameters()]
 
 "atlantis_supported_versions"
 

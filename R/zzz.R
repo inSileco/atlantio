@@ -40,3 +40,12 @@ path_to_atlantio <- function(...) {
     system.file(..., package = "atlantio", mustWork = TRUE)
   )
 }
+
+
+extract_field <- function(x, field) {
+  lapply(x, \(y) y[[field]] %||% NA)
+}
+
+find_value <- function(x, field) {
+  lapply(x, \(y) y[[field]] %||% NA)
+}

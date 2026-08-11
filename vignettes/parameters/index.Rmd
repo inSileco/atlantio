@@ -20,7 +20,7 @@ To access the set of parameter included in Atlantis as of version 3-6722, use:
 
 ```{r}
 # only version 3-6722 is available
-atl  <- atlantis_parameter_list(version = "3-6722")
+atl  <- list_atlantis_parameters(version = "3-6722")
 atl$meta[1:3]
 atl$parameters[1:2]
 ```

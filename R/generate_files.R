@@ -56,7 +56,9 @@ generate_run_file <- function(version, description, file, ...) {
       x$Category <- x$Category %||% "other"
       x
     })
-  vc_nm <- tmp |> get_field_as_vector("Name")
+  vc_nm <- tmp |>
+    extract_field("Name") |>
+    unlist()
 
   # Update values (if any)
   if (length(args)) {

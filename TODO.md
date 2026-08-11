@@ -1,0 +1,8 @@
+- Build objectif function: 
+  - sum ResN TrucN Nums for fish sepcies
+  - function that builda a file to use in calibrar 
+    - param name (validate with parameter file)
+    - position (default 1, ok for all )
+    - min max
+    - transform
+    - do a mini validation, e.g. the paramter does exist

@@ -1,0 +1,53 @@
+---
+title: "Calibrating Atlantis model with atlantio and calibrar"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Atlantis parameters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+Semi-automatic callibration of the Lake Erie model using `calibrar` as described in @morell_ManualSemiautomated_2026.
+
+```R
+library(atlantio)
+```
+
+
+# Overall apporach
+
+As described in @morell_ManualSemiautomated_2026, the goal of using calibrar is to automate the running of batch of simulations to improve model fit but also let modellers nodge the model to the right direction.
+
+The idea is to run the model various time, optionnally revisit the set of paramters to shuffle as we go.
+
+Difficulties exist given the tremendous number of parameters an Atlantis incude. Fortunately, a optimization tool such as `calibrar` (<https://CRAN.R-project.org/package=calibrar>).
+
+steps:
+
+- designing the objective function
+
+- editing atlantis parameter files in, handles by `atlantio` (@morell_ManualSemiautomated_2026 uses `https://github.com/alaiam/atlantis2ls`)
+
+- running Atlantis model
+
+- computing the objective function
+
+- using callibrar
+
+
+# Calibrar
+
+https://roliveros-ramos.github.io/calibrar/articles/calibrar.html#introduction
+
+
+If you use Docker to run the model, you would need to build the image first and then call containers, you would likely create a mount pa
+
+
+# atlantio to edit parameter files
+
+
+# Objective function
+
+Reading output with altlantio

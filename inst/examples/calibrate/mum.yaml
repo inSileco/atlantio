@@ -1,0 +1,11 @@
+- name: mum_<GRP>
+  GRP: [GZS, RDG, WAE]
+  min: -6
+  max: -1
+  transf: pow10 # exp or pow2
+- name: mum_<GRP>
+  GRP: YPH
+  min: -3
+  max: -1
+  transf: pow10 # exp or pow2
+  position: 2

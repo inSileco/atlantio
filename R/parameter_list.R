@@ -17,13 +17,13 @@
 #'   `dimension`, `units`, `bm_member`, `reader` and `conditional_on`.
 #'
 #' @examples
-#' prm_list <- atlantis_parameter_list()
+#' prm_list <- list_atlantis_parameters()
 #' prm_list$meta
 #' prm_list$parameters[[1]]
 #'
 #' @export
 
-atlantis_parameter_list <- function(version = "3-6722") {
+list_atlantis_parameters <- function(version = "3-6722") {
   if (version %in% atlantio::atlantis_supported_versions$version) {
     path_to_atlantio(
       "parameters",

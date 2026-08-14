@@ -6,3 +6,60 @@
     - min max
     - transform
     - do a mini validation, e.g. the paramter does exist
+
+
+
+
+---- AI notes 
+
+
+
+type names the cost (likelihood) function applied to each row's observed-vs-simulated comparison. 
+calibrar takes the string verbatim and does match.fun() on it at every objective-function evaluation. 
+In this repo every one of the 444 rows uses lnorm2, i.e. a sum of squared errors in log space.
+
+The chain, concretely
+
+calibrate_MPI.R:24 reads the file with calibration_setup(). That function only validates column names (type is one of the required five) and coerces type to character — it never checks that the value is a real function. calibration_data() on the next line ignores type entirely; it uses file, varid, and use_data to load data/*.csv.
+
+The dispatch happens inside the objective function built at calibrate_MPI.R:36. Each time the optimizer proposes a parameter vector, runModel() returns a named list of simulated series, and calibrar's internal .calculateObjetiveValue() loops over the seh calibrate = FALSE, and calls:
+
+.fitness(obs = observed[[var]], sim = simulated[[var]], FUN = info$type[j])
+# where .fitness is: FUN = match.fun(FUN); FUN(obs = obs, sim = sim, ...)
+
+The lookup starts in calibrar's namespace and falls through to the global eames work: calibrar's built-ins (lnorm2, lnorm3, lnorm4, lnorm4b, norm2,normp, multinom, pois, penalty, re, rangeq), and any function you define yourself — which is exactly why minmaxt at calibrate_MPI.R:16 is defined in the script and would be usable
+as a type. I confirmed this end-to-end with a two-row settings file: a typelobal function, and lnorm2 matched the hand-computed value.
+
+The result is one number per calibrated variable, named by variable. Since ective returns the full 384-element vector; the weight column travelsalongside as an attribute and is combined by .weighted.sum downstream in calibrate().
+
+What lnorm2 actually does
+
+lnorm2 = function(obs, sim, tiny = 0.01, ...) {                                                                                                                                     if (all(!is.finite(sim))) return(Inf)
+  sum((log(obs + tiny) - log(sim + tiny))^2, na.rm = TRUE)                                                                                                                        }
+                                                                                                                                                                                  Squared error on the log scale, so it penalises proportional deviation — seers of magnitude across functional groups, and it puts a herring row and asea lion row on comparable footing. The tiny = 0.01 offset keeps zeros finite, and na.rm = TRUE silently drops years with missing observations. This also makes the failure path irunModel_Atlantis.R:80-82 well-behaved: when Atlantis doesn't run, the moded log(0.01) gives a large but finite cost rather than NaN.
+                                                                                                                                                                                  In this repo specifically
+                                                                                                                                                                                  All 444 rows are lnorm2, split as 71 biomass series (varid = Biomass) and 3d = Weight), all with weight = 1; 384 have calibrate = TRUE and 60 areswitched off. The type values were hardcoded by the generator scripts — create_Atlantis_calibrar_files/Create_target_files_biomass.R:59 and Create_target_files_waa.R:79 both writrep("lnorm2", ...).
+                                                                                                                                                                                  Worth knowing: create_Atlantis_calibrar_files/setting_files/calibration_set for its 53 age-composition rows, but that file is not part of the activecombined settings. Because type is per row, you can freely mix cost functions in one file — multinom for compositions, lnorm2 for indices — and calibrar will dispatch each row   independently.
+                                                                                                                                                                                  One practical gotcha: a typo in type does not fail at calibration_setup().  objective evaluation as object 'xxx' of mode 'function' was not found,which under the 32-core MPI run means the error appears inside a worker rather than at startup.                                                                                   
+✻ Cogitated for 2m 10s                                                                                                                                                              
+※ recap: You asked how the `type` column in calibration_settings.csv is used by calibrar, and I traced and verified it: type names the cost function calibrar looks up per row, all 444 rows here being lnorm2. Nothing pending unless you want changes. (disab
+                                                                                                                                                                                    I guess I could skip this entirely if I design the objectve fuction as well
+                                                                                                                                                                                    Good instinct — but it depends on what calibrate() expects from fn. Let me ally pulls off the objective function.
+                                                                                                                                                                                    Ran 4 shell commands
+                                                                                                                                                                                    The vector case "worked" but I need to know whether weights actually appliemove the optimum:
+                                                                                                                                                                                    Ran 5 shell commands
+                                                                                                                                                                                    Yes — and that's a legitimate design, since calibrate() only needs par, fn,l. The settings CSV, type, and calibration_data() are a convenience layerfor constructing fn; nothing downstream requires them. But there's one non-obvious trap worth knowing before you go that way.                                                     
+Weights are silently dropped for a hand-rolled function. I tested a two-objective problem where the unweighted optimum is 5 and the optimum under weights c(1, 3) is 7.5:         
+┌────────────────────────────────────────────────────────┬────────┐                                                                                                               │                    how fn was built                    │ result │
+├────────────────────────────────────────────────────────┼────────┤                                                                                                               │ plain vector-valued function, no weight info           │ 5      │
+├────────────────────────────────────────────────────────┼────────┤                                                                                                               │ plain vector-valued function, control$weights = c(1,3) │ 5      │
+├────────────────────────────────────────────────────────┼────────┤                                                                                                               │ calibration_objFn() with weight column c(1,3)          │ 7.5    │
+└────────────────────────────────────────────────────────┴────────┘                                                                                                               
+Setting control$weights yourself does nothing. In .checkControl_calibrate(), con$weights is reset to NULL unless con$aggFn is non-NULL, and aggFn is only populated from attr(fn, "aggFn") inside the inherits(fn, "objFn") branch of calibrate.default(). Nothe unweighted sum. So if you write your own fn, you must apply the weightsinside it. That costs you nothing today because all 444 rows in calibration_settings.csv have weight = 1, but it becomes a live bug the moment someone retunes by editing that
+column, which is the normal way to rebalance an Atlantis calibration — the ses weight = 2.
+
+The two other things you'd be re-implementing: the nvar/variables attributelti-objective and label the partial fitness that your control$trace = 3prints, so a plain scalar fn gives you one number with no clue which of the 384 series is driving it; and .calculateObjetiveValue() raises Variable 'X' not found in simulated data when a name in the CSV has no match in the model output, which is a real satis.R builds a 444-entry list by hand.
+
+The middle path is probably what you actually want. You don't have to choos and a custom objective — type is exactly the hook for injecting your ownfunction, and it's per row, so you can use a custom cost for the weight-at-age series and keep lnorm2 for biomass. That's what minmaxt at calibrate_MPI.R:16 appears to be staged for; it's defined and exported to the cluster but never referenced in any t type column and it resolves, while you keep weighting, variable names, andthe per-variable trace.
+
+The one thing type genuinely can't do is parameterise the cost function per row: .calculateObjetiveValue() calls .fitness(obs, sim, FUN) with no extra arguments, so lnorm2's ti0.01 is fixed. If you want a different offset — plausible for weight-at-age0.01 offset is negligible, versus low-biomass groups where it isn't — you'd write a small wrapper like lnorm2_w = function(obs, sim, ...) calibrar:::lnorm2(obs, sim, tiny = 1e-6) in the global environment and name that in type. Full replacement of the objective function is only worth it if you need something structurally diff terms or a covariance between series, which the row-by-row loop can'texpress.

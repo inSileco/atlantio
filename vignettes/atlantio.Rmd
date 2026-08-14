@@ -19,9 +19,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(atlantio)
-path_to_examples  <- function(...) {
-  system.file("examples", ..., package = "atlantio")
-}
 ```
 
 
@@ -47,9 +44,9 @@ Add geometry, biology and group files
 ```{r simple}
 mod  <- mod  |>
   atlantis_load_files(c(
-    path_to_examples("inputs", "tiny.bgm"),
-    path_to_examples("inputs", "tiny_biol.prm"),
-    path_to_examples("inputs", "tiny_groups.csv")
+    atlantis_examples("inputs", "tiny.bgm"),
+    atlantis_examples("inputs", "tiny_biol.prm"),
+    atlantis_examples("inputs", "tiny_groups.csv")
   ))
 mod
 ```

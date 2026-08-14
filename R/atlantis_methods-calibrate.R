@@ -1,16 +1,30 @@
-# path_to_examples  <- function(...) {
-#   system.file("examples", ..., package = "atlantio")
-# }
-# mod  <- new_atlantis() |>
-#   atlantis_load_files(c(
-#     path_to_examples("inputs", "tiny.bgm"),
-#     path_to_examples("inputs", "tiny_biol.prm"),
-#     path_to_examples("inputs", "tiny_groups.csv")
-#   ))
-# mod |>
-#   generate_calibration_table(
-#     system.file("examples", "calibrate", "mum.yaml", package = "atlantio")
-#   )
+#' Generate a calibration table
+#'
+#' @description S7 generic for building the list of parameters to calibrate from a YAML specification file.
+#'
+#' @param x An `Atlantis` object.
+#' @param ... Additional arguments passed to methods
+#'
+#' @return A list of data frames, one per parameter entry, with columns
+#' `name`, `min`, `max`, `position`, `transf` and `source_file`.
+#'
+#' @examples
+#' \dontrun{
+#' mod  <- new_atlantis() |>
+#'   atlantis_load_files(c(
+#'     atlantis_examples("inputs", "tiny.bgm"),
+#'     atlantis_examples("inputs", "tiny_biol.prm"),
+#'     atlantis_examples("inputs", "tiny_groups.csv")
+#'   ))
+#' mod |>
+#'   generate_calibration_table(atlantis_examples("calibrate", "mum.yaml"))
+#' )
+#' }
+#'
+#' @export
+
+generate_calibration_table <- S7::new_generic("generate_calibration_table", "x")
+
 
 #' Generate a calibration table
 #'
@@ -20,13 +34,7 @@
 #' @param path Path to a YAML file describing the parameters to calibrate.
 #' @param version Atlantis version identifier. Default is `"3-6722"`.
 #'
-#' @return A list of data frames, one per parameter entry, with columns
-#' `name`, `min`, `max`, `position`, `transf` and `source_file`.
-#'
-#' @export
-generate_calibration_table <- S7::new_generic("generate_calibration_table", "x")
-
-
+#' @noRd
 S7::method(generate_calibration_table, Atlantis) <- function(
   x,
   path, # would be better to use a function to check the list first!
@@ -91,30 +99,33 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       ls_prm_pos <- ls_abb_prm_name <- list()
       for (i in df_key_val |>
         nrow() |>
-        seq_len()
-      ) {
+        seq_len()) {
         tmp <- prm$name
         for (j in ncol(df_key_val)) {
           tmp <- tmp |>
             stringr::str_replace(abbrev[j], df_key_val[i, j])
         }
-        prm_dim <- compute_parameter_dimension(x, prm_info$dimension, group = df_key_val$GRP[i])
+        prm_dim <- compute_parameter_dimension(
+          x,
+          prm_info$dimension,
+          group = df_key_val$GRP[i]
+        )
         ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
         ls_abb_prm_name[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
       }
-      ls_abb_prm_name <- ls_abb_prm_name  |> unlist()
+      ls_abb_prm_name <- ls_abb_prm_name |> unlist()
       ls_prm_pos <- ls_prm_pos |> unlist()
     }
   } else {
-    ls_abb_prm_name <- abb_prm_name
+    ls_abb_prm_name <- prm$name
     prm_dim <- compute_parameter_dimension(x, prm_info$dimension)
     ls_prm_pos <- generate_position_set(prm$position, prm_dim)
   }
 
   data.frame(
     name = ls_abb_prm_name,
-    min = prm$min %||% Inf,
-    max = prm$max %||% -Inf,
+    min = prm$min %||% -Inf,
+    max = prm$max %||% Inf,
     position = ls_prm_pos,
     transf = validate_transf(prm$transf %||% "identity"),
     source_file = prm_info$source_file
@@ -169,7 +180,7 @@ transform_parameter_value <- function(x, fun) {
     "pow10" = pow10(x),
     "pow2" = pow2(x),
     "exp" = exp(x),
-    cli::abort("Unknown transformation function.")
+    cli::cli_abort("Unknown transformation function.")
   )
 }
 
@@ -177,7 +188,7 @@ validate_transf <- function(x) {
   if (x %in% c("identity", "pow10", "pow2", "exp")) {
     x
   } else {
-    cli::abort("Unknown transformation function.")
+    cli::cli_abort("Unknown transformation function.")
   }
 }
 
@@ -204,6 +215,7 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
     },
     "per_group" = {
       # guessing here that sometimes it's per fish group, sometimes detritus must be excluded. 2B improved.
+      require_group_file(x)
       require_valid_group(group, x)
       x@group |> nrow()
     },
@@ -217,6 +229,7 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
       warn_no_dimension_check()
     },
     "per_cohort" = {
+      require_group_file(x)
       require_valid_group(group, x)
       x@group$NumCohorts[x@group$Code == group]
     },
@@ -226,12 +239,12 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
     "per_fishery" = {
       warn_no_dimension_check()
     },
-    cli_abort("Unknown dimension")
+    cli::cli_abort("Unknown dimension")
   )
 }
 
 
 warn_no_dimension_check <- function() {
-  cli_warn("No dimension check available.")
+  cli::cli_warn("No dimension check available.")
   1
 }

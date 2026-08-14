@@ -37,7 +37,7 @@ require_valid_group <- function(group, x) {
   chk <- group[!all(group %in% x@group$Code[x@group$IsTurnedOn > 0])]
   if (length(chk)) {
     cli::cli_abort(
-      "{length(chk)} group{?s} not in group file (or turned off): {chk}"
+      "{length(chk)} group{?s} not in group file (or turned off): '{chk}'"
     )
   }
   invisible(TRUE)

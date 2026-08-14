@@ -8,6 +8,7 @@
 #' @return A time series data structure
 #'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' my_model <- new_atlantis() |>
@@ -27,8 +28,9 @@
 #'   ggplot(aes(x = Time, y = value, color = box)) +
 #'   geom_line()
 #' }
-#'
+
 create_time_series <- S7::new_generic("create_time_series", "x")
+
 
 #' Create Time Series for Atlantis objects
 #'
@@ -42,6 +44,7 @@ create_time_series <- S7::new_generic("create_time_series", "x")
 #' @return A time series data structure
 #'
 #' @noRd
+
 S7::method(create_time_series, Atlantis) <- function(
   x,
   variable,

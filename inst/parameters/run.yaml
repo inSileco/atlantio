@@ -1,0 +1,517 @@
+- Name: flagecon_on
+  Description: Flag showing whether want economics loaded and submodel run (1) or not (0)
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_fisheries_on
+  Description: Flag showing whether want fisheries loaded and submodel run (1) or not (0)
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_skip_biol
+  Description: Flag showing whether want biological model run (1) or not (0 - only used when debugging fisheries)
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_skip_phys
+  Description: Flag showing whether want physics loaded and submodel run (1) or not (0). Should only be used for debugging.
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: check_dups
+  Description: Turn on to check for duplicates in prm files. Turning on will significantly slow down prm file read in - only use from time to time.
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_migration_on
+  Description: Flag showing whether want migrations loaded and submodel run (1) or not (0)
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: SubModelSetup
+  Version_start: '6698'
+  Version_stop: ''
+- Name: title
+  Description: ScenarioName
+  Type: String
+  RecommendedValue: ''
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: dt
+  Description: Model Time Step in hours
+  Units: Hours
+  Type: Integer
+  RecommendedValue: '12'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: tstop
+  Description: Stop model after the given number of days
+  Type: Integer
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagIsEstuary
+  Description: Flag indicating model is an estuary.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagAllowLand
+  Description: Flag indicating model can include land.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagIsPolar
+  Description: Flag indicating model is polar
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagpassivetracer
+  Description: Flag indicating want a passive tracer to track to check transports
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_pollutant_impacts
+  Description: Whether including noise and light pollution
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: fishmove
+  Description: Set to 0 to turn vertebrate movement off for debugging purposes
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flaghemisphere
+  Description: Flag for hemisphere model is in (0 = southern; 1 = northern).
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: trackAtomicRatio
+  Description: Flag to turn on tracking atomic ratios.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: external_populations
+  Description: Flag indicating use of external population model
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_multiyr_migs
+  Description: Flag to turn on multiyear migrations.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: track_rugosity_arag
+  Description: Flag to turn on tracking of rugosity and aragonite saturaiton.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: track_pH
+  Description: Flag to turn on tracking of pH.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_use_deltaH
+  Description: Flag to track delta H not pH when calculating pHcorr.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: mirror_invalid
+  Description: Flag to indicate how to deal with invalid hydrodynamic exchanges.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_replicated_old
+  Description: Flag to replicate old model results before the trunk code was merged.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_replicated_old_PPmort
+  Description: Flag to replicate old model code assumptions around primary production mortality before the trunk code was merged.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_old_embryo_init
+  Description: Flag to use the old means of having embryoes carried over from spawning pre-model start.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_replicate_old_calendar
+  Description: Flag to replicate old calendar for aging and spawning - when done once per year rather than having 1 queue for the entire model run.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_sanity_check
+  Description: Flag to trigger sanity checks.
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: store_aggregate_yoy
+  Description: Flag as to what YOY stored
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: store_mig_array
+  Description: Flag as to what Migration Array stored
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ScenarioOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: track_contaminants
+  Description: Flag to turn on tracking of contaminants..
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: ContaminantSettings
+  Version_start: '6698'
+  Version_stop: ''
+- Name: toutstart
+  Description: Output start day
+  Type: Float
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: toutinc
+  Description: Write output with this periodicity
+  Type: Float
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: toutfinc
+  Description: Write fisheries output with this periodicity
+  Type: Float
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: tburnday
+  Description: Day of run where burn-in conditions relaxed
+  Type: Float
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: tsumout
+  Description: Write stock state summary with this periodicity
+  Type: Float
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: fishout
+  Description: Switch to turn fisheries output on = 1, off = 0
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_age_output
+  Description: Age structured outputt on = 1, off = 0
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagreusefile
+  Description: Switch to show want to append output file no = 0, yes = 1, replace = 2
+  Type: Lookup
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagannual_Mest
+  Description: Write out mortality per predator annually (1) or not (0)
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: OutputOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: verbose
+  Description: Detailed logged output
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkbox
+  Description: Give detailed logged output for this box
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkstart
+  Description: Start detailed logged output from this day in the model run
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkstop
+  Description: Stop detailed logged output after this day in the model run
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: fishtest
+  Description: 'Count up total population for each vertebrate after each main subroutine: 0=no, 1=yes'
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flaggape
+  Description: Periodically list prey vs gape statistics (tuning diagnostic)
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagchecksize
+  Description: Periodically list relative size (tuning diagnostic)
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagagecheck
+  Description: Periodically list age structure per cohort (tuning diagnostic)
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagdietcheck
+  Description: Whether want detailed diet output
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagenviro_warn
+  Description: 'Whether want earnings anout environmental constraints on movement recorded to the logfile '
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flag_mig_in_bioindx
+  Description: 'Whether to include biomass from migration arrays '
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkNH
+  Description: Give detailed logged output for NH in checkbox
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkDL
+  Description: Give detailed logged output for DL in checkbox
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkDR
+  Description: Give detailed logged output for DR in checkbox
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: checkbiom
+  Description: Give detailed logged output for biomasses in checkbox
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: which_fleet
+  Description: ID number of fleet to track (if don't want to track anything set to a value greater than the number of fleets)
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: which_check
+  Description: ID number of group to track (if don't want to track anything set to a value greater than the number of groups)
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: habitat_check
+  Description: Which habitat to check the above group in.
+  Type: Lookup
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: move_check
+  Description: ID number of group where tracking movement (if don't want to track anything set to a value greater than the number of groups)
+  Type: Integer
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: debug
+  Description: Debugging option
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: debug_it
+  Type: Boolean
+  RecommendedValue: '0'
+  Category: DiagnosticOutput
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_tot_sp
+  Description: Total number of groups in the model
+  Type: Integer
+  RecommendedValue: '0'
+  Category: GroupOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_stocks_per_sp
+  Description: Maximum number of stocks per group in the model
+  Type: Integer
+  RecommendedValue: '0'
+  Category: GroupOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_detritus
+  Description: Total number of detritus groups in the model (labile and refractory; water column and sediments)
+  Type: Integer
+  RecommendedValue: '0'
+  Category: GroupOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_bed_types
+  Description: Maximum number of seabed types (currently only reef, soft and flat)
+  Type: Integer
+  RecommendedValue: '0'
+  Category: GroupOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_cover_types
+  Description: Maximum number of habitat types
+  Type: Integer
+  RecommendedValue: '0'
+  Category: GroupOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_catchqueue
+  Description: Length of the catch queue in days for use in running average of recent catch (typically a week or month)
+  Type: Integer
+  RecommendedValue: '1'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_fisheries
+  Description: Maximum number of fisheries
+  Type: Integer
+  RecommendedValue: '33'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_ports
+  Description: Number of ports in the model area
+  Type: Integer
+  RecommendedValue: '5'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_reg
+  Description: Maximum number of management zonings used in the model
+  Type: Integer
+  RecommendedValue: '5'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_markets
+  Description: Maxiumum number of markets in the model area
+  Type: Integer
+  RecommendedValue: '5'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: K_num_basket
+  Description: Maxiumum number of species in basket quota
+  Type: Integer
+  RecommendedValue: '5'
+  Category: FishingOptions
+  Version_start: '6698'
+  Version_stop: ''
+- Name: flagscaleinit
+  Description: Flag to indicate whether scaling initial vertebrate densities (1=yes, 0=no)
+  Type: Boolean
+  RecommendedValue: '1'
+  Category: ScaleGroupDensities
+  Version_start: '6698'
+  Version_stop: ''
+- Name: init_scalar
+  Description: Scale the vertebrate groups in the model. Only values for the vertebrate groups are used- other groups should just be 1.0
+  Type: FloatArray
+  Category: ScaleGroupDensities
+  Version_start: '6698'
+  Version_stop: ''

@@ -3,7 +3,7 @@ title: "Calibrating Atlantis model with atlantio and calibrar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Atlantis parameters}
+  %\VignetteIndexEntry{Calibrating Atlantis model with atlantio and calibrar}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

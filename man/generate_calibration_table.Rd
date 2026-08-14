@@ -9,14 +9,26 @@ generate_calibration_table(x, ...)
 \arguments{
 \item{x}{An \code{Atlantis} object.}
 
-\item{path}{Path to a YAML file describing the parameters to calibrate.}
-
-\item{version}{Atlantis version identifier. Default is \code{"3-6722"}.}
+\item{...}{Additional arguments passed to methods}
 }
 \value{
 A list of data frames, one per parameter entry, with columns
 \code{name}, \code{min}, \code{max}, \code{position}, \code{transf} and \code{source_file}.
 }
 \description{
-Build the list of parameters to calibrate from a YAML specification file.
+S7 generic for building the list of parameters to calibrate from a YAML specification file.
+}
+\examples{
+\dontrun{
+mod  <- new_atlantis() |>
+  atlantis_load_files(c(
+    atlantis_examples("inputs", "tiny.bgm"),
+    atlantis_examples("inputs", "tiny_biol.prm"),
+    atlantis_examples("inputs", "tiny_groups.csv")
+  ))
+mod |>
+  generate_calibration_table(atlantis_examples("calibrate", "mum.yaml"))
+)
+}
+
 }

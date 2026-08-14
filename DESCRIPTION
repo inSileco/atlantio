@@ -42,6 +42,7 @@ Imports:
     xml2,
     yaml
 Suggests:
+    calibrar,
     ggplot2 (>= 3.5),
     kableExtra,
     knitr,

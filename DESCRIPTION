@@ -1,6 +1,6 @@
 Package: atlantio
 Title: Read, Write and Manipulate Atlantis Model Inputs and Outputs
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R:
     c(
     person(given = "Kevin",
@@ -22,7 +22,7 @@ Description: Facilitate data wrangling and ecosystem analysis with Atlantis
     to extract diet tables, food webs and time series from a model.
 URL: https://github.com/inSileco/atlantio
 BugReports: https://github.com/inSileco/atlantio/issues
-Depends: R (>= 4.2.0)
+Depends: R (>= 4.3.0)
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -54,4 +54,3 @@ VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3

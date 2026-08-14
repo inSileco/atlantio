@@ -36,5 +36,4 @@ my_model |>
   ggplot(aes(x = Time, y = value, color = box)) +
   geom_line()
 }
-
 }

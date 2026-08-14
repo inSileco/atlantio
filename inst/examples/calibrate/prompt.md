@@ -1,0 +1,3 @@
+I want you to complete the script inst/examples/calibrate/script.R. 
+The goal is to use inst/examples/calibrate/mum.yaml to generate a table of 
+calibration that will be used by the apckage calibrar. the function atlantis_run_model() will be the objective function called, it should edit the paramter file, run the Atantis model in docker (see ../tinyAtlantis) and compute the score based on the main output that can be read with atantio. For the moment create a temporary score based on the biomass of teh last two year that should be close to the initial biomass. Important, atlantio has the tool to read and export paramter file (with mum.yaml, only the biology file will be exported). oYou have access to both ../tinyAtlantis and this folder.

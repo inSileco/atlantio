@@ -16,8 +16,15 @@ atlantis_run_model <- function(
 ) {
 
   library(altantio)
-
-
+  mod  <- new_atlantis() |>
+     atlantis_load_files(c(
+       atlantis_examples("inputs", "tiny.bgm"),
+       atlantis_examples("inputs", "tiny_biol.prm"),
+       atlantis_examples("inputs", "tiny_groups.csv")
+     ))
+  df_prm_calib <-  mod |>
+     generate_calibration_table(atlantis_examples("calibrate", "mum.yaml"))
+   )
 
   cli::cli_progress_step("Applying tranformation")
 
@@ -25,5 +32,5 @@ atlantis_run_model <- function(
 
   cli::cli_progress_step("Running the model")
 
-  cli::cli_progress_step("Computing the objective function")
+  cli::cli_progress_step("Computing the objective score and returning it")
 }

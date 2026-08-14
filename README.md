@@ -1,4 +1,7 @@
 # atlantio
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 Read, write and manipulate [Atlantis](https://research.csiro.au/atlantis/) model
 inputs and outputs. `atlantio` provides an S7 class `Atlantis` that represents

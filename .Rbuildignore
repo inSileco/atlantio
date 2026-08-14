@@ -4,3 +4,4 @@
 ^docs$
 ^pkgdown$
 ^TODO\.md$
+^\.github$

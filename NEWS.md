@@ -1,4 +1,4 @@
-# atlantio 0.0.0.9001
+# atlantio 0.1.0
 
 * Initial version. The input/output functionalities of the `calypso` package
   have been extracted into this package; the Shiny application now lives in
@@ -16,4 +16,4 @@
     - parameter file generation with `generate_file()` (run file only);
     - S7 methods for `Atlantis` objects: `print()`, `create_diet_table()`,
       `create_foodweb()`, `create_time_series()`,
-      `create_time_series_biomass()`.
+      `create_time_series_biomass()`, `generate_calibration_table()`.

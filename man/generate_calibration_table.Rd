@@ -27,8 +27,9 @@ mod  <- new_atlantis() |>
     atlantis_examples("inputs", "tiny_groups.csv")
   ))
 mod |>
-  generate_calibration_table(atlantis_examples("calibrate", "mum.yaml"))
-)
+  generate_calibration_table(
+   atlantis_examples("calibrate", "mum.yaml")
+ )
 }
 
 }

@@ -43,6 +43,7 @@ Imports:
     yaml
 Suggests:
     calibrar,
+    doParallel,
     ggplot2 (>= 3.5),
     kableExtra,
     knitr,

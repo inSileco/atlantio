@@ -134,27 +134,78 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
 }
 
 
-pow10 <- function(x) {
-  exp(log(10) * x)
-}
 
-pow2 <- function(x) {
-  exp(log(2) * x)
-}
-
-
+#' Transform a parameter value
+#'
+#' Apply a transformation function to a parameter value. This is used to
+#' map calibrated values back to their natural scale, e.g. when a parameter
+#' is calibrated on a log scale.
+#'
+#' @param x A numeric vector of parameter values, or `NULL`.
+#' @param fun A string naming the transformation to apply. One of
+#' `"identity"`, `"pow10"` (`10^x`), `"pow2"` (`2^x`) or `"exp"` (`exp(x)`).
+#'
+#' @return The transformed values, or `NULL` if `x` is `NULL`.
+#'
+#' @examples
+#' transform_parameter_value(2, "pow10")
+#' transform_parameter_value(c(1, 2, 3), "pow2")
+#' transform_parameter_value(0.5, "identity")
+#'
+#' @export
 transform_parameter_value <- function(x, fun) {
   if (is.null(x)) {
     return(x)
   }
-  switch(
-    fun,
+  switch(fun,
     "identity" = x,
     "pow10" = pow10(x),
     "pow2" = pow2(x),
     "exp" = exp(x),
     cli::cli_abort("Unknown transformation function.")
   )
+}
+
+
+#' Map a parameter value from the file scale back to the calibration scale
+#'
+#' Inverse of [transform_parameter_value()], used to get starting
+#' values in the space explored by the optimizer.
+#'
+#' @param x A numeric vector of parameter values on the file scale, or `NULL`.
+#' @param fun A string naming the transformation used during calibration. One
+#' of `"identity"`, `"pow10"` (inverse is `log10(x)`), `"pow2"` (inverse is
+#' `log2(x)`) or `"exp"` (inverse is `log(x)`).
+#'
+#' @return The values mapped back to the calibration scale, or `NULL` if `x`
+#' is `NULL`.
+#'
+#' @examples
+#' inverse_transform_parameter_value(100, "pow10")
+#' inverse_transform_parameter_value(c(2, 4, 8), "pow2")
+#' inverse_transform_parameter_value(0.5, "identity")
+#'
+#' @export
+inverse_transform_parameter_value <- function(x, fun) {
+  if (is.null(x)) {
+    return(x)
+  }
+  switch(fun,
+    identity = x,
+    pow10 = log10(x),
+    pow2 = log2(x),
+    exp = log(x),
+    cli::cli_abort("Unknown transformation function {.val {fun}}.")
+  )
+}
+
+
+pow10 <- function(x) {
+  exp(log(10) * x)
+}
+
+pow2 <- function(x) {
+  exp(log(2) * x)
 }
 
 validate_transf <- function(x) {

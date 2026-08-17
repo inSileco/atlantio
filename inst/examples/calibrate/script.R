@@ -44,13 +44,13 @@ readLines(run_prm_file) |>
   writeLines(run_prm_file)
 
 docker_user <- paste0(
-  system("id -u", intern = TRUE), ":", system("id -g", intern = TRUE)
+  system("id -u", intern = TRUE),
+  ":",
+  system("id -g", intern = TRUE)
 )
 
 
 # ---- 3. Helpers -------------------------------------------------------------
-
-
 
 #' Write the run script for the tiny model
 #'
@@ -62,7 +62,11 @@ docker_user <- paste0(
 #'
 #' @noRd
 write_tiny_run_script <- function(run_dir) {
-  script <- readLines(system.file("run_scripts", "script.sh", package = "atlantio"))
+  script <- readLines(system.file(
+    "run_scripts",
+    "script.sh",
+    package = "atlantio"
+  ))
   values <- c(
     "init_file" = "tiny_init.nc",
     "output_main" = "output.nc",
@@ -221,7 +225,6 @@ atlantis_run_model <- function(
   version = "3-6722",
   keep_files = FALSE
 ) {
-
   cli::cli_progress_step("Applying transformation")
   bio <- atlantis@biology
   for (i in seq_len(nrow(calib_table))) {
@@ -246,12 +249,18 @@ atlantis_run_model <- function(
   res <- processx::run(
     "docker",
     c(
-      "run", "--rm",
-      "--user", docker_user,
-      "-v", paste0(run_dir, ":/model"),
-      "-w", "/model",
-      "--entrypoint", "bash",
-      "tinyatl", "run.sh"
+      "run",
+      "--rm",
+      "--user",
+      docker_user,
+      "-v",
+      paste0(run_dir, ":/model"),
+      "-w",
+      "/model",
+      "--entrypoint",
+      "bash",
+      "tinyatl",
+      "run.sh"
     ),
     error_on_status = FALSE,
     timeout = 600

@@ -134,7 +134,6 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
 }
 
 
-
 #' Transform a parameter value
 #'
 #' Apply a transformation function to a parameter value. This is used to
@@ -157,7 +156,8 @@ transform_parameter_value <- function(x, fun) {
   if (is.null(x)) {
     return(x)
   }
-  switch(fun,
+  switch(
+    fun,
     "identity" = x,
     "pow10" = pow10(x),
     "pow2" = pow2(x),
@@ -190,7 +190,8 @@ inverse_transform_parameter_value <- function(x, fun) {
   if (is.null(x)) {
     return(x)
   }
-  switch(fun,
+  switch(
+    fun,
     identity = x,
     pow10 = log10(x),
     pow2 = log2(x),

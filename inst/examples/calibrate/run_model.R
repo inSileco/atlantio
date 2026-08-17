@@ -52,13 +52,13 @@ dir.create(results_dir, showWarnings = FALSE, recursive = TRUE)
 results_dir <- normalizePath(results_dir)
 
 docker_user <- paste0(
-  system("id -u", intern = TRUE), ":", system("id -g", intern = TRUE)
+  system("id -u", intern = TRUE),
+  ":",
+  system("id -g", intern = TRUE)
 )
 
 
 # ---- 3. Helpers -------------------------------------------------------------
-
-
 
 #' Write the run script for the tiny model
 #'
@@ -70,7 +70,11 @@ docker_user <- paste0(
 #'
 #' @noRd
 write_tiny_run_script <- function(run_dir) {
-  script <- readLines(system.file("run_scripts", "script.sh", package = "atlantio"))
+  script <- readLines(system.file(
+    "run_scripts",
+    "script.sh",
+    package = "atlantio"
+  ))
   values <- c(
     "init_file" = "tiny_init.nc",
     "output_main" = "output.nc",
@@ -237,7 +241,6 @@ atlantis_run_model <- function(
   version = "3-6722",
   keep_files = FALSE
 ) {
-
   cli::cli_progress_step("Applying transformation")
   bio <- atlantis@biology
   for (i in seq_len(nrow(calib_table))) {
@@ -273,12 +276,18 @@ atlantis_run_model <- function(
   res <- processx::run(
     "docker",
     c(
-      "run", "--rm",
-      "--user", docker_user,
-      "-v", paste0(run_dir, ":/model"),
-      "-w", "/model",
-      "--entrypoint", "bash",
-      "tinyatl", "run.sh"
+      "run",
+      "--rm",
+      "--user",
+      docker_user,
+      "-v",
+      paste0(run_dir, ":/model"),
+      "-w",
+      "/model",
+      "--entrypoint",
+      "bash",
+      "tinyatl",
+      "run.sh"
     ),
     error_on_status = FALSE,
     timeout = 600
@@ -358,7 +367,12 @@ names(start) <- paste(df_prm_calib$name, df_prm_calib$position, sep = ".")
 
 # sanity check: one objective evaluation at the starting point
 score0 <- atlantis_run_model(
-  start, mod, df_prm_calib, base_dir, results_dir, groups
+  start,
+  mod,
+  df_prm_calib,
+  base_dir,
+  results_dir,
+  groups
 )
 cli::cli_alert_info("Score at starting values: {round(score0, 4)}")
 

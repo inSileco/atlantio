@@ -59,12 +59,15 @@ calibrate_control <- list(
 # calibrate_MPI.R does with clusterExport()/clusterEvalQ().
 
 setup_cluster_nodes <- function() {
-  clusterExport(cl, c(
-    "docker_user",
-    "write_tiny_run_script",
-    "weighted_mean_nums",
-    "atlantis_compute_score"
-  ))
+  clusterExport(
+    cl,
+    c(
+      "docker_user",
+      "write_tiny_run_script",
+      "weighted_mean_nums",
+      "atlantis_compute_score"
+    )
+  )
   clusterEvalQ(cl, library(atlantio))
   invisible(NULL)
 }

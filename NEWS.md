@@ -1,3 +1,7 @@
+# atlantio 0.1.1
+
+* Add calibrar script.
+
 # atlantio 0.1.0
 
 * Initial version. The input/output functionalities of the `calypso` package

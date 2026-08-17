@@ -3,23 +3,17 @@ test_that("Full workflow: create -> load files -> access data", {
   atlantis_obj <- new_atlantis()
 
   # Load example files if available
-  bgm_file <- system.file(
-    "examples",
+  bgm_file <- atlantis_examples(
     "inputs",
-    "tiny.bgm",
-    package = "atlantio"
+    "tiny.bgm"
   )
-  bio_file <- system.file(
-    "examples",
+  bio_file <- atlantis_examples(
     "inputs",
-    "tiny_biol.prm",
-    package = "atlantio"
+    "tiny_biol.prm"
   )
-  group_file <- system.file(
-    "examples",
+  group_file <- atlantis_examples(
     "inputs",
-    "tiny_groups.csv",
-    package = "atlantio"
+    "tiny_groups.csv"
   )
 
   skip_if(
@@ -84,32 +78,23 @@ test_that("Object immutability and proper updating", {
 
 test_that("Multiple file loading preserves all data", {
   # Skip if example files not available
-  bgm_file <- system.file(
-    "examples",
+  bgm_file <- atlantis_examples(
     "inputs",
-    "tiny.bgm",
-    package = "atlantio"
+    "tiny.bgm"
   )
-  bio_file <- system.file(
-    "examples",
+  bio_file <- atlantis_examples(
     "inputs",
-    "tiny_biol.prm",
-    package = "atlantio"
+    "tiny_biol.prm"
   )
 
   skip_if(any(c(bgm_file, bio_file) == ""), "Example files not available")
 
   # Load multiple files at once
-  atlantis_obj <- new_atlantis()
-  atlantis_obj <- atlantis_load_files(atlantis_obj, c(bgm_file, bio_file))
+  atlantis_obj <- new_atlantis() |>
+    atlantis_load_files(c(bgm_file, bio_file))
 
   expect_true(!is.null(atlantis_obj@geometry))
   expect_true(!is.null(atlantis_obj@biology))
-
-  # Both data types should be properly loaded
-  bgm_data <- atlantis_obj@geometry
-  bio_data <- atlantis_obj@biology
-
-  expect_true(nrow(bgm_data) > 0)
-  expect_true(length(bio_data) > 0)
+  expect_identical(nrow(atlantis_obj@geometry), 11L)
+  expect_identical(length(atlantis_obj@biology), 1657L)
 })

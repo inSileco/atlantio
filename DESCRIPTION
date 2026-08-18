@@ -22,7 +22,7 @@ Description: Facilitate data wrangling and ecosystem analysis with Atlantis
     to extract diet tables, food webs and time series from a model.
 URL: https://github.com/inSileco/atlantio
 BugReports: https://github.com/inSileco/atlantio/issues
-Depends: R (>= 4.3.0)
+Depends: R (>= 4.2.0)
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -34,7 +34,6 @@ Imports:
     rbgm (>= 0.1.0),
     rlang,
     S7 (>= 0.2.0),
-    sf (>= 1.0.15),
     stringr,
     tidyr (>= 1.3.1),
     utils,
@@ -49,6 +48,7 @@ Suggests:
     knitr,
     processx,
     rmarkdown,
+    sf,
     testthat (>= 3.0.0),
     withr (>= 3.0.0)
 License: MIT + file LICENSE

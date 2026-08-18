@@ -75,6 +75,7 @@ read_atlantis_files <- function(files, filenames = basename(files)) {
 #' @param filename File basename.
 #' @export
 read_bgm <- function(path) {
+  rlang::check_installed("sf", reason = "to read BGM (box geometry) files.")
   suppressMessages({
     geom <- rbgm::box_sf(rbgm::bgmfile(path))
     # address 'old-style crs object detected' error

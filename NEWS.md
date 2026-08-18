@@ -1,3 +1,7 @@
+# atlantio 0.1.2
+
+* Move sf to Suggests.
+
 # atlantio 0.1.1
 
 * Add calibrar script.

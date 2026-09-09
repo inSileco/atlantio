@@ -338,9 +338,9 @@ network analysis or plotting.
 
 fw <- create_foodweb(mod)
 fw
-#> IGRAPH 1bb2b14 DNW- 18 62 -- 
+#> IGRAPH d359dc4 DNW- 18 62 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from 1bb2b14 (vertex names):
+#> + edges from d359dc4 (vertex names):
 #>  [1] WAE->WAE YPH->WAE WAE->YPH YPH->YPH WAE->GZS WAE->RDG YPH->RDG RDG->DRE
 #>  [9] WAE->DRE YPH->DRE GZS->CHI RDG->CHI WAE->CHI YPH->CHI CAL->DIA DRE->DIA
 #> [17] GZS->DIA ROT->DIA CAL->GRN DRE->GRN GZS->GRN ROT->GRN DRE->CAL GZS->CAL

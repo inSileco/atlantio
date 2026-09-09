@@ -80,48 +80,398 @@
 
     
     
-<p>Semi-automatic callibration of the Lake Erie model using
-<code>calibrar</code> as described in <span class="citation">@morell_ManualSemiautomated_2026</span>.</p>
+<p>Semi-automatic calibration of an Atlantis model using
+<code>calibrar</code>, following the approach described in <span class="citation">@morell_ManualSemiautomated_2026</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/inSileco/atlantio" class="external-link">atlantio</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="overall-apporach">Overall apporach<a class="anchor" aria-label="anchor" href="#overall-apporach"></a>
+<h2 id="overall-approach">Overall approach<a class="anchor" aria-label="anchor" href="#overall-approach"></a>
 </h2>
 <p>As described in <span class="citation">@morell_ManualSemiautomated_2026</span>, the goal of
-using calibrar is to automate the running of batch of simulations to
-improve model fit but also let modellers nodge the model to the right
-direction.</p>
-<p>The idea is to run the model various time, optionnally revisit the
-set of paramters to shuffle as we go.</p>
-<p>Difficulties exist given the tremendous number of parameters an
-Atlantis incude. Fortunately, a optimization tool such as
-<code>calibrar</code> (<a href="https://CRAN.R-project.org/package=calibrar" class="external-link uri">https://CRAN.R-project.org/package=calibrar</a>).</p>
-<p>steps:</p>
+using <code>calibrar</code> is to automate the running of batches of
+simulations to improve model fit, while letting modellers nudge the
+model in the right direction. The model is run many times, and the set
+of parameters to shuffle is optionally revisited as calibration
+progresses.</p>
+<p>An Atlantis model includes a tremendous number of parameters, so
+calibrating them all at once is out of reach. Instead, calibration
+proceeds in rounds: a small set of parameters is chosen (e.g. growth and
+clearance rates of a few groups), an optimizer such as
+<code>calibrar</code> (<a href="https://CRAN.R-project.org/package=calibrar" class="external-link uri">https://CRAN.R-project.org/package=calibrar</a>) searches
+their values, the results are inspected, and the set of parameters or
+their bounds are revised before the next round.</p>
+<p>Each round involves the same steps:</p>
+<ol style="list-style-type: decimal">
+<li>choosing the parameters to calibrate, with their bounds and
+scale;</li>
+<li>assembling the model inputs and a way to run the model;</li>
+<li>designing an objective function that runs the model for a candidate
+parameter set and returns a score;</li>
+<li>running the optimization, usually in parallel;</li>
+<li>inspecting the results, including the runs that crashed.</li>
+</ol>
+<p><code>atlantio</code> handles the Atlantis-specific parts: reading
+and writing the parameter files, expanding a calibration table,
+transforming parameter values, and reading the model output.
+<code>calibrar</code> handles the optimization. <span class="citation">@morell_ManualSemiautomated_2026</span> use
+<code>atlantis2ls</code> (<a href="https://github.com/alaiam/atlantis2ls" class="external-link uri">https://github.com/alaiam/atlantis2ls</a>) for the same role
+as <code>atlantio</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="how-calibrar-works">How calibrar works<a class="anchor" aria-label="anchor" href="#how-calibrar-works"></a>
+</h2>
+<p>See <a href="https://roliveros-ramos.github.io/calibrar/articles/calibrar.html" class="external-link uri">https://roliveros-ramos.github.io/calibrar/articles/calibrar.html</a>.</p>
+<p><code><a href="https://roliveros-ramos.github.io/calibrar/reference/calibrate.html" class="external-link">calibrar::calibrate()</a></code> minimizes an objective function
+<code>fn(par, ...)</code> over a parameter vector <code>par</code>
+bounded by <code>lower</code> and <code>upper</code>. With the
+evolutionary strategy <code>method = "AHR-ES"</code>, every generation
+evaluates a population of <code>popsize</code> parameter sets; with
+<code>parallel = TRUE</code>, these evaluations are spread over the
+workers of a registered <code>foreach</code> backend. The state of the
+optimization is saved in a restart file every <code>REPORT</code>
+generations, so an interrupted calibration resumes where it stopped.</p>
+<p>Everything therefore boils down to writing one R function that takes
+a parameter vector, writes the corresponding Atlantis input files, runs
+the model, reads its output and returns a single number. The rest of
+this vignette walks through building that function and running it with
+<code>calibrar</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="step-1-choose-the-parameters-to-calibrate">Step 1: choose the parameters to calibrate<a class="anchor" aria-label="anchor" href="#step-1-choose-the-parameters-to-calibrate"></a>
+</h2>
+<p>The parameters to calibrate are described in a YAML file, one entry
+per parameter name. The <code>&lt;GRP&gt;</code> placeholder is expanded
+over the listed group codes, and <code>min</code>, <code>max</code> and
+<code>transf</code> give the bounds and the transformation used during
+the search. Searching on a log scale (<code>pow10</code>,
+<code>exp</code>) is recommended for rate parameters that span several
+orders of magnitude.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> mum_&lt;GRP&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">  </span><span class="fu">GRP</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">GRP1</span><span class="kw">,</span><span class="at"> GRP2</span><span class="kw">,</span><span class="at"> GRP3</span><span class="kw">]</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">  </span><span class="fu">min</span><span class="kw">:</span><span class="at"> </span><span class="dv">-5</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="at">  </span><span class="fu">max</span><span class="kw">:</span><span class="at"> </span><span class="dv">-1</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="at">  </span><span class="fu">transf</span><span class="kw">:</span><span class="at"> pow10</span><span class="co"> # or exp, pow2</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> C_&lt;GRP&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="at">  </span><span class="fu">GRP</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">GRP1</span><span class="kw">,</span><span class="at"> GRP2</span><span class="kw">,</span><span class="at"> GRP3</span><span class="kw">]</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="at">  </span><span class="fu">min</span><span class="kw">:</span><span class="at"> </span><span class="dv">-5</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="at">  </span><span class="fu">max</span><span class="kw">:</span><span class="at"> </span><span class="dv">-1</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="at">  </span><span class="fu">transf</span><span class="kw">:</span><span class="at"> pow10</span></span></code></pre></div>
+<p><code><a href="../../reference/generate_calibration_table.html">generate_calibration_table()</a></code> expands this file into a
+table with one row per value to optimize: array parameters (e.g. one
+value per cohort) yield one row per position. It needs the biology
+parameter file and the group file loaded first, so that it knows the
+groups and the array lengths.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/new_atlantis.html">new_atlantis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"biology.prm"</span>, <span class="st">"groups.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">calib_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/generate_calibration_table.html">generate_calibration_table</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"calibration.yaml"</span><span class="op">)</span></span></code></pre></div>
+<p>The columns <code>min</code> and <code>max</code> of
+<code>calib_table</code> are passed to <code>calibrar</code> as bounds;
+<code>name</code>, <code>position</code> and <code>transf</code> are
+used by the objective function to write the values back into the biology
+file.</p>
+</div>
+<div class="section level2">
+<h2 id="step-2-assemble-the-inputs-and-a-model-runner">Step 2: assemble the inputs and a model runner<a class="anchor" aria-label="anchor" href="#step-2-assemble-the-inputs-and-a-model-runner"></a>
+</h2>
+<div class="section level3">
+<h3 id="input-files">Input files<a class="anchor" aria-label="anchor" href="#input-files"></a>
+</h3>
+<p>Gather every input file the model needs (run, physics, biology,
+forcing, initial conditions, groups, fisheries, geometry) in a base
+directory. Each evaluation copies this directory and rewrites only the
+parameter files that contain calibrated parameters, typically the
+biology file.</p>
+<p>Large forcing data (often several GB) should not be copied per run:
+mount it read-only into the container, or symlink it into each run
+directory.</p>
+</div>
+<div class="section level3">
+<h3 id="running-the-model">Running the model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
+</h3>
+<p><code>atlantio</code> ships a template of the Atlantis command line
+in <code>inst/run_scripts/script.sh</code>, with
+<code>{{placeholders}}</code> for the input files. Render it once per
+run directory:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">write_run_script</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"run_scripts"</span>, <span class="st">"script.sh"</span>, package <span class="op">=</span> <span class="st">"atlantio"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"init_file"</span> <span class="op">=</span> <span class="st">"init.nc"</span>,</span>
+<span>    <span class="st">"output_main"</span> <span class="op">=</span> <span class="st">"output.nc"</span>,</span>
+<span>    <span class="st">"run.prm"</span> <span class="op">=</span> <span class="st">"run.prm"</span>,</span>
+<span>    <span class="st">"force.prm"</span> <span class="op">=</span> <span class="st">"force.prm"</span>,</span>
+<span>    <span class="st">"physics.prm"</span> <span class="op">=</span> <span class="st">"physics.prm"</span>,</span>
+<span>    <span class="st">"biol.prm"</span> <span class="op">=</span> <span class="st">"biology.prm"</span>,</span>
+<span>    <span class="st">"groups.csv"</span> <span class="op">=</span> <span class="st">"groups.csv"</span>,</span>
+<span>    <span class="st">"fisheries.csv"</span> <span class="op">=</span> <span class="st">"fisheries.csv"</span>,</span>
+<span>    <span class="st">"output_dir"</span> <span class="op">=</span> <span class="st">"outputFolder"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">key</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"{{"</span>, <span class="va">key</span>, <span class="st">"}}"</span><span class="op">)</span>, <span class="va">values</span><span class="op">[[</span><span class="va">key</span><span class="op">]</span><span class="op">]</span>, <span class="va">script</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"run.sh"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">script</span>, <span class="va">path</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">Sys.chmod</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"0755"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>The script is then executed with <code><a href="http://processx.r-lib.org/reference/run.html" class="external-link">processx::run()</a></code>, either
+directly (when <code>atlantisMerged</code> is installed in the same
+environment as R, as on most HPC clusters) or inside a Docker container
+with the run directory mounted as the working directory. Set a timeout:
+a full run can take hours.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">run_atlantis</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">processx</span><span class="fu">::</span><span class="fu"><a href="http://processx.r-lib.org/reference/run.html" class="external-link">run</a></span><span class="op">(</span></span>
+<span>    <span class="st">"bash"</span>, <span class="st">"run.sh"</span>,</span>
+<span>    wd <span class="op">=</span> <span class="va">run_dir</span>,</span>
+<span>    error_on_status <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    timeout <span class="op">=</span> <span class="fl">86400</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>With Docker, replace the command with
+<code>docker run --rm -v &lt;run_dir&gt;:/model -w /model &lt;image&gt; bash run.sh</code>,
+running the container as the current user so that the files it writes
+remain owned by the R session.</p>
+</div>
+<div class="section level3">
+<h3 id="detecting-crashed-runs">Detecting crashed runs<a class="anchor" aria-label="anchor" href="#detecting-crashed-runs"></a>
+</h3>
+<p>An Atlantis fatal error ends in <code><a href="https://rdrr.io/r/base/quit.html" class="external-link">quit()</a></code>, which exits with
+status 0 after printing to stderr. A crash therefore usually shows as a
+truncated <code>output.nc</code> rather than a non-zero exit status.
+Read the expected run length and output interval from the run file, and
+compare them with the last time step actually written:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">run_prm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/new_atlantis.html">new_atlantis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="st">"run.prm"</span><span class="op">)</span></span>
+<span><span class="va">tstop_days</span> <span class="op">&lt;-</span> <span class="va">run_prm</span><span class="op">@</span><span class="va">run</span><span class="op">$</span><span class="va">tstop</span></span>
+<span><span class="va">toutinc_days</span> <span class="op">&lt;-</span> <span class="va">run_prm</span><span class="op">@</span><span class="va">run</span><span class="op">$</span><span class="va">toutinc</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="step-3-design-the-objective-function">Step 3: design the objective function<a class="anchor" aria-label="anchor" href="#step-3-design-the-objective-function"></a>
+</h2>
+<div class="section level3">
+<h3 id="the-score">The score<a class="anchor" aria-label="anchor" href="#the-score"></a>
+</h3>
+<p>The score turns the model output into a single number that is small
+when the model behaves as desired. <span class="citation">@morell_ManualSemiautomated_2026</span> combine a fit
+to observed biomasses with a stability penalty on the trend of each
+group. When observations are scarce, a useful first target is
+persistence: every group should stay close to its initial state over the
+whole run rather than collapse or explode.</p>
+<p>One way to express this is, for every group and age class, to
+aggregate the tracers of interest (numbers, structural and reserve
+weight) over boxes and layers, compare them with their initial values on
+the log scale (<code>log(x(t) + tiny) - log(x(0) + tiny)</code>, as in
+<code>calibrar</code>’s <code>lnorm2</code>), and penalize only the
+excess beyond a tolerance band (e.g. 20%). Comparing annual snapshots
+taken at the same phase of the seasonal cycle avoids mistaking seasonal
+oscillations for drift.</p>
+<p><code>atlantio</code> provides the ingredients:
+<code><a href="../../reference/atlantis_load_files.html">atlantis_load_files()</a></code> reads the output NetCDF into the
+model object, and <code><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> returns a
+tidy table of the age-structured tracers, one row per group, age, box,
+layer and time.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">compute_score</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># ts: tidy tracer table from create_time_series_biomass()</span></span>
+<span>  <span class="co"># aggregate over space, compare with t = 0, sum the penalties</span></span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Whatever the score, it must be robust to the failure cases: a crashed
+run, a truncated output or a scoring error must return a large penalty
+(e.g. <code>1e8</code>) rather than abort the whole generation of the
+optimizer.</p>
+</div>
+<div class="section level3">
+<h3 id="the-function">The function<a class="anchor" aria-label="anchor" href="#the-function"></a>
+</h3>
+<p>The objective function chains one calibration iteration:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>transform the parameters</strong> from the calibration scale
+to the model scale with <code><a href="../../reference/transform_parameter_value.html">transform_parameter_value()</a></code> and
+assign them into the biology object (element assignment keeps the array
+attributes <code><a href="../../reference/read_prm.html">write_prm()</a></code> needs);</li>
+<li>
+<strong>create a unique run directory</strong>, copy the base inputs
+there and write the modified biology file with <code><a href="../../reference/read_prm.html">write_prm()</a></code>
+together with the run script;</li>
+<li>
+<strong>run the model</strong>;</li>
+<li>
+<strong>read the output</strong> and compute the score;</li>
+<li>
+<strong>save</strong> the time series and the parameter values with
+their score, and remove the bulky run files.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">run_model</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span>, <span class="va">atlantis</span>, <span class="va">calib_table</span>, <span class="va">base_dir</span>, <span class="va">results_dir</span>,</span>
+<span>                      <span class="va">groups</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># 1. transformation</span></span>
+<span>  <span class="va">bio</span> <span class="op">&lt;-</span> <span class="va">atlantis</span><span class="op">@</span><span class="va">biology</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">calib_table</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/transform_parameter_value.html">transform_parameter_value</a></span><span class="op">(</span><span class="va">par</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">calib_table</span><span class="op">$</span><span class="va">transf</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="va">bio</span><span class="op">[[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">name</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">position</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="co"># 2. run directory and input files</span></span>
+<span>  <span class="va">run_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"run_"</span>, tmpdir <span class="op">=</span> <span class="va">results_dir</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">base_dir</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">run_dir</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../../reference/read_prm.html">write_prm</a></span><span class="op">(</span><span class="va">bio</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"biology.prm"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">write_run_script</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"outputFolder"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># 3. model run</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">run_atlantis</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
+<span>  <span class="va">out_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"outputFolder"</span>, <span class="st">"output.nc"</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">status</span> <span class="op">!=</span> <span class="fl">0</span> <span class="op">||</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">out_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">res</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="co"># 4. output and score; any error becomes the penalty score</span></span>
+<span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="va">atlantis</span>, <span class="va">out_file</span><span class="op">)</span></span>
+<span>    <span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span><span class="va">out</span>, <span class="va">groups</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op">/</span> <span class="fl">86400</span> <span class="op">&lt;</span> <span class="va">tstop_days</span> <span class="op">-</span> <span class="va">toutinc_days</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"output.nc is truncated: the model crashed mid-run"</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">ts</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu">compute_score</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">conditionMessage</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># 5. results</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>par <span class="op">=</span> <span class="va">par</span>, score <span class="op">=</span> <span class="va">score</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"parameters.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">run_dir</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"time_series.rds"</span>, <span class="st">"parameters.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">score</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Keeping the results directory outside <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code> matters:
+it must survive the R session, and it is what makes the calibration
+inspectable afterwards. For failed runs, <code>failed_run()</code>
+should record the parameter values, the penalty and the failure reason,
+and keep the tail of the model output (where Atlantis prints its
+<code><a href="https://rdrr.io/r/base/quit.html" class="external-link">quit()</a></code> message).</p>
+</div>
+<div class="section level3">
+<h3 id="starting-values">Starting values<a class="anchor" aria-label="anchor" href="#starting-values"></a>
+</h3>
+<p>The natural starting point is the current set of values in the
+biology file, mapped back to the calibration scale with
+<code><a href="../../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value()</a></code> and clamped into the
+bounds. Evaluate the objective function once at this point before
+launching the calibration: this checks the whole chain and gives the
+reference score to beat.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">calib_table</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value</a></span><span class="op">(</span></span>
+<span>    <span class="va">mod</span><span class="op">@</span><span class="va">biology</span><span class="op">[[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">name</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">position</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    <span class="va">calib_table</span><span class="op">$</span><span class="va">transf</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">start</span>, <span class="va">calib_table</span><span class="op">$</span><span class="va">min</span><span class="op">)</span>, <span class="va">calib_table</span><span class="op">$</span><span class="va">max</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">score0</span> <span class="op">&lt;-</span> <span class="fu">run_model</span><span class="op">(</span><span class="va">start</span>, <span class="va">mod</span>, <span class="va">calib_table</span>, <span class="va">base_dir</span>, <span class="va">results_dir</span>, <span class="va">groups</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="step-4-run-the-optimization-in-parallel">Step 4: run the optimization in parallel<a class="anchor" aria-label="anchor" href="#step-4-run-the-optimization-in-parallel"></a>
+</h2>
+<p>A generation of <code>calibrar</code> evaluates <code>popsize</code>
+parameter sets, each one a full model run, so parallel evaluation is
+essential. <code>calibrar</code> uses <code>foreach</code>’s
+<code>%dopar%</code>, which needs a registered backend; the simplest is
+a cluster from the base <code>parallel</code> package registered with
+<code>doParallel</code>. The workers must share the master’s filesystem
+and be able to run the model.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="va">n_workers</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># %dopar% ships the objective function to the workers, but not the global</span></span>
+<span><span class="co"># objects it relies on: export them and load the packages explicitly</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"write_run_script"</span>, <span class="st">"run_atlantis"</span>, <span class="st">"compute_score"</span>,</span>
+<span>  <span class="st">"failed_run"</span>, <span class="st">"tstop_days"</span>, <span class="st">"toutinc_days"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterEvalQ</a></span><span class="op">(</span><span class="va">cl</span>, <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/inSileco/atlantio" class="external-link">atlantio</a></span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Sensible controls for a first round: a population of one run per
+worker (<code>calibrar</code> raises it to its internal minimum if too
+small), a handful of generations, and a restart file saved every
+generation. The restart file must be a relative path.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  maxit <span class="op">=</span> <span class="fl">5</span>,             <span class="co"># generations</span></span>
+<span>  popsize <span class="op">=</span> <span class="va">n_workers</span>,   <span class="co"># parameter sets per generation</span></span>
+<span>  ncores <span class="op">=</span> <span class="va">n_workers</span>,</span>
+<span>  REPORT <span class="op">=</span> <span class="fl">1</span>,            <span class="co"># generations between restart-file saves</span></span>
+<span>  restart.file <span class="op">=</span> <span class="st">"calib_restart"</span>,</span>
+<span>  trace <span class="op">=</span> <span class="fl">3</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_calib</span> <span class="op">&lt;-</span> <span class="fu">calibrar</span><span class="fu">::</span><span class="fu"><a href="https://roliveros-ramos.github.io/calibrar/reference/calibrate.html" class="external-link">calibrate</a></span><span class="op">(</span></span>
+<span>  par <span class="op">=</span> <span class="va">start</span>,</span>
+<span>  fn <span class="op">=</span> <span class="va">run_model</span>,</span>
+<span>  lower <span class="op">=</span> <span class="va">calib_table</span><span class="op">$</span><span class="va">min</span>,</span>
+<span>  upper <span class="op">=</span> <span class="va">calib_table</span><span class="op">$</span><span class="va">max</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"AHR-ES"</span>,</span>
+<span>  control <span class="op">=</span> <span class="va">control</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="co"># extra arguments are forwarded to run_model()</span></span>
+<span>  atlantis <span class="op">=</span> <span class="va">mod</span>,</span>
+<span>  calib_table <span class="op">=</span> <span class="va">calib_table</span>,</span>
+<span>  base_dir <span class="op">=</span> <span class="va">base_dir</span>,</span>
+<span>  results_dir <span class="op">=</span> <span class="va">results_dir</span>,</span>
+<span>  groups <span class="op">=</span> <span class="va">groups</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_calib</span><span class="op">$</span><span class="va">par</span></span>
+<span><span class="va">res_calib</span><span class="op">$</span><span class="va">value</span></span></code></pre></div>
+<p>Relaunching the same script after an interruption resumes from the
+last restart file. On an HPC cluster, wrap the script in a job asking
+for one node with many CPUs (the cluster above is single-node), restore
+the modules needed by Atlantis and R, and pass the number of workers and
+the results directory through environment variables so that the same
+script runs unchanged on a laptop with Docker and on the cluster with
+the bare binary.</p>
+</div>
+<div class="section level2">
+<h2 id="step-5-inspect-the-results-and-iterate">Step 5: inspect the results and iterate<a class="anchor" aria-label="anchor" href="#step-5-inspect-the-results-and-iterate"></a>
+</h2>
+<p>Every evaluation leaves its time series, parameter values and score
+in one folder of the results directory, which allows two kinds of
+inspection:</p>
 <ul>
-<li><p>designing the objective function</p></li>
-<li><p>editing atlantis parameter files in, handles by
-<code>atlantio</code> (<span class="citation">@morell_ManualSemiautomated_2026</span> uses
-<code>https://github.com/alaiam/atlantis2ls</code>)</p></li>
-<li><p>running Atlantis model</p></li>
-<li><p>computing the objective function</p></li>
-<li><p>using callibrar</p></li>
+<li>
+<strong>the trajectory of the best parameter sets</strong>, to see
+which groups drive the score and whether the tolerance band or the
+scoring window need adjusting;</li>
+<li>
+<strong>the parameter sets that crashed the model</strong>.
+Gathering the <code>parameters.rds</code> of all runs into one table,
+with the crashed runs first and the range of each parameter in crashed
+versus completed runs, points at the bound (or bound combination)
+responsible. Tightening these bounds in the YAML file before the next
+round is the “nudging” that keeps the optimizer in the region where the
+model makes sense.</li>
 </ul>
+<p>The next round then starts from the calibrated values, possibly with
+a new set of parameters, which is how <span class="citation">@morell_ManualSemiautomated_2026</span> describe
+calibration as a semi-automated process rather than a single
+optimization.</p>
 </div>
 <div class="section level2">
-<h2 id="calibrar">Calibrar<a class="anchor" aria-label="anchor" href="#calibrar"></a>
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p><a href="https://roliveros-ramos.github.io/calibrar/articles/calibrar.html#introduction" class="external-link uri">https://roliveros-ramos.github.io/calibrar/articles/calibrar.html#introduction</a></p>
-<p>If you use Docker to run the model, you would need to build the image
-first and then call containers, you would likely create a mount pa</p>
-</div>
-<div class="section level2">
-<h2 id="atlantio-to-edit-parameter-files">atlantio to edit parameter files<a class="anchor" aria-label="anchor" href="#atlantio-to-edit-parameter-files"></a>
-</h2>
-</div>
-<div class="section level2">
-<h2 id="objective-function">Objective function<a class="anchor" aria-label="anchor" href="#objective-function"></a>
-</h2>
-<p>Reading output with altlantio</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

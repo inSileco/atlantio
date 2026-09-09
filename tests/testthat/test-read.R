@@ -53,3 +53,53 @@ test_that("read_xml() converts XML files to lists", {
   expect_identical(res_wrapped[[1]]$type, "xml_file")
   expect_identical(res_wrapped[[1]]$object, res_direct$object)
 })
+
+test_that("read_txt_files() classifies output text files", {
+  read_type <- function(...) {
+    fl <- atlantis_examples("outputs", ...)
+    suppressMessages(suppressWarnings(read_atlantis_files(fl)))[[1]]$type
+  }
+  expect_identical(read_type("outputDietCheck.txt"), "diet")
+  expect_identical(read_type("outputBiomIndx.txt"), "biomass_all")
+  expect_identical(read_type("outputBoxBiomass.txt"), "biomass_box")
+  expect_identical(read_type("outputAgeBiomIndx.txt"), "biomass_age")
+  expect_identical(
+    read_type("outputAnnualAgeBiomIndx.txt"),
+    "biomass_age_annual"
+  )
+  expect_identical(read_type("outputYOY.txt"), "yoy")
+  expect_identical(read_type("outputMort.txt"), "unknown")
+  expect_identical(read_type("outputSSB.txt"), "unknown")
+})
+
+test_that("read_txt_files() never returns a NULL type", {
+  txt_files <- list.files(
+    atlantis_examples("outputs"),
+    pattern = "\\.txt$",
+    full.names = TRUE
+  )
+  types <- vapply(
+    txt_files,
+    \(fl) suppressMessages(suppressWarnings(read_atlantis_files(fl)))[[1]]$type,
+    character(1)
+  )
+  expect_true(all(nzchar(types)))
+  expect_false("biomass_age" %in% types[grepl("DietCheck", names(types))])
+})
+
+test_that("read_txt_files() classifies detailed diet output by column layout", {
+  fl <- withr::local_tempfile(fileext = ".txt")
+  writeLines(
+    c(
+      "Time Predator Cohort Box Layer Stock Updated WAE YPH",
+      "0 WAE 1 0 1 0 0 0.1 0.2"
+    ),
+    fl
+  )
+  res <- suppressMessages(read_txt_files(fl, "outputDetailedDietCheck.txt"))
+  expect_identical(res$type, "diet_detailed")
+  # too few columns must not error
+  writeLines(c("Time Predator", "0 WAE"), fl)
+  res <- suppressMessages(read_txt_files(fl, "outputDetailedDietCheck.txt"))
+  expect_identical(res$type, "unknown")
+})

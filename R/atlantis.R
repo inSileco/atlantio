@@ -226,14 +226,13 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
 
   # check if multiple file of the same type use duplicated
   # cli::cli_alert_warning()
-  v_types <- lapply(files, \(x) x$type) |> unlist()
+  v_types <- vapply(files, \(x) x$type, character(1))
   dups <- duplicated(v_types)
   if (any(dups)) {
     cli::cli_alert_warning(
-      "Several files available for: {v_types[dups] |> unique()}",
-      "only the first file is used"
+      "Several files available for: {unique(v_types[dups])}; only the first one is used."
     )
-    files <- files[dups]
+    files <- files[!dups]
   }
 
   for (i in seq_along(files)) {
@@ -242,11 +241,15 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
       cli::cli_warn("{tmp$path} does not exist.")
       next
     }
+    if (!tmp$type %in% S7::prop_names(atlantis)) {
+      cli::cli_warn(
+        "{tmp$path} skipped: unsupported file type {.val {tmp$type}}."
+      )
+      next
+    }
     S7::prop(atlantis, tmp$type) <- tmp$object %||% S7::prop(atlantis, tmp$type)
     atlantis@file_paths$path[atlantis@file_paths$name == tmp$type] <- tmp$path
   }
-
-  atlantis@file_paths
 
   atlantis
 }

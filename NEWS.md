@@ -1,4 +1,10 @@
-# devel 
+# devel
+
+* `atlantis_load_files()` no longer drops files when several files of the same
+  type are passed, and skips files of unsupported type (e.g. `unknown`,
+  `xml_file`) with a warning instead of erroring.
+* `read_txt_files()` classifies `DietCheck` outputs as `diet` and
+  `DetailedDietCheck` outputs as `diet_detailed`, and always returns a type.
 
 
 # atlantio 0.1.2

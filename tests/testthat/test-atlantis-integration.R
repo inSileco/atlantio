@@ -92,7 +92,6 @@ test_that("Multiple file loading preserves all data", {
   skip_if_not_installed("sf")
   skip_if(any(c(bgm_file, bio_file) == ""), "Example files not available")
 
-
   # Load multiple files at once
   atlantis_obj <- new_atlantis() |>
     atlantis_load_files(c(bgm_file, bio_file))

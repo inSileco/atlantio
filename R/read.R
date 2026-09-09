@@ -182,25 +182,15 @@ read_txt_files <- function(path, filename) {
       return(list(type = "biomass_age", object = out))
     }
   } else if (grepl("DietCheck", bnm)) {
-    if (
-      grepl("DetailedDietCheck", bnm) &&
-        nm[2L] == "Predator" &&
-        nm[4L] == "Stock"
-    ) {
+    if (grepl("DetailedDietCheck", bnm) && identical(nm[4L], "Box")) {
+      return(list(type = "diet_detailed", object = out))
+    } else if (identical(nm[2L], "Predator") && identical(nm[4L], "Stock")) {
       return(list(type = "diet", object = out))
-    } else if (nm[2L] == "Predator" && nm[4L] == "Box") {
-      return(list(type = "biomass_age", object = out))
     }
   } else if (grepl("YOY", bnm)) {
     return(list(type = "yoy", object = out))
-  } else {
-    return(
-      list(
-        type = "unknown",
-        object = NULL
-      )
-    )
   }
+  list(type = "unknown", object = NULL)
 }
 
 #' @describeIn read_atlantis_files Read XML files and convert them to lists

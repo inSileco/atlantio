@@ -1,6 +1,7 @@
 # atlantio
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml)
+[![pkgdown.yaml](https://github.com/inSileco/atlantio/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/inSileco/atlantio/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 Read, write and manipulate [Atlantis](https://research.csiro.au/atlantis/) model

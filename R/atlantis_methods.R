@@ -15,6 +15,7 @@ S7::method(print, Atlantis) <- function(x, ...) {
   # Check and display data availability
   data_status <- list(
     "Geometry (BGM)" = !is.null(x@geometry),
+    "Run file" = !is.null(x@run),
     "Biology parameters" = !is.null(x@biology),
     "Group file" = !is.null(x@group),
     "Main output" = !is.null(x@main_output),

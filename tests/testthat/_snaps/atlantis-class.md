@@ -8,6 +8,7 @@
       
       -- Data availability: 
       x Geometry (BGM)
+      x Run file
       x Biology parameters
       x Group file
       x Main output

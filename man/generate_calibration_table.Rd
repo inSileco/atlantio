@@ -16,7 +16,8 @@ A list of data frames, one per parameter entry, with columns
 \code{name}, \code{min}, \code{max}, \code{position}, \code{transf} and \code{source_file}.
 }
 \description{
-S7 generic for building the list of parameters to calibrate from a YAML specification file.
+S7 generic for building the list of parameters to calibrate
+from a YAML specification file.
 }
 \examples{
 \dontrun{

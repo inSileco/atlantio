@@ -8,6 +8,7 @@
       
       -- Data availability: 
       x Geometry (BGM)
+      x Run file
       x Biology parameters
       x Group file
       x Main output
@@ -27,6 +28,7 @@
       
       -- Data availability: 
       v Geometry (BGM)
+      x Run file
       v Biology parameters
       x Group file
       x Main output
@@ -54,6 +56,7 @@
       
       -- Data availability: 
       v Geometry (BGM)
+      x Run file
       x Biology parameters
       x Group file
       x Main output
@@ -81,6 +84,7 @@
       
       -- Data availability: 
       x Geometry (BGM)
+      x Run file
       x Biology parameters
       x Group file
       v Main output
@@ -104,6 +108,7 @@
       
       -- Data availability: 
       v Geometry (BGM)
+      x Run file
       v Biology parameters
       v Group file
       x Main output

@@ -1,6 +1,7 @@
 #' Generate a calibration table
 #'
-#' @description S7 generic for building the list of parameters to calibrate from a YAML specification file.
+#' @description S7 generic for building the list of parameters to calibrate
+#' from a YAML specification file.
 #'
 #' @param x An `Atlantis` object.
 #' @param ... Additional arguments passed to methods

@@ -236,7 +236,7 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
     dimension,
     "scalar" = 1,
     "per_box" = {
-      require_geometry_file()
+      require_geometry_file(x)
       x@geometry |> nrow()
     },
     "per_group" = {

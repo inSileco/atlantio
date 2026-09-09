@@ -98,3 +98,14 @@ test_that("Works as expected", {
     )
   )
 })
+
+test_that("compute_parameter_dimension() handles per_box parameters", {
+  skip_if_not_installed("sf")
+  expect_error(
+    compute_parameter_dimension(mod, "per_box"),
+    "Geometry file \\(bgm\\) required"
+  )
+  mod_geom <- mod |>
+    atlantis_load_files(atlantis_examples("inputs", "tiny.bgm"))
+  expect_identical(compute_parameter_dimension(mod_geom, "per_box"), 11L)
+})

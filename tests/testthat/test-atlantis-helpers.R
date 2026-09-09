@@ -63,3 +63,15 @@ test_that("Large objects can be stored", {
   expect_equal(nrow(retrieved_data), 1000)
   expect_equal(ncol(retrieved_data), 3)
 })
+
+test_that("require_valid_group() reports only invalid groups", {
+  mod <- new_atlantis() |>
+    atlantis_load_files(atlantis_examples("inputs", "tiny_groups.csv"))
+  expect_true(require_valid_group(c("WAE", "YPH"), mod))
+  expect_error(
+    require_valid_group(c("WAE", "YPH", "ZZZ"), mod),
+    "1 group not in group file (or turned off): 'ZZZ'",
+    fixed = TRUE
+  )
+  expect_error(require_valid_group(NULL, mod), "Undefined group")
+})

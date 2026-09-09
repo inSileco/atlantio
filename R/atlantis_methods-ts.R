@@ -218,8 +218,10 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
     # this could be done using x@group$NumCohorts but it mean that group file
     # is always required even though all the info is in the mainoutput
     v_age <- var_names |>
-      stringr::str_subset(i) |>
-      stringr::str_extract(".*([0-9]+)_", group = 1) |>
+      stringr::str_extract(
+        paste0("^", stringr::str_escape(i), "([0-9]+)_(ResN|StructN|Nums)$"),
+        group = 1
+      ) |>
       unique()
     v_age <- v_age[!is.na(v_age)]
 

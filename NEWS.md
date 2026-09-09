@@ -5,6 +5,11 @@
   `xml_file`) with a warning instead of erroring.
 * `read_txt_files()` classifies `DietCheck` outputs as `diet` and
   `DetailedDietCheck` outputs as `diet_detailed`, and always returns a type.
+* `create_time_series_biomass()` now detects all cohorts of groups with 10 or
+  more age classes (the cohort index was truncated to its last digit).
+* `generate_calibration_table()` no longer errors on `per_box` parameters.
+* `require_valid_group()` reports only the groups that are missing or turned
+  off, instead of all groups passed.
 
 
 # atlantio 0.1.2

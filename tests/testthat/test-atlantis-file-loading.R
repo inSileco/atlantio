@@ -1,43 +1,38 @@
+bio_file <- system.file(
+  "examples",
+  "inputs",
+  "tiny_biol.prm",
+  package = "atlantio"
+)
+bgm_file <- system.file(
+  "examples",
+  "inputs",
+  "tiny.bgm",
+  package = "atlantio"
+)
+
+
 test_that("atlantis_load_files() works with character paths", {
-  skip_if_not_installed("sf")
   # Test with example files from the package
-  bgm_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny.bgm",
-    package = "atlantio"
-  )
-  skip_if(bgm_file == "", "Example BGM file not available")
+  atlantis_obj <- new_atlantis() |>
+    atlantis_load_files(bio_file)
 
-  atlantis_obj <- new_atlantis()
-  updated_obj <- atlantis_load_files(atlantis_obj, bgm_file)
-
-  expect_s3_class(updated_obj, "atlantio::atlantis")
-  expect_true(!is.null(updated_obj@geometry))
-
-  bgm_data <- updated_obj@geometry
-  expect_true(is.data.frame(bgm_data))
-  expect_true(nrow(bgm_data) > 0)
+  expect_s3_class(atlantis_obj, "atlantio::atlantis")
+  expect_true(!is.null(atlantis_obj@biology))
+  expect_identical(atlantis_obj@biology |> length(), 1657L)
 })
 
 test_that("atlantis_load_files() works with atlantis_file objects", {
-  skip_if_not_installed("sf")
-  bgm_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny.bgm",
-    package = "atlantio"
-  )
   skip_if(bgm_file == "", "Example BGM file not available")
 
   # Create atlantis_file object
-  files <- read_atlantis_files(bgm_file)
+  files <- read_atlantis_files(bio_file)
 
-  atlantis_obj <- new_atlantis()
-  updated_obj <- atlantis_load_files(atlantis_obj, files)
+  atlantis_obj <- new_atlantis() |>
+    atlantis_load_files(files)
 
-  expect_s3_class(updated_obj, "atlantio::atlantis")
-  expect_true(!is.null(updated_obj@geometry))
+  expect_s3_class(atlantis_obj, "atlantio::atlantis")
+  expect_identical(atlantis_obj@biology |> length(), 1657L)
 })
 
 test_that("atlantis_load_files() preserves existing data", {
@@ -50,12 +45,6 @@ test_that("atlantis_load_files() preserves existing data", {
   expect_true(is.null(atlantis_obj@geometry))
 
   # Load BGM file (should not affect bio data)
-  bgm_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny.bgm",
-    package = "atlantio"
-  )
   skip_if(bgm_file == "", "Example BGM file not available")
 
   updated_obj <- atlantis_load_files(atlantis_obj, bgm_file)
@@ -74,12 +63,6 @@ test_that("atlantis_load_files() overwrites existing data of same type", {
   expect_equal(atlantis_obj@geometry, initial_bgm)
 
   # Load new BGM file (should overwrite)
-  bgm_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny.bgm",
-    package = "atlantio"
-  )
   skip_if(bgm_file == "", "Example BGM file not available")
 
   updated_obj <- atlantis_load_files(atlantis_obj, bgm_file)
@@ -92,19 +75,6 @@ test_that("atlantis_load_files() overwrites existing data of same type", {
 
 test_that("atlantis_load_files() works with multiple file types", {
   skip_if_not_installed("sf")
-  # Test loading multiple files at once
-  bgm_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny.bgm",
-    package = "atlantio"
-  )
-  bio_file <- system.file(
-    "examples",
-    "inputs",
-    "tiny_biol.prm",
-    package = "atlantio"
-  )
 
   skip_if(bgm_file == "" || bio_file == "", "Example files not available")
 

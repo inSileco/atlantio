@@ -9,45 +9,390 @@ vignette: >
 ---
 
 
-Semi-automatic callibration of the Lake Erie model using `calibrar` as described in @morell_ManualSemiautomated_2026.
+Semi-automatic calibration of an Atlantis model using `calibrar`, following
+the approach described in @morell_ManualSemiautomated_2026.
 
 ```R
 library(atlantio)
 ```
 
 
-# Overall apporach
+# Overall approach
 
-As described in @morell_ManualSemiautomated_2026, the goal of using calibrar is to automate the running of batch of simulations to improve model fit but also let modellers nodge the model to the right direction.
+As described in @morell_ManualSemiautomated_2026, the goal of using `calibrar`
+is to automate the running of batches of simulations to improve model fit,
+while letting modellers nudge the model in the right direction. The model is
+run many times, and the set of parameters to shuffle is optionally revisited
+as calibration progresses.
 
-The idea is to run the model various time, optionnally revisit the set of paramters to shuffle as we go.
+An Atlantis model includes a tremendous number of parameters, so calibrating
+them all at once is out of reach. Instead, calibration proceeds in rounds: a
+small set of parameters is chosen (e.g. growth and clearance rates of a few
+groups), an optimizer such as `calibrar`
+(<https://CRAN.R-project.org/package=calibrar>) searches their values, the
+results are inspected, and the set of parameters or their bounds are revised
+before the next round.
 
-Difficulties exist given the tremendous number of parameters an Atlantis incude. Fortunately, a optimization tool such as `calibrar` (<https://CRAN.R-project.org/package=calibrar>).
+Each round involves the same steps:
 
-steps:
+1. choosing the parameters to calibrate, with their bounds and scale;
+2. assembling the model inputs and a way to run the model;
+3. designing an objective function that runs the model for a candidate
+   parameter set and returns a score;
+4. running the optimization, usually in parallel;
+5. inspecting the results, including the runs that crashed.
 
-- designing the objective function
-
-- editing atlantis parameter files in, handles by `atlantio` (@morell_ManualSemiautomated_2026 uses `https://github.com/alaiam/atlantis2ls`)
-
-- running Atlantis model
-
-- computing the objective function
-
-- using callibrar
-
-
-# Calibrar
-
-https://roliveros-ramos.github.io/calibrar/articles/calibrar.html#introduction
-
-
-If you use Docker to run the model, you would need to build the image first and then call containers, you would likely create a mount pa
-
-
-# atlantio to edit parameter files
+`atlantio` handles the Atlantis-specific parts: reading and writing the
+parameter files, expanding a calibration table, transforming parameter
+values, and reading the model output. `calibrar` handles the optimization.
+@morell_ManualSemiautomated_2026 use `atlantis2ls`
+(<https://github.com/alaiam/atlantis2ls>) for the same role as `atlantio`.
 
 
-# Objective function
+# How calibrar works
 
-Reading output with altlantio
+See <https://roliveros-ramos.github.io/calibrar/articles/calibrar.html>.
+
+`calibrar::calibrate()` minimizes an objective function `fn(par, ...)` over a
+parameter vector `par` bounded by `lower` and `upper`. With the evolutionary
+strategy `method = "AHR-ES"`, every generation evaluates a population of
+`popsize` parameter sets; with `parallel = TRUE`, these evaluations are
+spread over the workers of a registered `foreach` backend. The state of the
+optimization is saved in a restart file every `REPORT` generations, so an
+interrupted calibration resumes where it stopped.
+
+Everything therefore boils down to writing one R function that takes a
+parameter vector, writes the corresponding Atlantis input files, runs the
+model, reads its output and returns a single number. The rest of this
+vignette walks through building that function and running it with
+`calibrar`.
+
+
+# Step 1: choose the parameters to calibrate
+
+The parameters to calibrate are described in a YAML file, one entry per
+parameter name. The `<GRP>` placeholder is expanded over the listed group
+codes, and `min`, `max` and `transf` give the bounds and the transformation
+used during the search. Searching on a log scale (`pow10`, `exp`) is
+recommended for rate parameters that span several orders of magnitude.
+
+```yaml
+- name: mum_<GRP>
+  GRP: [GRP1, GRP2, GRP3]
+  min: -5
+  max: -1
+  transf: pow10 # or exp, pow2
+- name: C_<GRP>
+  GRP: [GRP1, GRP2, GRP3]
+  min: -5
+  max: -1
+  transf: pow10
+```
+
+`generate_calibration_table()` expands this file into a table with one row
+per value to optimize: array parameters (e.g. one value per cohort) yield
+one row per position. It needs the biology parameter file and the group file
+loaded first, so that it knows the groups and the array lengths.
+
+```R
+mod <- new_atlantis() |>
+  atlantis_load_files(c("biology.prm", "groups.csv"))
+
+calib_table <- generate_calibration_table(mod, "calibration.yaml")
+```
+
+The columns `min` and `max` of `calib_table` are passed to `calibrar` as
+bounds; `name`, `position` and `transf` are used by the objective function
+to write the values back into the biology file.
+
+
+# Step 2: assemble the inputs and a model runner
+
+## Input files
+
+Gather every input file the model needs (run, physics, biology, forcing,
+initial conditions, groups, fisheries, geometry) in a base directory. Each
+evaluation copies this directory and rewrites only the parameter files that
+contain calibrated parameters, typically the biology file.
+
+Large forcing data (often several GB) should not be copied per run: mount it
+read-only into the container, or symlink it into each run directory.
+
+## Running the model
+
+`atlantio` ships a template of the Atlantis command line in
+`inst/run_scripts/script.sh`, with `{{placeholders}}` for the input files.
+Render it once per run directory:
+
+```R
+write_run_script <- function(run_dir) {
+  script <- readLines(
+    system.file("run_scripts", "script.sh", package = "atlantio")
+  )
+  values <- c(
+    "init_file" = "init.nc",
+    "output_main" = "output.nc",
+    "run.prm" = "run.prm",
+    "force.prm" = "force.prm",
+    "physics.prm" = "physics.prm",
+    "biol.prm" = "biology.prm",
+    "groups.csv" = "groups.csv",
+    "fisheries.csv" = "fisheries.csv",
+    "output_dir" = "outputFolder"
+  )
+  for (key in names(values)) {
+    script <- gsub(paste0("{{", key, "}}"), values[[key]], script, fixed = TRUE)
+  }
+  path <- file.path(run_dir, "run.sh")
+  writeLines(script, path)
+  Sys.chmod(path, "0755")
+  invisible(path)
+}
+```
+
+The script is then executed with `processx::run()`, either directly (when
+`atlantisMerged` is installed in the same environment as R, as on most HPC
+clusters) or inside a Docker container with the run directory mounted as
+the working directory. Set a timeout: a full run can take hours.
+
+```R
+run_atlantis <- function(run_dir) {
+  processx::run(
+    "bash", "run.sh",
+    wd = run_dir,
+    error_on_status = FALSE,
+    timeout = 86400
+  )
+}
+```
+
+With Docker, replace the command with `docker run --rm -v <run_dir>:/model
+-w /model <image> bash run.sh`, running the container as the current user so
+that the files it writes remain owned by the R session.
+
+## Detecting crashed runs
+
+An Atlantis fatal error ends in `quit()`, which exits with status 0 after
+printing to stderr. A crash therefore usually shows as a truncated
+`output.nc` rather than a non-zero exit status. Read the expected run length
+and output interval from the run file, and compare them with the last time
+step actually written:
+
+```R
+run_prm <- new_atlantis() |> atlantis_load_files("run.prm")
+tstop_days <- run_prm@run$tstop
+toutinc_days <- run_prm@run$toutinc
+```
+
+
+# Step 3: design the objective function
+
+## The score
+
+The score turns the model output into a single number that is small when
+the model behaves as desired. @morell_ManualSemiautomated_2026 combine a fit
+to observed biomasses with a stability penalty on the trend of each group.
+When observations are scarce, a useful first target is persistence: every
+group should stay close to its initial state over the whole run rather than
+collapse or explode.
+
+One way to express this is, for every group and age class, to aggregate the
+tracers of interest (numbers, structural and reserve weight) over boxes and
+layers, compare them with their initial values on the log scale
+(`log(x(t) + tiny) - log(x(0) + tiny)`, as in `calibrar`'s `lnorm2`), and
+penalize only the excess beyond a tolerance band (e.g. 20%). Comparing
+annual snapshots taken at the same phase of the seasonal cycle avoids
+mistaking seasonal oscillations for drift.
+
+`atlantio` provides the ingredients: `atlantis_load_files()` reads the
+output NetCDF into the model object, and `create_time_series_biomass()`
+returns a tidy table of the age-structured tracers, one row per group, age,
+box, layer and time.
+
+```R
+compute_score <- function(ts) {
+  # ts: tidy tracer table from create_time_series_biomass()
+  # aggregate over space, compare with t = 0, sum the penalties
+  ...
+}
+```
+
+Whatever the score, it must be robust to the failure cases: a crashed run,
+a truncated output or a scoring error must return a large penalty (e.g.
+`1e8`) rather than abort the whole generation of the optimizer.
+
+## The function
+
+The objective function chains one calibration iteration:
+
+1. **transform the parameters** from the calibration scale to the model
+   scale with `transform_parameter_value()` and assign them into the biology
+   object (element assignment keeps the array attributes `write_prm()`
+   needs);
+2. **create a unique run directory**, copy the base inputs there and write
+   the modified biology file with `write_prm()` together with the run script;
+3. **run the model**;
+4. **read the output** and compute the score;
+5. **save** the time series and the parameter values with their score, and
+   remove the bulky run files.
+
+```R
+run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
+                      groups) {
+  # 1. transformation
+  bio <- atlantis@biology
+  for (i in seq_len(nrow(calib_table))) {
+    value <- transform_parameter_value(par[i], calib_table$transf[i])
+    bio[[calib_table$name[i]]][calib_table$position[i]] <- value
+  }
+
+  # 2. run directory and input files
+  run_dir <- tempfile("run_", tmpdir = results_dir)
+  dir.create(run_dir)
+  file.copy(list.files(base_dir, full.names = TRUE), run_dir)
+  write_prm(bio, file.path(run_dir, "biology.prm"))
+  write_run_script(run_dir)
+  dir.create(file.path(run_dir, "outputFolder"))
+
+  # 3. model run
+  res <- run_atlantis(run_dir)
+  out_file <- file.path(run_dir, "outputFolder", "output.nc")
+  if (res$status != 0 || !file.exists(out_file)) {
+    return(failed_run(run_dir, par, res))
+  }
+
+  # 4. output and score; any error becomes the penalty score
+  score <- tryCatch({
+    out <- atlantis_load_files(atlantis, out_file)
+    ts <- create_time_series_biomass(out, groups)
+    if (max(ts$time) / 86400 < tstop_days - toutinc_days) {
+      stop("output.nc is truncated: the model crashed mid-run")
+    }
+    saveRDS(ts, file.path(run_dir, "time_series.rds"))
+    compute_score(ts)
+  }, error = function(e) failed_run(run_dir, par, res, conditionMessage(e)))
+
+  # 5. results
+  saveRDS(list(par = par, score = score), file.path(run_dir, "parameters.rds"))
+  unlink(setdiff(
+    list.files(run_dir, full.names = TRUE),
+    file.path(run_dir, c("time_series.rds", "parameters.rds"))
+  ), recursive = TRUE)
+  score
+}
+```
+
+Keeping the results directory outside `tempdir()` matters: it must survive
+the R session, and it is what makes the calibration inspectable afterwards.
+For failed runs, `failed_run()` should record the parameter values, the
+penalty and the failure reason, and keep the tail of the model output
+(where Atlantis prints its `quit()` message).
+
+## Starting values
+
+The natural starting point is the current set of values in the biology
+file, mapped back to the calibration scale with
+`inverse_transform_parameter_value()` and clamped into the bounds. Evaluate
+the objective function once at this point before launching the calibration:
+this checks the whole chain and gives the reference score to beat.
+
+```R
+start <- vapply(seq_len(nrow(calib_table)), function(i) {
+  inverse_transform_parameter_value(
+    mod@biology[[calib_table$name[i]]][calib_table$position[i]],
+    calib_table$transf[i]
+  )
+}, numeric(1))
+start <- pmin(pmax(start, calib_table$min), calib_table$max)
+
+score0 <- run_model(start, mod, calib_table, base_dir, results_dir, groups)
+```
+
+
+# Step 4: run the optimization in parallel
+
+A generation of `calibrar` evaluates `popsize` parameter sets, each one a
+full model run, so parallel evaluation is essential. `calibrar` uses
+`foreach`'s `%dopar%`, which needs a registered backend; the simplest is a
+cluster from the base `parallel` package registered with `doParallel`. The
+workers must share the master's filesystem and be able to run the model.
+
+```R
+library(parallel)
+library(doParallel)
+
+cl <- makeCluster(n_workers)
+registerDoParallel(cl)
+
+# %dopar% ships the objective function to the workers, but not the global
+# objects it relies on: export them and load the packages explicitly
+clusterExport(cl, c("write_run_script", "run_atlantis", "compute_score",
+  "failed_run", "tstop_days", "toutinc_days"))
+clusterEvalQ(cl, library(atlantio))
+```
+
+Sensible controls for a first round: a population of one run per worker
+(`calibrar` raises it to its internal minimum if too small), a handful of
+generations, and a restart file saved every generation. The restart file
+must be a relative path.
+
+```R
+control <- list(
+  maxit = 5,             # generations
+  popsize = n_workers,   # parameter sets per generation
+  ncores = n_workers,
+  REPORT = 1,            # generations between restart-file saves
+  restart.file = "calib_restart",
+  trace = 3
+)
+
+res_calib <- calibrar::calibrate(
+  par = start,
+  fn = run_model,
+  lower = calib_table$min,
+  upper = calib_table$max,
+  method = "AHR-ES",
+  control = control,
+  parallel = TRUE,
+  # extra arguments are forwarded to run_model()
+  atlantis = mod,
+  calib_table = calib_table,
+  base_dir = base_dir,
+  results_dir = results_dir,
+  groups = groups
+)
+stopCluster(cl)
+
+res_calib$par
+res_calib$value
+```
+
+Relaunching the same script after an interruption resumes from the last
+restart file. On an HPC cluster, wrap the script in a job asking for one
+node with many CPUs (the cluster above is single-node), restore the modules
+needed by Atlantis and R, and pass the number of workers and the results
+directory through environment variables so that the same script runs
+unchanged on a laptop with Docker and on the cluster with the bare binary.
+
+
+# Step 5: inspect the results and iterate
+
+Every evaluation leaves its time series, parameter values and score in one
+folder of the results directory, which allows two kinds of inspection:
+
+- **the trajectory of the best parameter sets**, to see which groups drive
+  the score and whether the tolerance band or the scoring window need
+  adjusting;
+- **the parameter sets that crashed the model**. Gathering the
+  `parameters.rds` of all runs into one table, with the crashed runs first
+  and the range of each parameter in crashed versus completed runs, points
+  at the bound (or bound combination) responsible. Tightening these bounds
+  in the YAML file before the next round is the "nudging" that keeps the
+  optimizer in the region where the model makes sense.
+
+The next round then starts from the calibrated values, possibly with a new
+set of parameters, which is how @morell_ManualSemiautomated_2026 describe
+calibration as a semi-automated process rather than a single optimization.
+
+
+# References

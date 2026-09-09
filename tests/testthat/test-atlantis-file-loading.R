@@ -1,4 +1,5 @@
 test_that("atlantis_load_files() works with character paths", {
+  skip_if_not_installed("sf")
   # Test with example files from the package
   bgm_file <- system.file(
     "examples",
@@ -20,6 +21,7 @@ test_that("atlantis_load_files() works with character paths", {
 })
 
 test_that("atlantis_load_files() works with atlantis_file objects", {
+  skip_if_not_installed("sf")
   bgm_file <- system.file(
     "examples",
     "inputs",
@@ -39,6 +41,7 @@ test_that("atlantis_load_files() works with atlantis_file objects", {
 })
 
 test_that("atlantis_load_files() preserves existing data", {
+  skip_if_not_installed("sf")
   # Create object with some initial data
   initial_bio <- list(param1 = "initial_value")
   atlantis_obj <- new_atlantis(biology = initial_bio)
@@ -63,6 +66,7 @@ test_that("atlantis_load_files() preserves existing data", {
 })
 
 test_that("atlantis_load_files() overwrites existing data of same type", {
+  skip_if_not_installed("sf")
   # Create object with initial BGM data
   initial_bgm <- data.frame(x = 1:3, y = 4:6)
   atlantis_obj <- new_atlantis(geometry = initial_bgm)
@@ -87,6 +91,7 @@ test_that("atlantis_load_files() overwrites existing data of same type", {
 
 
 test_that("atlantis_load_files() works with multiple file types", {
+  skip_if_not_installed("sf")
   # Test loading multiple files at once
   bgm_file <- system.file(
     "examples",

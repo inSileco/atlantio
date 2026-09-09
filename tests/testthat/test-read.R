@@ -14,6 +14,7 @@ test_that("read_atlantis_files() handles wrong file type", {
 })
 
 test_that("read_bgm() works", {
+  skip_if_not_installed("sf")
   fl1 <- system.file("examples", "inputs", "tiny.bgm", package = "atlantio")
   res1 <- read_bgm(fl1)
   res2 <- read_atlantis_files(fl1)

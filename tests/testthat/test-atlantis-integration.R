@@ -20,6 +20,7 @@ test_that("Full workflow: create -> load files -> access data", {
     any(c(bgm_file, bio_file, group_file) == ""),
     "Example files not available"
   )
+  skip_if_not_installed("sf")
 
   # Load files step by step
   atlantis_obj <- atlantis_load_files(atlantis_obj, bgm_file)
@@ -47,6 +48,7 @@ test_that("Full workflow: create -> load files -> access data", {
 
 
 test_that("Error handling works correctly", {
+  skip_if_not_installed("sf")
   atlantis_obj <- new_atlantis()
 
   # Test with non-existent file
@@ -87,7 +89,9 @@ test_that("Multiple file loading preserves all data", {
     "tiny_biol.prm"
   )
 
+  skip_if_not_installed("sf")
   skip_if(any(c(bgm_file, bio_file) == ""), "Example files not available")
+
 
   # Load multiple files at once
   atlantis_obj <- new_atlantis() |>

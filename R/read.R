@@ -43,7 +43,8 @@ read_atlantis_files <- function(files, filenames = basename(files)) {
   out <- list(path = files)
   # read files according to their extension
   res <- tryCatch(
-    switch(fs::path_ext(files),
+    switch(
+      fs::path_ext(files),
       bgm = read_bgm(files),
       nc = read_nc(files),
       prm = read_prm_files(files),

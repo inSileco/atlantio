@@ -22,6 +22,31 @@ pak::pak("inSileco/atlantio")
 
 ```r
 library(atlantio)
+mod <- new_atlantis() |>
+  atlantis_load_files(c(
+    atlantis_examples("outputs", "output.nc"),
+    atlantis_examples("outputs", "outputBiomIndx.txt"),
+    atlantis_examples("outputs", "outputBoxBiomass.txt")
+  ))
+mod
+
+# ── Atlantis Model ──
+# 
+# ── Data availability: 
+# ✖ Geometry (BGM)
+# ✖ Run file
+# ✖ Biology parameters
+# ✖ Group file
+# ✔ Main output
+# ✖ Diet data
+# ✖ Detailed diet data
+# ✔ Biomass (system-wide)
+# ✔ Biomass (per box)
+# ✖ Biomass (per age)
+# 
+# ── Main output details: 
+# • 139 variables
+# • 74 time steps
 ```
 
 See the package vignettes for details on reading models, listing parameters and

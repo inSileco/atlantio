@@ -29,11 +29,6 @@ one row per value to calibrate. The following fields are recognised:
 values of an extra field of the same name without angle brackets (see
 \code{GRP} below). Entries without a placeholder (e.g. \code{rec_m}) yield the
 parameter as is.
-\item \code{GRP} (required when \code{name} contains \verb{<GRP>}): one or several group
-codes. Every code must belong to a group that is turned on in the group
-file, which therefore has to be loaded in \code{x}. The group is also used to
-compute the dimension of the parameter, e.g. the number of cohorts for a
-\code{per_cohort} parameter.
 \item \code{position} (optional): integer index, or vector of indices, of the values
 to calibrate for array parameters (e.g. one value per cohort or per box).
 Defaults to all positions. Positions are validated against the dimension

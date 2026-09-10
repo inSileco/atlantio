@@ -139,16 +139,25 @@ test_that("Works as expected", {
 })
 
 test_that("Works as expected with is_factor set to true", {
-  withr::local_options(list(digits = 6))
   expect_identical(
     res_relative,
     data.frame(
       name = c("mum_GZS", "mum_GZS", "mum_GZS", "mum_WAE"),
       cur_value = c(0.036549944, 0.003063438, 0.00167827, 0.00606736),
-      min = c(-Inf, -Inf, -3.77513817, 0.00303368),
-      max = c(Inf, Inf, -1.77513817, 0.00910104),
+      min = c(
+        -Inf,
+        log10(0.003063438 * 10^-1) |> round(8),
+        log10(0.00167827 * 10^-1) |> round(8),
+        0.00303368
+      ),
+      max = c(
+        Inf,
+        log10(0.003063438 * 10^1) |> round(8),
+        log10(0.00167827 * 10^1) |> round(8),
+        0.00910104
+      ),
       position = c(1L, 2L, 3L, 1L),
-      transf = c("pow10", "pow10", "pow10", "identity"),
+      transf = c("identity", "pow10", "pow10", "identity"),
       source_file = c(
         "biology_prm",
         "biology_prm",

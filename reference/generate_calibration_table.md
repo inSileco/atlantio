@@ -37,12 +37,6 @@ recognised:
   same name without angle brackets (see `GRP` below). Entries without a
   placeholder (e.g. `rec_m`) yield the parameter as is.
 
-- `GRP` (required when `name` contains `<GRP>`): one or several group
-  codes. Every code must belong to a group that is turned on in the
-  group file, which therefore has to be loaded in `x`. The group is also
-  used to compute the dimension of the parameter, e.g. the number of
-  cohorts for a `per_cohort` parameter.
-
 - `position` (optional): integer index, or vector of indices, of the
   values to calibrate for array parameters (e.g. one value per cohort or
   per box). Defaults to all positions. Positions are validated against

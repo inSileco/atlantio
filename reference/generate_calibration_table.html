@@ -82,11 +82,6 @@ one row per value to calibrate. The following fields are recognised:</p><ul><li>
 values of an extra field of the same name without angle brackets (see
 <code>GRP</code> below). Entries without a placeholder (e.g. <code>rec_m</code>) yield the
 parameter as is.</p></li>
-<li><p><code>GRP</code> (required when <code>name</code> contains <code>&lt;GRP&gt;</code>): one or several group
-codes. Every code must belong to a group that is turned on in the group
-file, which therefore has to be loaded in <code>x</code>. The group is also used to
-compute the dimension of the parameter, e.g. the number of cohorts for a
-<code>per_cohort</code> parameter.</p></li>
 <li><p><code>position</code> (optional): integer index, or vector of indices, of the values
 to calibrate for array parameters (e.g. one value per cohort or per box).
 Defaults to all positions. Positions are validated against the dimension

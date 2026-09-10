@@ -9,3 +9,4 @@
   max: -1
   transf: pow10 # exp or pow2
   position: 2
+  is_factor: true

@@ -1,5 +1,7 @@
 # devel
 
+* `generate_calibration_table()` supports `is_factor`, when `true`, `min` and 
+  `max`are interpreted relative to the current value of the parameter rather than as absolute bounds.
 * `atlantis_load_files()` no longer drops files when several files of the same
   type are passed, and skips files of unsupported type (e.g. `unknown`,
   `xml_file`) with a warning instead of erroring.

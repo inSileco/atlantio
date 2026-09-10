@@ -6,8 +6,68 @@
 #' @param x An `Atlantis` object.
 #' @param ... Additional arguments passed to methods
 #'
-#' @return A list of data frames, one per parameter entry, with columns
-#' `name`, `min`, `max`, `position`, `transf` and `source_file`.
+#' @return A data frame with one row per value to calibrate and columns
+#' `name`, `cur_value`, `min`, `max`, `position`, `transf` and `source_file`.
+#'
+#' @details
+#' The YAML file is a list of entries, one per parameter, each expanded into
+#' one row per value to calibrate. The following fields are recognised:
+#'
+#' * `name` (required): the parameter name, as listed in
+#'   [list_atlantis_parameters()]. The name may contain a placeholder such as
+#'   `<GRP>` (e.g. `mum_<GRP>`); the placeholder is then expanded over the
+#'   values of an extra field of the same name without angle brackets (see
+#'   `GRP` below). Entries without a placeholder (e.g. `rec_m`) yield the
+#'   parameter as is.
+#' * `position` (optional): integer index, or vector of indices, of the values
+#'   to calibrate for array parameters (e.g. one value per cohort or per box).
+#'   Defaults to all positions. Positions are validated against the dimension
+#'   of the parameter when it can be computed from the loaded files
+#'   (`scalar`, `per_group`, `per_cohort` and `per_box` parameters; the
+#'   latter requires the geometry file). For other dimensions a warning is
+#'   emitted and a single position is assumed.
+#' * `transf` (optional): transformation mapping the calibration scale to the
+#'   scale used in the parameter file, one of `"identity"` (default),
+#'   `"pow10"`, `"pow2"` or `"exp"`, see [transform_parameter_value()]. A log
+#'   scale (`pow10` or `exp`) is recommended for rate parameters spanning
+#'   several orders of magnitude.
+#' * `min`, `max` (optional): lower and upper bounds of the search, expressed
+#'   on the calibration scale. With `transf: pow10`, `min: -3` thus means a
+#'   lower bound of `0.001` in the parameter file. Default to `-Inf` and
+#'   `Inf`.
+#' * `is_factor` (optional, default `false`): when `true`, `min` and `max`
+#'   are interpreted relative to the current value of the parameter rather
+#'   than as absolute bounds. The bounds become `cur_value * transf(min)` and
+#'   `cur_value * transf(max)` on the file scale, mapped back to the
+#'   calibration scale. For instance, with `transf: pow10`, `min: -1` and
+#'   `max: 1` restrict the search to one order of magnitude on each side of
+#'   the current value, and with `transf: identity`, `min: 0.5` and
+#'   `max: 1.5` to plus or minus 50%. This requires the current value to be
+#'   available, i.e. the parameter file the parameter belongs to must be
+#'   loaded in `x`.
+#'
+#' The current value of every parameter is read from the corresponding
+#' parameter file loaded in `x` and reported in the `cur_value` column. When
+#' the file is not loaded, a warning is emitted and `cur_value` is `NA`
+#' (unless `is_factor` is `true`, in which case an error is thrown).
+#'
+#' A minimal specification looks like:
+#'
+#' ```yaml
+#' - name: mum_<GRP>
+#'   GRP: [GZS, RDG, WAE]
+#'   min: -6
+#'   max: -1
+#'   transf: pow10
+#' - name: mum_<GRP>
+#'   GRP: YPH
+#'   position: 2
+#'   min: -1
+#'   max: 1
+#'   transf: pow10
+#'   is_factor: true
+#' - name: rec_m
+#' ```
 #'
 #' @examples
 #' \dontrun{
@@ -71,6 +131,7 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
   if (length(prm$name) != 1) {
     cli::cli_abort("Parameter name should have a length of 1.")
   }
+  transf <- validate_transf(prm$transf %||% "identity")
   ls_prm_all <- list_atlantis_parameters()$parameters
   prm_idx <- ls_prm_all |>
     Position(f = \(y) y$name == prm$name)
@@ -98,7 +159,7 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       df_key_val <- prm[abb_prm_name] |>
         expand.grid(stringsAsFactors = FALSE)
 
-      ls_prm_pos <- ls_abb_prm_name <- list()
+      ls_prm_pos <- ls_prm_nam <- list()
       for (i in df_key_val |>
         nrow() |>
         seq_len()) {
@@ -113,24 +174,48 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
           group = df_key_val$GRP[i]
         )
         ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
-        ls_abb_prm_name[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
+        ls_prm_nam[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
       }
-      ls_abb_prm_name <- ls_abb_prm_name |> unlist()
+      ls_prm_nam <- ls_prm_nam |> unlist()
       ls_prm_pos <- ls_prm_pos |> unlist()
     }
   } else {
-    ls_abb_prm_name <- prm$name
+    ls_prm_nam <- prm$name
     prm_dim <- compute_parameter_dimension(x, prm_info$dimension)
     ls_prm_pos <- generate_position_set(prm$position, prm_dim)
   }
 
+  is_factor <- prm$is_factor %||% FALSE
+  ls_prm_val <- get_values(
+    x,
+    ls_prm_nam,
+    ls_prm_pos,
+    prm_info$source_file,
+    is_factor
+  )
+
+  out_min <- prm$min %||% -Inf
+  out_max <- prm$max %||% Inf
+  if (is_factor) {
+    out_min <- inverse_transform_parameter_value(
+      ls_prm_val * transform_parameter_value(out_min, transf),
+      transf
+    )
+    out_max <- inverse_transform_parameter_value(
+      ls_prm_val * transform_parameter_value(out_max, transf),
+      transf
+    )
+  } else {}
+
   data.frame(
-    name = ls_abb_prm_name,
-    min = prm$min %||% -Inf,
-    max = prm$max %||% Inf,
+    name = ls_prm_nam,
+    cur_value = ls_prm_val,
+    min = out_min,
+    max = out_max,
     position = ls_prm_pos,
-    transf = validate_transf(prm$transf %||% "identity"),
-    source_file = prm_info$source_file
+    transf = transf,
+    source_file = prm_info$source_file,
+    row.names = NULL
   )
 }
 
@@ -273,4 +358,44 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
 warn_no_dimension_check <- function() {
   cli::cli_warn("No dimension check available.")
   1
+}
+
+
+get_prop_name <- function(bname) {
+  switch(
+    bname,
+    "biology_prm" = "biology",
+    "forcing_prm" = "forcing",
+    "harvest_prm" = "harvest",
+    "groups_csv" = "group",
+    "fisheries_csv" = "fisheries",
+    "physics_prm" = "physics",
+    "run_prm" = "run",
+    cli::cli_abort("Unknown property.")
+  )
+}
+
+
+get_values <- function(atl, prm_nam, prm_pos, src_file, is_factor = FALSE) {
+  mapply(
+    \(nam, pos) {
+      out <- S7::prop(atl, get_prop_name(src_file))[[nam]][pos]
+      if (is.null(out)) {
+        if (is_factor) {
+          cli::cli_abort(
+            "Cannot find value for `{nam}[{pos}]` in '{src_file}'.",
+            "i" = "Values are required to use `min` and `max` as factors."
+          )
+        } else {
+          cli::cli_warn(
+            "Cannot find value for `{nam}[{pos}]` in '{src_file}'."
+          )
+          out <- NA
+        }
+      }
+      outz
+    },
+    nam = prm_nam,
+    pos = prm_pos
+  )
 }

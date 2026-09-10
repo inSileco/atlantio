@@ -12,12 +12,77 @@ generate_calibration_table(x, ...)
 \item{...}{Additional arguments passed to methods}
 }
 \value{
-A list of data frames, one per parameter entry, with columns
-\code{name}, \code{min}, \code{max}, \code{position}, \code{transf} and \code{source_file}.
+A data frame with one row per value to calibrate and columns
+\code{name}, \code{cur_value}, \code{min}, \code{max}, \code{position}, \code{transf} and \code{source_file}.
 }
 \description{
 S7 generic for building the list of parameters to calibrate
 from a YAML specification file.
+}
+\details{
+The YAML file is a list of entries, one per parameter, each expanded into
+one row per value to calibrate. The following fields are recognised:
+\itemize{
+\item \code{name} (required): the parameter name, as listed in
+\code{\link[=list_atlantis_parameters]{list_atlantis_parameters()}}. The name may contain a placeholder such as
+\verb{<GRP>} (e.g. \verb{mum_<GRP>}); the placeholder is then expanded over the
+values of an extra field of the same name without angle brackets (see
+\code{GRP} below). Entries without a placeholder (e.g. \code{rec_m}) yield the
+parameter as is.
+\item \code{GRP} (required when \code{name} contains \verb{<GRP>}): one or several group
+codes. Every code must belong to a group that is turned on in the group
+file, which therefore has to be loaded in \code{x}. The group is also used to
+compute the dimension of the parameter, e.g. the number of cohorts for a
+\code{per_cohort} parameter.
+\item \code{position} (optional): integer index, or vector of indices, of the values
+to calibrate for array parameters (e.g. one value per cohort or per box).
+Defaults to all positions. Positions are validated against the dimension
+of the parameter when it can be computed from the loaded files
+(\code{scalar}, \code{per_group}, \code{per_cohort} and \code{per_box} parameters; the
+latter requires the geometry file). For other dimensions a warning is
+emitted and a single position is assumed.
+\item \code{transf} (optional): transformation mapping the calibration scale to the
+scale used in the parameter file, one of \code{"identity"} (default),
+\code{"pow10"}, \code{"pow2"} or \code{"exp"}, see \code{\link[=transform_parameter_value]{transform_parameter_value()}}. A log
+scale (\code{pow10} or \code{exp}) is recommended for rate parameters spanning
+several orders of magnitude.
+\item \code{min}, \code{max} (optional): lower and upper bounds of the search, expressed
+on the calibration scale. With \code{transf: pow10}, \code{min: -3} thus means a
+lower bound of \code{0.001} in the parameter file. Default to \code{-Inf} and
+\code{Inf}.
+\item \code{is_factor} (optional, default \code{false}): when \code{true}, \code{min} and \code{max}
+are interpreted relative to the current value of the parameter rather
+than as absolute bounds. The bounds become \code{cur_value * transf(min)} and
+\code{cur_value * transf(max)} on the file scale, mapped back to the
+calibration scale. For instance, with \code{transf: pow10}, \code{min: -1} and
+\code{max: 1} restrict the search to one order of magnitude on each side of
+the current value, and with \code{transf: identity}, \code{min: 0.5} and
+\code{max: 1.5} to plus or minus 50\%. This requires the current value to be
+available, i.e. the parameter file the parameter belongs to must be
+loaded in \code{x}.
+}
+
+The current value of every parameter is read from the corresponding
+parameter file loaded in \code{x} and reported in the \code{cur_value} column. When
+the file is not loaded, a warning is emitted and \code{cur_value} is \code{NA}
+(unless \code{is_factor} is \code{true}, in which case an error is thrown).
+
+A minimal specification looks like:
+
+\if{html}{\out{<div class="sourceCode yaml">}}\preformatted{- name: mum_<GRP>
+  GRP: [GZS, RDG, WAE]
+  min: -6
+  max: -1
+  transf: pow10
+- name: mum_<GRP>
+  GRP: YPH
+  position: 2
+  min: -1
+  max: 1
+  transf: pow10
+  is_factor: true
+- name: rec_m
+}\if{html}{\out{</div>}}
 }
 \examples{
 \dontrun{

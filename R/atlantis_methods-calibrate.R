@@ -393,7 +393,7 @@ get_values <- function(atl, prm_nam, prm_pos, src_file, is_factor = FALSE) {
           out <- NA
         }
       }
-      outz
+      out
     },
     nam = prm_nam,
     pos = prm_pos

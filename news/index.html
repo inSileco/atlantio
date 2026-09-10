@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,12 +44,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.2" id="atlantio-012">atlantio 0.1.2<a class="anchor" aria-label="anchor" href="#atlantio-012"></a></h2>
-<ul><li>Move sf to Suggests.</li>
-</ul></div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1" id="atlantio-011">atlantio 0.1.1<a class="anchor" aria-label="anchor" href="#atlantio-011"></a></h2>
-<ul><li>Add calibrar script.</li>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="atlantio-020">atlantio 0.2.0<a class="anchor" aria-label="anchor" href="#atlantio-020"></a></h2>
+<ul><li>
+<code><a href="../reference/generate_calibration_table.html">generate_calibration_table()</a></code> supports <code>is_factor</code>, when <code>true</code>, <code>min</code> and <code>max</code>are interpreted relative to the current value of the parameter rather than as absolute bounds.</li>
+<li>
+<code><a href="../reference/atlantis_load_files.html">atlantis_load_files()</a></code> no longer drops files when several files of the same type are passed, and skips files of unsupported type (e.g. <code>unknown</code>, <code>xml_file</code>) with a warning instead of erroring.</li>
+<li>
+<code><a href="../reference/read_atlantis_files.html">read_txt_files()</a></code> classifies <code>DietCheck</code> outputs as <code>diet</code> and <code>DetailedDietCheck</code> outputs as <code>diet_detailed</code>, and always returns a type.</li>
+<li>
+<code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> now detects all cohorts of groups with 10 or more age classes (the cohort index was truncated to its last digit).</li>
+<li>
+<code><a href="../reference/generate_calibration_table.html">generate_calibration_table()</a></code> no longer errors on <code>per_box</code> parameters.</li>
+<li>
+<code>require_valid_group()</code> reports only the groups that are missing or turned off, instead of all groups passed.</li>
+<li>Move sf to Suggests.</li>
+<li>Add calibrar script.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="atlantio-010">atlantio 0.1.0<a class="anchor" aria-label="anchor" href="#atlantio-010"></a></h2>

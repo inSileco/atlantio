@@ -1,4 +1,4 @@
-# devel
+# atlantio 0.2.0
 
 * `generate_calibration_table()` supports `is_factor`, when `true`, `min` and 
   `max`are interpreted relative to the current value of the parameter rather than as absolute bounds.
@@ -12,15 +12,9 @@
 * `generate_calibration_table()` no longer errors on `per_box` parameters.
 * `require_valid_group()` reports only the groups that are missing or turned
   off, instead of all groups passed.
-
-
-# atlantio 0.1.2
-
 * Move sf to Suggests.
-
-# atlantio 0.1.1
-
 * Add calibrar script.
+
 
 # atlantio 0.1.0
 

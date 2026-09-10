@@ -338,9 +338,9 @@ network analysis or plotting.
 
 fw <- create_foodweb(mod)
 fw
-#> IGRAPH 8fce91d DNW- 18 62 -- 
+#> IGRAPH 4c15aa3 DNW- 18 62 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from 8fce91d (vertex names):
+#> + edges from 4c15aa3 (vertex names):
 #>  [1] WAE->WAE YPH->WAE WAE->YPH YPH->YPH WAE->GZS WAE->RDG YPH->RDG RDG->DRE
 #>  [9] WAE->DRE YPH->DRE GZS->CHI RDG->CHI WAE->CHI YPH->CHI CAL->DIA DRE->DIA
 #> [17] GZS->DIA ROT->DIA CAL->GRN DRE->GRN GZS->GRN ROT->GRN DRE->CAL GZS->CAL
@@ -474,17 +474,18 @@ readLines(atlantis_examples("calibrate", "mum.yaml")) |> cat(sep = "\n")
 #>   max: -1
 #>   transf: pow10 # exp or pow2
 #>   position: 2
+#>   is_factor: true
 
 mod |>
   generate_calibration_table(atlantis_examples("calibrate", "mum.yaml")) |>
   head()
-#>      name min max position transf source_file
-#> 1 mum_GZS  -6  -1        1  pow10 biology_prm
-#> 2 mum_GZS  -6  -1        2  pow10 biology_prm
-#> 3 mum_GZS  -6  -1        3  pow10 biology_prm
-#> 4 mum_GZS  -6  -1        4  pow10 biology_prm
-#> 5 mum_GZS  -6  -1        5  pow10 biology_prm
-#> 6 mum_RDG  -6  -1        1  pow10 biology_prm
+#>      name   cur_value min max position transf source_file
+#> 1 mum_GZS 0.036549944  -6  -1        1  pow10 biology_prm
+#> 2 mum_GZS 0.003063438  -6  -1        2  pow10 biology_prm
+#> 3 mum_GZS 0.001678270  -6  -1        3  pow10 biology_prm
+#> 4 mum_GZS 0.000717670  -6  -1        4  pow10 biology_prm
+#> 5 mum_GZS 0.000475500  -6  -1        5  pow10 biology_prm
+#> 6 mum_RDG 0.009661128  -6  -1        1  pow10 biology_prm
 ```
 
 [`transform_parameter_value()`](../reference/transform_parameter_value.md)

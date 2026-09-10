@@ -70,8 +70,67 @@ from a YAML specification file.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of data frames, one per parameter entry, with columns
-<code>name</code>, <code>min</code>, <code>max</code>, <code>position</code>, <code>transf</code> and <code>source_file</code>.</p>
+    <p>A data frame with one row per value to calibrate and columns
+<code>name</code>, <code>cur_value</code>, <code>min</code>, <code>max</code>, <code>position</code>, <code>transf</code> and <code>source_file</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The YAML file is a list of entries, one per parameter, each expanded into
+one row per value to calibrate. The following fields are recognised:</p><ul><li><p><code>name</code> (required): the parameter name, as listed in
+<code><a href="list_atlantis_parameters.html">list_atlantis_parameters()</a></code>. The name may contain a placeholder such as
+<code>&lt;GRP&gt;</code> (e.g. <code>mum_&lt;GRP&gt;</code>); the placeholder is then expanded over the
+values of an extra field of the same name without angle brackets (see
+<code>GRP</code> below). Entries without a placeholder (e.g. <code>rec_m</code>) yield the
+parameter as is.</p></li>
+<li><p><code>GRP</code> (required when <code>name</code> contains <code>&lt;GRP&gt;</code>): one or several group
+codes. Every code must belong to a group that is turned on in the group
+file, which therefore has to be loaded in <code>x</code>. The group is also used to
+compute the dimension of the parameter, e.g. the number of cohorts for a
+<code>per_cohort</code> parameter.</p></li>
+<li><p><code>position</code> (optional): integer index, or vector of indices, of the values
+to calibrate for array parameters (e.g. one value per cohort or per box).
+Defaults to all positions. Positions are validated against the dimension
+of the parameter when it can be computed from the loaded files
+(<code>scalar</code>, <code>per_group</code>, <code>per_cohort</code> and <code>per_box</code> parameters; the
+latter requires the geometry file). For other dimensions a warning is
+emitted and a single position is assumed.</p></li>
+<li><p><code>transf</code> (optional): transformation mapping the calibration scale to the
+scale used in the parameter file, one of <code>"identity"</code> (default),
+<code>"pow10"</code>, <code>"pow2"</code> or <code>"exp"</code>, see <code><a href="transform_parameter_value.html">transform_parameter_value()</a></code>. A log
+scale (<code>pow10</code> or <code>exp</code>) is recommended for rate parameters spanning
+several orders of magnitude.</p></li>
+<li><p><code>min</code>, <code>max</code> (optional): lower and upper bounds of the search, expressed
+on the calibration scale. With <code>transf: pow10</code>, <code>min: -3</code> thus means a
+lower bound of <code>0.001</code> in the parameter file. Default to <code>-Inf</code> and
+<code>Inf</code>.</p></li>
+<li><p><code>is_factor</code> (optional, default <code>false</code>): when <code>true</code>, <code>min</code> and <code>max</code>
+are interpreted relative to the current value of the parameter rather
+than as absolute bounds. The bounds become <code>cur_value * transf(min)</code> and
+<code>cur_value * transf(max)</code> on the file scale, mapped back to the
+calibration scale. For instance, with <code>transf: pow10</code>, <code>min: -1</code> and
+<code>max: 1</code> restrict the search to one order of magnitude on each side of
+the current value, and with <code>transf: identity</code>, <code>min: 0.5</code> and
+<code>max: 1.5</code> to plus or minus 50%. This requires the current value to be
+available, i.e. the parameter file the parameter belongs to must be
+loaded in <code>x</code>.</p></li>
+</ul><p>The current value of every parameter is read from the corresponding
+parameter file loaded in <code>x</code> and reported in the <code>cur_value</code> column. When
+the file is not loaded, a warning is emitted and <code>cur_value</code> is <code>NA</code>
+(unless <code>is_factor</code> is <code>true</code>, in which case an error is thrown).</p>
+<p>A minimal specification looks like:</p>
+<p></p><div class="sourceCode yaml"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> mum_&lt;GRP&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="at">  </span><span class="fu">GRP</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">GZS</span><span class="kw">,</span><span class="at"> RDG</span><span class="kw">,</span><span class="at"> WAE</span><span class="kw">]</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="at">  </span><span class="fu">min</span><span class="kw">:</span><span class="at"> </span><span class="dv">-6</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="at">  </span><span class="fu">max</span><span class="kw">:</span><span class="at"> </span><span class="dv">-1</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="at">  </span><span class="fu">transf</span><span class="kw">:</span><span class="at"> pow10</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> mum_&lt;GRP&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="at">  </span><span class="fu">GRP</span><span class="kw">:</span><span class="at"> YPH</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="at">  </span><span class="fu">position</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="at">  </span><span class="fu">min</span><span class="kw">:</span><span class="at"> </span><span class="dv">-1</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="at">  </span><span class="fu">max</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="at">  </span><span class="fu">transf</span><span class="kw">:</span><span class="at"> pow10</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="at">  </span><span class="fu">is_factor</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> rec_m</span></span></code></pre><p></p></div>
     </div>
 
     <div class="section level2">

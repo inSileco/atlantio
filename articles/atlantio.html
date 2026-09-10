@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get Started with atlantio</h1>
             
-            <h4 data-toc-skip class="date">2026-09-09</h4>
+            <h4 data-toc-skip class="date">2026-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/inSileco/atlantio/blob/main/vignettes/atlantio.Rmd" class="external-link"><code>vignettes/atlantio.Rmd</code></a></small>
       <div class="d-none name"><code>atlantio.Rmd</code></div>
@@ -377,9 +377,9 @@ analysis or plotting.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_foodweb.html">create_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="va">fw</span></span>
-<span><span class="co">#&gt; IGRAPH 8fce91d DNW- 18 62 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 4c15aa3 DNW- 18 62 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 8fce91d (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 4c15aa3 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] WAE-&gt;WAE YPH-&gt;WAE WAE-&gt;YPH YPH-&gt;YPH WAE-&gt;GZS WAE-&gt;RDG YPH-&gt;RDG RDG-&gt;DRE</span></span>
 <span><span class="co">#&gt;  [9] WAE-&gt;DRE YPH-&gt;DRE GZS-&gt;CHI RDG-&gt;CHI WAE-&gt;CHI YPH-&gt;CHI CAL-&gt;DIA DRE-&gt;DIA</span></span>
 <span><span class="co">#&gt; [17] GZS-&gt;DIA ROT-&gt;DIA CAL-&gt;GRN DRE-&gt;GRN GZS-&gt;GRN ROT-&gt;GRN DRE-&gt;CAL GZS-&gt;CAL</span></span>
@@ -502,17 +502,18 @@ the transformation applied and the file the parameter belongs to.</p>
 <span><span class="co">#&gt;   max: -1</span></span>
 <span><span class="co">#&gt;   transf: pow10 # exp or pow2</span></span>
 <span><span class="co">#&gt;   position: 2</span></span>
+<span><span class="co">#&gt;   is_factor: true</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/generate_calibration_table.html">generate_calibration_table</a></span><span class="op">(</span><span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"calibrate"</span>, <span class="st">"mum.yaml"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      name min max position transf source_file</span></span>
-<span><span class="co">#&gt; 1 mum_GZS  -6  -1        1  pow10 biology_prm</span></span>
-<span><span class="co">#&gt; 2 mum_GZS  -6  -1        2  pow10 biology_prm</span></span>
-<span><span class="co">#&gt; 3 mum_GZS  -6  -1        3  pow10 biology_prm</span></span>
-<span><span class="co">#&gt; 4 mum_GZS  -6  -1        4  pow10 biology_prm</span></span>
-<span><span class="co">#&gt; 5 mum_GZS  -6  -1        5  pow10 biology_prm</span></span>
-<span><span class="co">#&gt; 6 mum_RDG  -6  -1        1  pow10 biology_prm</span></span></code></pre></div>
+<span><span class="co">#&gt;      name   cur_value min max position transf source_file</span></span>
+<span><span class="co">#&gt; 1 mum_GZS 0.036549944  -6  -1        1  pow10 biology_prm</span></span>
+<span><span class="co">#&gt; 2 mum_GZS 0.003063438  -6  -1        2  pow10 biology_prm</span></span>
+<span><span class="co">#&gt; 3 mum_GZS 0.001678270  -6  -1        3  pow10 biology_prm</span></span>
+<span><span class="co">#&gt; 4 mum_GZS 0.000717670  -6  -1        4  pow10 biology_prm</span></span>
+<span><span class="co">#&gt; 5 mum_GZS 0.000475500  -6  -1        5  pow10 biology_prm</span></span>
+<span><span class="co">#&gt; 6 mum_RDG 0.009661128  -6  -1        1  pow10 biology_prm</span></span></code></pre></div>
 <p><code><a href="../reference/transform_parameter_value.html">transform_parameter_value()</a></code> and
 <code><a href="../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value()</a></code> map values between the
 calibration scale and the scale used in the parameter file.</p>

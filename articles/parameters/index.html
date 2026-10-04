@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../../logo.png" class="logo" alt=""><h1>Atlantis parameter set</h1>
             
-            <h4 data-toc-skip class="date">2026-09-10</h4>
+            <h4 data-toc-skip class="date">2026-10-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/inSileco/atlantio/blob/main/vignettes/parameters/index.Rmd" class="external-link"><code>vignettes/parameters/index.Rmd</code></a></small>
       <div class="d-none name"><code>index.Rmd</code></div>
@@ -3644,7 +3644,7 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-pPREY&lt;PREDCOHORT&gt;&lt;PRED&gt;&lt;PREYCOHORT&gt;
+pPREY&lt;PREYCOHORT&gt;&lt;PRED&gt;&lt;PREDCOHORT&gt;
 </td>
 <td style="text-align:left;">
 Vertebrate predator-prey availability matrix (pSPVERTeat), availability
@@ -14740,7 +14740,7 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-pPREY&lt;PREDCOHORT&gt;&lt;PRED&gt;&lt;PREYCOHORT&gt;
+pPREY&lt;PREYCOHORT&gt;&lt;PRED&gt;&lt;PREDCOHORT&gt;
 </td>
 <td style="text-align:left;">
 Vertebrate predator-prey availability matrix (pSPVERTeat), availability
@@ -17155,7 +17155,7 @@ per_group
 <span><span class="co">#&gt; [1] "name of a generic forcing tracer (netCDF forcing input, bm-&gt;forceTracerInput[])"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $PRED</span></span>
-<span><span class="co">#&gt; [1] "predator group code in diet-availability keys pPREY&lt;PREDCOHORT&gt;&lt;PRED&gt;&lt;PREYCOHORT&gt;"</span></span>
+<span><span class="co">#&gt; [1] "predator group code in diet-availability keys pPREY&lt;PREYCOHORT&gt;&lt;PRED&gt;&lt;PREDCOHORT&gt;"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $N</span></span>
 <span><span class="co">#&gt; [1] "migration event index (Migrate&lt;N&gt;: 1..num_migrate; KMIG_INVERT&lt;N&gt;: 0..num_migrate-1)"</span></span>
@@ -17176,10 +17176,10 @@ per_group
 <span><span class="co">#&gt; [1] "age-class (cohort) index in harvest keys, e.g. qStock_&lt;GRP&gt;_&lt;coh&gt;, sel_&lt;GRP&gt;&lt;coh&gt;"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $PREYCOHORT</span></span>
-<span><span class="co">#&gt; [1] "prey life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"</span></span>
+<span><span class="co">#&gt; [1] "prey life-stage digit in pPREY keys, first digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $PREDCOHORT</span></span>
-<span><span class="co">#&gt; [1] "predator life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"</span></span>
+<span><span class="co">#&gt; [1] "predator life-stage digit in pPREY keys, last digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $n</span></span>
 <span><span class="co">#&gt; [1] "stage number in a moving group/stage code &lt;code&gt;_stage_&lt;n&gt;"</span></span>

@@ -35,15 +35,24 @@ recognised:
   may contain a placeholder such as `<GRP>` (e.g. `mum_<GRP>`); the
   placeholder is then expanded over the values of an extra field of the
   same name without angle brackets (see `GRP` below). Entries without a
-  placeholder (e.g. `rec_m`) yield the parameter as is.
+  placeholder (e.g. `rec_m`) yield the parameter as is. Names with
+  several placeholders are expanded over all combinations, e.g. the diet
+  availabilities `pPREY<PREYCOHORT><PRED><PREDCOHORT>` with the fields
+  `PREYCOHORT`, `PRED` and `PREDCOHORT` (`pPREY1WAE2` is the
+  availability of juvenile prey to adult walleye).
 
 - `position` (optional): integer index, or vector of indices, of the
   values to calibrate for array parameters (e.g. one value per cohort or
   per box). Defaults to all positions. Positions are validated against
   the dimension of the parameter when it can be computed from the loaded
-  files (`scalar`, `per_group`, `per_cohort` and `per_box` parameters;
-  the latter requires the geometry file). For other dimensions a warning
-  is emitted and a single position is assumed.
+  files (`scalar`, `per_group`, `per_cohort`, `per_prey` and `per_box`
+  parameters; the latter requires the geometry file). For other
+  dimensions a warning is emitted and a single position is assumed.
+
+- `ignored_values` (optional): value, or list of values, whose positions
+  are left out of the calibration, e.g. `ignored_values: 0` to calibrate
+  only the existing trophic links of a `pPREY` array. This requires the
+  parameter file to be loaded in `x`.
 
 - `transf` (optional): transformation mapping the calibration scale to
   the scale used in the parameter file, one of `"identity"` (default),
@@ -67,6 +76,9 @@ recognised:
   `max: 1.5` to plus or minus 50%. This requires the current value to be
   available, i.e. the parameter file the parameter belongs to must be
   loaded in `x`.
+
+Bounds of parameters that Atlantis reads as proportions (e.g. `pPREY`)
+are capped to `[0, 1]` on the file scale.
 
 The current value of every parameter is read from the corresponding
 parameter file loaded in `x` and reported in the `cur_value` column.

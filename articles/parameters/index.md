@@ -315,7 +315,7 @@ fisheries - : cohort - : move group code - : tracer name
 | flagfishrates | Use fish-specific clearance/growth rates flag |  | int | scalar |
 | li_a_invert | Length-weight allometry coefficient a for invertebrates |  | double | scalar |
 | li_b_invert | Length-weight allometry exponent b for invertebrates |  | double | scalar |
-| pPREY\<PREDCOHORT\>\<PRED\>\<PREYCOHORT\> | Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class |  | double_array | per_prey |
+| pPREY\<PREYCOHORT\>\<PRED\>\<PREDCOHORT\> | Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class |  | double_array | per_prey |
 | pPREY\<PRED\> | Invertebrate/biomass-pool predator-prey availability row (single cohort) |  | double_array | per_prey |
 | DetritusSedimentFoodAvail/\<GRP\>\[/\<COHORT\>\] | Availability of detritus/sediment groups to a predator (per detritus group, per cohort for age-structured) |  | double_array | per_prey |
 | AgeDietAvail/\<GRP\> | Fine ontogenetic (per-age) prey availability matrix |  | double_array | per_prey |
@@ -956,7 +956,7 @@ fisheries - : cohort - : move group code - : tracer name
 | flagfishrates | Use fish-specific clearance/growth rates flag |  | int | biology_prm | scalar |
 | li_a_invert | Length-weight allometry coefficient a for invertebrates |  | double | biology_prm | scalar |
 | li_b_invert | Length-weight allometry exponent b for invertebrates |  | double | biology_prm | scalar |
-| pPREY\<PREDCOHORT\>\<PRED\>\<PREYCOHORT\> | Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class |  | double_array | biology_prm | per_prey |
+| pPREY\<PREYCOHORT\>\<PRED\>\<PREDCOHORT\> | Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class |  | double_array | biology_prm | per_prey |
 | pPREY\<PRED\> | Invertebrate/biomass-pool predator-prey availability row (single cohort) |  | double_array | biology_prm | per_prey |
 | DetritusSedimentFoodAvail/\<GRP\>\[/\<COHORT\>\] | Availability of detritus/sediment groups to a predator (per detritus group, per cohort for age-structured) |  | double_array | biology_prm | per_prey |
 | AgeDietAvail/\<GRP\> | Fine ontogenetic (per-age) prey availability matrix |  | double_array | biology_prm | per_prey |
@@ -1103,7 +1103,7 @@ atl$abbreviation
 #> [1] "name of a generic forcing tracer (netCDF forcing input, bm->forceTracerInput[])"
 #> 
 #> $PRED
-#> [1] "predator group code in diet-availability keys pPREY<PREDCOHORT><PRED><PREYCOHORT>"
+#> [1] "predator group code in diet-availability keys pPREY<PREYCOHORT><PRED><PREDCOHORT>"
 #> 
 #> $N
 #> [1] "migration event index (Migrate<N>: 1..num_migrate; KMIG_INVERT<N>: 0..num_migrate-1)"
@@ -1124,10 +1124,10 @@ atl$abbreviation
 #> [1] "age-class (cohort) index in harvest keys, e.g. qStock_<GRP>_<coh>, sel_<GRP><coh>"
 #> 
 #> $PREYCOHORT
-#> [1] "prey life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"
+#> [1] "prey life-stage digit in pPREY keys, first digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"
 #> 
 #> $PREDCOHORT
-#> [1] "predator life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"
+#> [1] "predator life-stage digit in pPREY keys, last digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"
 #> 
 #> $n
 #> [1] "stage number in a moving group/stage code <code>_stage_<n>"

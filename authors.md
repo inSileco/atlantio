@@ -13,13 +13,13 @@ Source:
 [`DESCRIPTION`](https://github.com/inSileco/atlantio/blob/main/DESCRIPTION)
 
 Cazelles K, Yingming Z (2026). *atlantio: Read, Write and Manipulate
-Atlantis Model Inputs and Outputs*. R package version 0.2.0.9000,
+Atlantis Model Inputs and Outputs*. R package version 0.2.1,
 <https://github.com/inSileco/atlantio>.
 
     @Manual{,
       title = {atlantio: Read, Write and Manipulate Atlantis Model Inputs and Outputs},
       author = {Kevin Cazelles and Zhao Yingming},
       year = {2026},
-      note = {R package version 0.2.0.9000},
+      note = {R package version 0.2.1},
       url = {https://github.com/inSileco/atlantio},
     }

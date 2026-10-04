@@ -28,14 +28,22 @@ one row per value to calibrate. The following fields are recognised:
 \verb{<GRP>} (e.g. \verb{mum_<GRP>}); the placeholder is then expanded over the
 values of an extra field of the same name without angle brackets (see
 \code{GRP} below). Entries without a placeholder (e.g. \code{rec_m}) yield the
-parameter as is.
+parameter as is. Names with several placeholders are expanded over all
+combinations, e.g. the diet availabilities
+\verb{pPREY<PREYCOHORT><PRED><PREDCOHORT>} with the fields \code{PREYCOHORT},
+\code{PRED} and \code{PREDCOHORT} (\code{pPREY1WAE2} is the availability of juvenile
+prey to adult walleye).
 \item \code{position} (optional): integer index, or vector of indices, of the values
 to calibrate for array parameters (e.g. one value per cohort or per box).
 Defaults to all positions. Positions are validated against the dimension
 of the parameter when it can be computed from the loaded files
-(\code{scalar}, \code{per_group}, \code{per_cohort} and \code{per_box} parameters; the
-latter requires the geometry file). For other dimensions a warning is
-emitted and a single position is assumed.
+(\code{scalar}, \code{per_group}, \code{per_cohort}, \code{per_prey} and \code{per_box}
+parameters; the latter requires the geometry file). For other dimensions
+a warning is emitted and a single position is assumed.
+\item \code{ignored_values} (optional): value, or list of values, whose positions
+are left out of the calibration, e.g. \code{ignored_values: 0} to calibrate
+only the existing trophic links of a \code{pPREY} array. This requires the
+parameter file to be loaded in \code{x}.
 \item \code{transf} (optional): transformation mapping the calibration scale to the
 scale used in the parameter file, one of \code{"identity"} (default),
 \code{"pow10"}, \code{"pow2"} or \code{"exp"}, see \code{\link[=transform_parameter_value]{transform_parameter_value()}}. A log
@@ -56,6 +64,9 @@ the current value, and with \code{transf: identity}, \code{min: 0.5} and
 available, i.e. the parameter file the parameter belongs to must be
 loaded in \code{x}.
 }
+
+Bounds of parameters that Atlantis reads as proportions (e.g. \code{pPREY}) are
+capped to \verb{[0, 1]} on the file scale.
 
 The current value of every parameter is read from the corresponding
 parameter file loaded in \code{x} and reported in the \code{cur_value} column. When

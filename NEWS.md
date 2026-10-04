@@ -1,3 +1,18 @@
+# atlantio (development version)
+
+* `generate_calibration_table()`:
+    - expands names with several placeholders (only the last one was
+      replaced), e.g. `pPREY<PREYCOHORT><PRED><PREDCOHORT>`;
+    - gains the field `ignored_values` to leave out positions holding given
+      values, e.g. `ignored_values: 0` to calibrate only existing diet links;
+    - checks positions of `per_prey` parameters (one value per group plus
+      one per detritus group);
+    - caps the bounds of proportion parameters (e.g. `pPREY`) to `[0, 1]`.
+* The diet availability key is now listed as
+  `pPREY<PREYCOHORT><PRED><PREDCOHORT>`: the first digit is the prey stage,
+  the last one the predator stage (the two were swapped).
+
+
 # atlantio 0.2.0
 
 * `generate_calibration_table()` supports `is_factor`, when `true`, `min` and 

@@ -18,14 +18,22 @@
 #'   `<GRP>` (e.g. `mum_<GRP>`); the placeholder is then expanded over the
 #'   values of an extra field of the same name without angle brackets (see
 #'   `GRP` below). Entries without a placeholder (e.g. `rec_m`) yield the
-#'   parameter as is.
+#'   parameter as is. Names with several placeholders are expanded over all
+#'   combinations, e.g. the diet availabilities
+#'   `pPREY<PREYCOHORT><PRED><PREDCOHORT>` with the fields `PREYCOHORT`,
+#'   `PRED` and `PREDCOHORT` (`pPREY1WAE2` is the availability of juvenile
+#'   prey to adult walleye).
 #' * `position` (optional): integer index, or vector of indices, of the values
 #'   to calibrate for array parameters (e.g. one value per cohort or per box).
 #'   Defaults to all positions. Positions are validated against the dimension
 #'   of the parameter when it can be computed from the loaded files
-#'   (`scalar`, `per_group`, `per_cohort` and `per_box` parameters; the
-#'   latter requires the geometry file). For other dimensions a warning is
-#'   emitted and a single position is assumed.
+#'   (`scalar`, `per_group`, `per_cohort`, `per_prey` and `per_box`
+#'   parameters; the latter requires the geometry file). For other dimensions
+#'   a warning is emitted and a single position is assumed.
+#' * `ignored_values` (optional): value, or list of values, whose positions
+#'   are left out of the calibration, e.g. `ignored_values: 0` to calibrate
+#'   only the existing trophic links of a `pPREY` array. This requires the
+#'   parameter file to be loaded in `x`.
 #' * `transf` (optional): transformation mapping the calibration scale to the
 #'   scale used in the parameter file, one of `"identity"` (default),
 #'   `"pow10"`, `"pow2"` or `"exp"`, see [transform_parameter_value()]. A log
@@ -45,6 +53,9 @@
 #'   `max: 1.5` to plus or minus 50%. This requires the current value to be
 #'   available, i.e. the parameter file the parameter belongs to must be
 #'   loaded in `x`.
+#'
+#' Bounds of parameters that Atlantis reads as proportions (e.g. `pPREY`) are
+#' capped to `[0, 1]` on the file scale.
 #'
 #' The current value of every parameter is read from the corresponding
 #' parameter file loaded in `x` and reported in the `cur_value` column. When
@@ -164,14 +175,19 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
         nrow() |>
         seq_len()) {
         tmp <- prm$name
-        for (j in ncol(df_key_val)) {
+        for (j in seq_len(ncol(df_key_val))) {
           tmp <- tmp |>
-            stringr::str_replace(abbrev[j], df_key_val[i, j])
+            stringr::str_replace(
+              stringr::fixed(abbrev[j]),
+              as.character(df_key_val[i, j])
+            )
         }
+        # the group a per_group/per_cohort dimension refers to: GRP, or the
+        # predator of a diet key (pPREY...)
         prm_dim <- compute_parameter_dimension(
           x,
           prm_info$dimension,
-          group = df_key_val$GRP[i]
+          group = df_key_val$GRP[i] %||% df_key_val$PRED[i]
         )
         ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
         ls_prm_nam[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
@@ -186,13 +202,26 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
   }
 
   is_factor <- prm$is_factor %||% FALSE
+  ignored_values <- unlist(prm$ignored_values)
   ls_prm_val <- get_values(
     x,
     ls_prm_nam,
     ls_prm_pos,
     prm_info$source_file,
-    is_factor
+    is_factor || length(ignored_values) > 0
   )
+
+  if (length(ignored_values)) {
+    keep <- !ls_prm_val %in% ignored_values
+    if (!any(keep)) {
+      cli::cli_warn(
+        "All values of {.code {prm$name}} are in `ignored_values`."
+      )
+    }
+    ls_prm_nam <- ls_prm_nam[keep]
+    ls_prm_pos <- ls_prm_pos[keep]
+    ls_prm_val <- ls_prm_val[keep]
+  }
 
   out_min <- prm$min %||% -Inf
   out_max <- prm$max %||% Inf
@@ -206,6 +235,11 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       transf
     )
   } else {}
+  # Atlantis aborts when a proportion is outside [0, 1]
+  if (identical(prm_info$reader$check, "proportion_check")) {
+    out_min <- clamp_file_scale(out_min, transf, 0, 1)
+    out_max <- clamp_file_scale(out_max, transf, 0, 1)
+  }
 
   data.frame(
     name = ls_prm_nam,
@@ -295,6 +329,15 @@ pow2 <- function(x) {
   exp(log(2) * x)
 }
 
+# clamp bounds expressed on the calibration scale to [lower, upper] on the
+# file scale
+clamp_file_scale <- function(x, transf, lower, upper) {
+  transform_parameter_value(x, transf) |>
+    pmax(lower) |>
+    pmin(upper) |>
+    inverse_transform_parameter_value(transf)
+}
+
 validate_transf <- function(x) {
   if (x %in% c("identity", "pow10", "pow2", "exp")) {
     x
@@ -337,7 +380,10 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
       warn_no_dimension_check()
     },
     "per_prey" = {
-      warn_no_dimension_check()
+      # one value per group, followed by one per detritus group (sediment
+      # availability), see atBioltoXML.c
+      require_group_file(x)
+      nrow(x@group) + count_detritus_groups(x)
     },
     "per_cohort" = {
       require_group_file(x)
@@ -352,6 +398,15 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
     },
     cli::cli_abort("Unknown dimension")
   )
+}
+
+
+count_detritus_groups <- function(x) {
+  n_det <- x@run$K_num_detritus
+  if (is.null(n_det)) {
+    n_det <- sum(x@group$GroupType %in% c("LAB_DET", "REF_DET", "CARRION"))
+  }
+  as.integer(n_det)
 }
 
 

@@ -1,0 +1,9 @@
+- name: pPREY<PREYCOHORT><PRED><PREDCOHORT>
+  PRED: WAE
+  PREYCOHORT: [1, 2]
+  PREDCOHORT: [1, 2]
+  ignored_values: 0
+  min: -1
+  max: 1
+  transf: pow10
+  is_factor: true

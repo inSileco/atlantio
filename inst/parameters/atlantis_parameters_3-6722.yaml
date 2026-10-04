@@ -63,15 +63,15 @@ abbreviations:
   i: "loop index: file index in a forcing-file series (e.g. hd<i>.name, <tracerName>_File<i>.name) or change-schedule index in pss keys (pss<s>_change<i>)"
   s: "point source/sink index, 0..npss-1 (e.g. pss<s>_numchanges)"
   tracerName: "name of a generic forcing tracer (netCDF forcing input, bm->forceTracerInput[])"
-  PRED: "predator group code in diet-availability keys pPREY<PREDCOHORT><PRED><PREYCOHORT>"
+  PRED: "predator group code in diet-availability keys pPREY<PREYCOHORT><PRED><PREDCOHORT>"
   "N": "migration event index (Migrate<N>: 1..num_migrate; KMIG_INVERT<N>: 0..num_migrate-1)"
   shortName: "short name of a physical-property forcing series (e.g. temp, salt, pH, Wind, vertMixScalar) used in keys like n<shortName>files"
   COHORT: "age class (cohort) of an age-structured group, e.g. in MigrateIOBox/<GRP>[/<COHORT>]/Migrate<N>"
   suffix: "parameter suffix in per-group keys of the form <GRP>_<suffix>; uppercase <SUFFIX> used in comment blocks"
   moveGroupCode: "moving group/stage code listed in MoveGroupCodes (forced-movement entries, form <code>_stage_<n>)"
   coh: "age-class (cohort) index in harvest keys, e.g. qStock_<GRP>_<coh>, sel_<GRP><coh>"
-  PREYCOHORT: "prey life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"
-  PREDCOHORT: "predator life-stage digit in pPREY keys (1 = juvenile, 2 = adult)"
+  PREYCOHORT: "prey life-stage digit in pPREY keys, first digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"
+  PREDCOHORT: "predator life-stage digit in pPREY keys, last digit (1 = juvenile, 2 = adult; ConvertAtlantis/atBioltoXML.c)"
   "n": "stage number in a moving group/stage code <code>_stage_<n>"
   longName: "long name of a physical-property forcing series (e.g. Temperature, Salinity) used in <longName><i>.name"
   code: "group code part of a moving group/stage code <code>_stage_<n>"
@@ -4664,7 +4664,7 @@ parameters:
     conditional_on:
 
   # --- Diet matrices and per-group growth/clearance arrays ---
-  - name: pPREY<PREDCOHORT><PRED><PREYCOHORT>
+  - name: pPREY<PREYCOHORT><PRED><PREDCOHORT>
     description: Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class
     source_file: biology_prm
     value_type: double_array

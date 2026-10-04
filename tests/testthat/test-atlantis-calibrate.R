@@ -178,3 +178,42 @@ test_that("compute_parameter_dimension() handles per_box parameters", {
     atlantis_load_files(atlantis_examples("inputs", "tiny.bgm"))
   expect_identical(compute_parameter_dimension(mod_geom, "per_box"), 11L)
 })
+
+test_that("pPREY keys are expanded over all placeholders", {
+  res <- mod |>
+    generate_calibration_table(path_to_mock("right_pprey.yaml"))
+  # first digit: prey stage, last digit: predator stage
+  expect_identical(
+    unique(res$name),
+    c("pPREY1WAE1", "pPREY2WAE1", "pPREY1WAE2", "pPREY2WAE2")
+  )
+  # ignored_values: 0 keeps the non-zero entries only
+  expect_identical(
+    res$position[res$name == "pPREY1WAE1"],
+    which(mod@biology$pPREY1WAE1 > 0)
+  )
+  expect_identical(
+    res$position[res$name == "pPREY2WAE2"],
+    which(mod@biology$pPREY2WAE2 > 0)
+  )
+  expect_true(all(res$cur_value > 0))
+  # bounds of proportions are capped at 1 on the file scale
+  expect_equal(
+    res$max[res$name == "pPREY2WAE2"],
+    rep(0, 3)
+  )
+  expect_equal(
+    res$min[res$name == "pPREY2WAE2"],
+    rep(log10(0.01), 3)
+  )
+  expect_true(all(10^res$max <= 1))
+})
+
+test_that("per_prey dimension counts groups and detritus", {
+  expect_identical(compute_parameter_dimension(mod, "per_prey"), 18L)
+  expect_error(
+    mod |>
+      generate_calibration_table(path_to_mock("wrong_pprey_position.yaml")),
+    "Invalid position"
+  )
+})

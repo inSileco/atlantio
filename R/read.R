@@ -168,7 +168,8 @@ read_prm_files <- function(path) {
 #' of the file is used as a clue to determine the type of files.
 #' @export
 read_txt_files <- function(path, filename) {
-  out <- vroom::vroom(path)
+  # altrep = FALSE: lazy (memory-mapped) reading keeps the file locked on Windows
+  out <- vroom::vroom(path, altrep = FALSE)
   bnm <- filename
   nm <- names(out)
   if (grepl("BoxBiomass", bnm) && nm[2] == "Box") {

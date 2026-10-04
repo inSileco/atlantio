@@ -6,7 +6,7 @@ test_that("generate_file() creates run parameter file with default settings", {
 
   expect_error(generate_file("wrong"))
 
-  expect_identical(result |> as.character(), temp_file)
+  expect_identical(as.character(result), as.character(fs::path(temp_file)))
   expect_true(file.exists(temp_file))
 
   # Check file content with comments

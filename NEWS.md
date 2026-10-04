@@ -1,4 +1,4 @@
-# atlantio (development version)
+# atlantio 0.2.1
 
 * `generate_calibration_table()`:
     - expands names with several placeholders (only the last one was

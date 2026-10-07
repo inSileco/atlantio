@@ -4794,6 +4794,58 @@ parameters:
       check: no_checking
     conditional_on: numCohorts==1 grazer
 
+  - name: BHalpha_<GRP>
+    description: Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar per age-structured group
+    source_file: biology_prm
+    value_type: double
+    dimension: per_group
+    units: individuals
+    bm_member: FunctGroupArray[sp].speciesParams[BHalpha_id]
+    reader:
+      fn: Util_XML_Read_Species_Param
+      at: atecology/atBiologyXMLParamIO.c:3477
+      check: no_checking
+    conditional_on: SP_AGE_STRUCTURED
+
+  - name: BHbeta_<GRP>
+    description: Beverton-Holt recruitment parameter beta (half-saturation stock biomass); scalar per age-structured group
+    source_file: biology_prm
+    value_type: double
+    dimension: per_group
+    units: mg N
+    bm_member: FunctGroupArray[sp].speciesParams[BHbeta_id]
+    reader:
+      fn: Util_XML_Read_Species_Param
+      at: atecology/atBiologyXMLParamIO.c:3478
+      check: no_checking
+    conditional_on: SP_AGE_STRUCTURED
+
+  - name: <GRP>_mL
+    description: Linear mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise)
+    source_file: biology_prm
+    value_type: double_array
+    dimension: per_stage
+    units: d-1
+    bm_member: FunctGroupArray[guild].cohortSpeciesParams[stage][mL_T15_id]
+    reader:
+      fn: Read_Cohort_Species_Param_Values
+      at: atecology/atBiologyXMLParamIO.c:142
+      check: proportion_check
+    conditional_on: SP_MORT
+
+  - name: <GRP>_mQ
+    description: Quadratic (density-dependent) mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise)
+    source_file: biology_prm
+    value_type: double_array
+    dimension: per_stage
+    units: d-1 (mg N m-3)-1
+    bm_member: FunctGroupArray[guild].cohortSpeciesParams[stage][mQ_T15_id]
+    reader:
+      fn: Read_Cohort_Species_Param_Values
+      at: atecology/atBiologyXMLParamIO.c:3180
+      check: proportion_check
+    conditional_on: SP_MORT_NOT_PP
+
   - name: mum_<GRP>
     description: Per-cohort vertebrate maximum growth (consumption) rate; prm key mum_<GRP> array over age classes
     source_file: biology_prm

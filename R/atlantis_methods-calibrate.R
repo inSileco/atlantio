@@ -27,7 +27,7 @@
 #'   to calibrate for array parameters (e.g. one value per cohort or per box).
 #'   Defaults to all positions. Positions are validated against the dimension
 #'   of the parameter when it can be computed from the loaded files
-#'   (`scalar`, `per_group`, `per_cohort`, `per_prey` and `per_box`
+#'   (`scalar`, `per_group`, `per_cohort`, `per_stage`, `per_prey` and `per_box`
 #'   parameters; the latter requires the geometry file). For other dimensions
 #'   a warning is emitted and a single position is assumed.
 #' * `ignored_values` (optional): value, or list of values, whose positions
@@ -166,6 +166,14 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       if (length(mis_abb_prm)) {
         cli::cli_abort("{mis_abb_prm} missing from calibrarion file.")
       }
+      # each expanded key is its own entry: a key of non-array type (e.g.
+      # mum_<GRP>_T15, one double per group) holds a single value, whatever
+      # dimension the dictionary lists for the family
+      key_dimension <- if (grepl("_array$", prm_info$value_type)) {
+        prm_info$dimension
+      } else {
+        "scalar"
+      }
       # compting all combinations
       df_key_val <- prm[abb_prm_name] |>
         expand.grid(stringsAsFactors = FALSE)
@@ -186,7 +194,7 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
         # predator of a diet key (pPREY...)
         prm_dim <- compute_parameter_dimension(
           x,
-          prm_info$dimension,
+          key_dimension,
           group = df_key_val$GRP[i] %||% df_key_val$PRED[i]
         )
         ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
@@ -389,6 +397,13 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
       require_group_file(x)
       require_valid_group(group, x)
       x@group$NumCohorts[x@group$Code == group]
+    },
+    "per_stage" = {
+      # stage-structured groups (juvenile/adult) carry one value per stage,
+      # e.g. <GRP>_mL, see Read_Cohort_Species_Param_Values()
+      require_group_file(x)
+      require_valid_group(group, x)
+      x@group$NumStages[x@group$Code == group]
     },
     "per_layer" = {
       warn_no_dimension_check()

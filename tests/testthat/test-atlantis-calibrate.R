@@ -217,3 +217,28 @@ test_that("per_prey dimension counts groups and detritus", {
     "Invalid position"
   )
 })
+
+test_that("mortality keys have one value per stage", {
+  expect_identical(compute_parameter_dimension(mod, "per_stage", "WAE"), 2L)
+  expect_identical(compute_parameter_dimension(mod, "per_stage", "DRE"), 1L)
+  res <- mod |>
+    generate_calibration_table(path_to_mock("right_mortality.yaml"))
+  expect_identical(res$name, c("DRE_mQ", "WAE_mQ", "WAE_mQ", "CHI_mL"))
+  expect_identical(res$position, c(1L, 1L, 2L, 1L))
+  expect_equal(res$min[1:3], rep(-9, 3))
+  # factor bounds around the current value, CHI_mL = 0.001
+  expect_equal(res$min[4], log10(1e-4))
+  expect_equal(res$max[4], log10(1e-2))
+})
+
+test_that("keys of non-array type expand to a single value", {
+  res <- mod |>
+    generate_calibration_table(path_to_mock("right_invert.yaml"))
+  expect_identical(
+    res$name,
+    c("mum_DRE_T15", "mum_CHI_T15", "C_CAL_T15", "BHalpha_GZS", "BHalpha_WAE")
+  )
+  expect_identical(res$position, rep(1L, 5))
+  expect_equal(res$cur_value[4:5], c(9.36e9, 3.07e9))
+  expect_false(anyNA(res$cur_value))
+})

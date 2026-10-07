@@ -1,5 +1,20 @@
 # Changelog
 
+## atlantio 0.2.2
+
+- [`generate_calibration_table()`](../reference/generate_calibration_table.md)
+  can calibrate the linear and quadratic mortality rates `<GRP>_mL` and
+  `<GRP>_mQ`, now listed in the parameter dictionary with the new
+  dimension `per_stage`: one value per stage, read from the `NumStages`
+  column of the groups file (2 for juvenile/adult groups, 1 otherwise).
+- The Beverton-Holt recruitment parameters `BHalpha_<GRP>` and
+  `BHbeta_<GRP>` are listed in the parameter dictionary, so they can be
+  calibrated.
+- [`generate_calibration_table()`](../reference/generate_calibration_table.md)
+  expands placeholder keys of non-array type (e.g. `mum_<GRP>_T15`,
+  `C_<GRP>_T15`) to a single value per key; they were given one position
+  per group, all but the first with no current value.
+
 ## atlantio 0.2.1
 
 - [`generate_calibration_table()`](../reference/generate_calibration_table.md):

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../../logo.png" class="logo" alt=""><h1>Atlantis parameter set</h1>
             
-            <h4 data-toc-skip class="date">2026-10-04</h4>
+            <h4 data-toc-skip class="date">2026-10-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/inSileco/atlantio/blob/main/vignettes/parameters/index.Rmd" class="external-link"><code>vignettes/parameters/index.Rmd</code></a></small>
       <div class="d-none name"><code>index.Rmd</code></div>
@@ -3807,6 +3807,78 @@ double
 </td>
 <td style="text-align:left;">
 per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BHalpha_&lt;GRP&gt;
+</td>
+<td style="text-align:left;">
+Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar
+per age-structured group
+</td>
+<td style="text-align:left;">
+individuals
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BHbeta_&lt;GRP&gt;
+</td>
+<td style="text-align:left;">
+Beverton-Holt recruitment parameter beta (half-saturation stock
+biomass); scalar per age-structured group
+</td>
+<td style="text-align:left;">
+mg N
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+&lt;GRP&gt;_mL
+</td>
+<td style="text-align:left;">
+Linear mortality rate at 15C; one value per stage (2 values for
+stage-structured groups, a scalar otherwise)
+</td>
+<td style="text-align:left;">
+d-1
+</td>
+<td style="text-align:left;">
+double_array
+</td>
+<td style="text-align:left;">
+per_stage
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+&lt;GRP&gt;_mQ
+</td>
+<td style="text-align:left;">
+Quadratic (density-dependent) mortality rate at 15C; one value per stage
+(2 values for stage-structured groups, a scalar otherwise)
+</td>
+<td style="text-align:left;">
+d-1 (mg N m-3)-1
+</td>
+<td style="text-align:left;">
+double_array
+</td>
+<td style="text-align:left;">
+per_stage
 </td>
 </tr>
 <tr>
@@ -14933,6 +15005,90 @@ biology_prm
 </td>
 <td style="text-align:left;">
 per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BHalpha_&lt;GRP&gt;
+</td>
+<td style="text-align:left;">
+Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar
+per age-structured group
+</td>
+<td style="text-align:left;">
+individuals
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+biology_prm
+</td>
+<td style="text-align:left;">
+per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BHbeta_&lt;GRP&gt;
+</td>
+<td style="text-align:left;">
+Beverton-Holt recruitment parameter beta (half-saturation stock
+biomass); scalar per age-structured group
+</td>
+<td style="text-align:left;">
+mg N
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+biology_prm
+</td>
+<td style="text-align:left;">
+per_group
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+&lt;GRP&gt;_mL
+</td>
+<td style="text-align:left;">
+Linear mortality rate at 15C; one value per stage (2 values for
+stage-structured groups, a scalar otherwise)
+</td>
+<td style="text-align:left;">
+d-1
+</td>
+<td style="text-align:left;">
+double_array
+</td>
+<td style="text-align:left;">
+biology_prm
+</td>
+<td style="text-align:left;">
+per_stage
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+&lt;GRP&gt;_mQ
+</td>
+<td style="text-align:left;">
+Quadratic (density-dependent) mortality rate at 15C; one value per stage
+(2 values for stage-structured groups, a scalar otherwise)
+</td>
+<td style="text-align:left;">
+d-1 (mg N m-3)-1
+</td>
+<td style="text-align:left;">
+double_array
+</td>
+<td style="text-align:left;">
+biology_prm
+</td>
+<td style="text-align:left;">
+per_stage
 </td>
 </tr>
 <tr>

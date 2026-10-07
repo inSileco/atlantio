@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,14 @@
       <small>Source: <a href="https://github.com/inSileco/atlantio/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.2" id="atlantio-022">atlantio 0.2.2<a class="anchor" aria-label="anchor" href="#atlantio-022"></a></h2>
+<ul><li>
+<code><a href="../reference/generate_calibration_table.html">generate_calibration_table()</a></code> can calibrate the linear and quadratic mortality rates <code>&lt;GRP&gt;_mL</code> and <code>&lt;GRP&gt;_mQ</code>, now listed in the parameter dictionary with the new dimension <code>per_stage</code>: one value per stage, read from the <code>NumStages</code> column of the groups file (2 for juvenile/adult groups, 1 otherwise).</li>
+<li>The Beverton-Holt recruitment parameters <code>BHalpha_&lt;GRP&gt;</code> and <code>BHbeta_&lt;GRP&gt;</code> are listed in the parameter dictionary, so they can be calibrated.</li>
+<li>
+<code><a href="../reference/generate_calibration_table.html">generate_calibration_table()</a></code> expands placeholder keys of non-array type (e.g. <code>mum_&lt;GRP&gt;_T15</code>, <code>C_&lt;GRP&gt;_T15</code>) to a single value per key; they were given one position per group, all but the first with no current value.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="atlantio-021">atlantio 0.2.1<a class="anchor" aria-label="anchor" href="#atlantio-021"></a></h2>
 <ul><li>

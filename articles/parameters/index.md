@@ -325,6 +325,10 @@ fisheries - : cohort - : move group code - : tracer name
 | Catch_Opportunity/Proportion_Exploitable/\<GRP\> | Proportion of each fishery’s catch exploitable by catch-eaters |  | double_array | other |
 | C\_\<GRP\> | Per-cohort vertebrate clearance (search-volume) rate; prm key C\_\<GRP\> array over age classes | m3 (mg N)-1 d-1 | double_array | per_cohort |
 | C\_\<GRP\>\_T15 | Invertebrate grazer clearance rate at 15C; scalar per group | m3 (mg N)-1 d-1 | double | per_group |
+| BHalpha\_\<GRP\> | Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar per age-structured group | individuals | double | per_group |
+| BHbeta\_\<GRP\> | Beverton-Holt recruitment parameter beta (half-saturation stock biomass); scalar per age-structured group | mg N | double | per_group |
+| \<GRP\>\_mL | Linear mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 | double_array | per_stage |
+| \<GRP\>\_mQ | Quadratic (density-dependent) mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 (mg N m-3)-1 | double_array | per_stage |
 | mum\_\<GRP\> | Per-cohort vertebrate maximum growth (consumption) rate; prm key mum\_\<GRP\> array over age classes | mg N d-1 (per individual) | double_array | per_cohort |
 | mum\_\<GRP\>\_T15 | Invertebrate/PP/bacteria maximum growth rate at 15C; scalar per group | d-1 | double | per_group |
 | InvertebrateSN/\<GRP\> | Invertebrate structural-N (size) reference per group | mg N | double_array | per_group |
@@ -966,6 +970,10 @@ fisheries - : cohort - : move group code - : tracer name
 | Catch_Opportunity/Proportion_Exploitable/\<GRP\> | Proportion of each fishery’s catch exploitable by catch-eaters |  | double_array | biology_prm | other |
 | C\_\<GRP\> | Per-cohort vertebrate clearance (search-volume) rate; prm key C\_\<GRP\> array over age classes | m3 (mg N)-1 d-1 | double_array | biology_prm | per_cohort |
 | C\_\<GRP\>\_T15 | Invertebrate grazer clearance rate at 15C; scalar per group | m3 (mg N)-1 d-1 | double | biology_prm | per_group |
+| BHalpha\_\<GRP\> | Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar per age-structured group | individuals | double | biology_prm | per_group |
+| BHbeta\_\<GRP\> | Beverton-Holt recruitment parameter beta (half-saturation stock biomass); scalar per age-structured group | mg N | double | biology_prm | per_group |
+| \<GRP\>\_mL | Linear mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 | double_array | biology_prm | per_stage |
+| \<GRP\>\_mQ | Quadratic (density-dependent) mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 (mg N m-3)-1 | double_array | biology_prm | per_stage |
 | mum\_\<GRP\> | Per-cohort vertebrate maximum growth (consumption) rate; prm key mum\_\<GRP\> array over age classes | mg N d-1 (per individual) | double_array | biology_prm | per_cohort |
 | mum\_\<GRP\>\_T15 | Invertebrate/PP/bacteria maximum growth rate at 15C; scalar per group | d-1 | double | biology_prm | per_group |
 | InvertebrateSN/\<GRP\> | Invertebrate structural-N (size) reference per group | mg N | double_array | biology_prm | per_group |

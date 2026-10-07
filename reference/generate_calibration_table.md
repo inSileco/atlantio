@@ -45,9 +45,10 @@ recognised:
   values to calibrate for array parameters (e.g. one value per cohort or
   per box). Defaults to all positions. Positions are validated against
   the dimension of the parameter when it can be computed from the loaded
-  files (`scalar`, `per_group`, `per_cohort`, `per_prey` and `per_box`
-  parameters; the latter requires the geometry file). For other
-  dimensions a warning is emitted and a single position is assumed.
+  files (`scalar`, `per_group`, `per_cohort`, `per_stage`, `per_prey`
+  and `per_box` parameters; the latter requires the geometry file). For
+  other dimensions a warning is emitted and a single position is
+  assumed.
 
 - `ignored_values` (optional): value, or list of values, whose positions
   are left out of the calibration, e.g. `ignored_values: 0` to calibrate

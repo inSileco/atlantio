@@ -37,7 +37,7 @@ prey to adult walleye).
 to calibrate for array parameters (e.g. one value per cohort or per box).
 Defaults to all positions. Positions are validated against the dimension
 of the parameter when it can be computed from the loaded files
-(\code{scalar}, \code{per_group}, \code{per_cohort}, \code{per_prey} and \code{per_box}
+(\code{scalar}, \code{per_group}, \code{per_cohort}, \code{per_stage}, \code{per_prey} and \code{per_box}
 parameters; the latter requires the geometry file). For other dimensions
 a warning is emitted and a single position is assumed.
 \item \code{ignored_values} (optional): value, or list of values, whose positions

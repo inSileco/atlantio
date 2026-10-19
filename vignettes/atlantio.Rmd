@@ -98,6 +98,39 @@ write_prm(prm[c("tstop", "dt", "toutstart", "toutinc")])
 
 Pass a path to `file` to write to disk instead of the console.
 
+Note that `read_prm()` keeps the numbers only: the time units of the run
+file go to the comments, so `tstop 365 day` is written back as `tstop 365`,
+which Atlantis reads as 365 seconds. To write modified parameters into a
+copy of an existing file, keeping its units, comments and layout, use
+`write_parameter_folder()`, which changes only the values that differ (see
+the [calibration vignette](calibration/index.html)).
+
+`compare_prm()` compares two parameter files, or parameter lists, by
+parameter name, so that moved lines, comments and layout do not show up:
+
+```{r compare-prm}
+# `prm` has tstop set to 730 above
+new <- prm
+new$dt <- 6
+compare_prm(read_prm(atlantis_examples("inputs", "tiny_run.prm")), new)
+```
+
+## Checking the inputs
+
+`check_prm()` and `check_init()` report the problems of parameter files and
+initial conditions that Atlantis reads silently, and `check_run()` whether a
+run reached its end (Atlantis exits with status 0 even when it crashes).
+All three return a table with one row per finding (`file`, `check`,
+`severity`, `key` and `message`), printed as a summary.
+
+```{r check-run}
+check_run(
+  atlantis_examples("outputs", "output.nc"),
+  atlantis_examples("inputs", "tiny_run.prm")
+)
+check_prm(run = atlantis_examples("inputs", "tiny_run.prm"))
+```
+
 
 # Working with outputs
 
@@ -229,7 +262,7 @@ transform_parameter_value(-3, "pow10")
 inverse_transform_parameter_value(0.001, "pow10")
 ```
 
-The full workflow (running Atlantis, computing the objective function and driving `calibrar`) is described in the [calibration vignette](calibration/index.html).
+The full workflow (running Atlantis, computing the objective function, driving `calibrar`, summarising the runs and writing the next parameter folder) is described in the [calibration vignette](calibration/index.html).
 
 
 # References

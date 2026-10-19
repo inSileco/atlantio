@@ -341,7 +341,10 @@ set_init_values <- function(path, variable, values, file = path) {
 }
 
 
-#' @export
+# registered on base::print explicitly: `S7::method(print, Atlantis) <-`
+# leaves a copy of `print` in the namespace, and a plain registration would
+# go to that copy, which print() never dispatches through
+#' @exportS3Method base::print
 print.atlantis_check <- function(x, ...) {
   if (!nrow(x)) {
     cli::cli_alert_success("No problem found.")

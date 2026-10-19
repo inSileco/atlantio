@@ -15,6 +15,21 @@
       their comments, units, layout and line endings are kept (`write_prm()`
       drops the units: `tstop 365 day` becomes 365 seconds);
     - `compare_prm()` compares two parameter files by parameter name.
+* Summarising a calibration: `read_calibration_runs()` collects the
+  `parameters.rds` of every run, and `summarise_calibration()` gives, per
+  parameter value, the best run, the range of the best runs and the median of
+  the top runs (as factors of the starting value or as values), how many top
+  runs sit at a bound, how failed runs differ from completed ones, and the
+  values and scores per generation.
+* The `atlantis_check` tables of `check_init()`, `check_prm()` and
+  `check_run()` now print as a summary when the package is installed (the
+  print method was registered on a copy of `print()` left in the namespace by
+  the S7 print method of `Atlantis`).
+* The vignettes cover the new functions: checking the inputs and the runs in
+  Get Started, and in the calibration vignette, `check_run()` and
+  `apply_parameters()` / `write_parameter_folder()` in the objective
+  function, and a new step 5 summarising the runs and writing the next
+  parameter folder.
 * `score_table()` and `compute_score()` gain `method = "lnorm2"`, the
   objective function of Morell et al. (2026) as in their calibration code
   (squared log ratio to the target summed over the scored values, no band,

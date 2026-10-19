@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -272,13 +272,59 @@ programmatically and write a new file.</p>
 <span><span class="co">#&gt; toutinc 5</span></span></code></pre></div>
 <p>Pass a path to <code>file</code> to write to disk instead of the
 console.</p>
+<p>Note that <code><a href="../reference/read_prm.html">read_prm()</a></code> keeps the numbers only: the time
+units of the run file go to the comments, so <code>tstop 365 day</code>
+is written back as <code>tstop 365</code>, which Atlantis reads as 365
+seconds. To write modified parameters into a copy of an existing file,
+keeping its units, comments and layout, use
+<code><a href="../reference/write_parameter_folder.html">write_parameter_folder()</a></code>, which changes only the values
+that differ (see the <a href="calibration/index.html">calibration
+vignette</a>).</p>
+<p><code><a href="../reference/compare_prm.html">compare_prm()</a></code> compares two parameter files, or parameter
+lists, by parameter name, so that moved lines, comments and layout do
+not show up:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># `prm` has tstop set to 730 above</span></span>
+<span><span class="va">new</span> <span class="op">&lt;-</span> <span class="va">prm</span></span>
+<span><span class="va">new</span><span class="op">$</span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
+<span><span class="fu"><a href="../reference/compare_prm.html">compare_prm</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_prm.html">read_prm</a></span><span class="op">(</span><span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_run.prm"</span><span class="op">)</span><span class="op">)</span>, <span class="va">new</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     key position   x   y</span></span>
+<span><span class="co">#&gt; 1    dt        1  12   6</span></span>
+<span><span class="co">#&gt; 2 tstop        1 365 730</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="checking-the-inputs">Checking the inputs<a class="anchor" aria-label="anchor" href="#checking-the-inputs"></a>
+</h3>
+<p><code><a href="../reference/check_prm.html">check_prm()</a></code> and <code><a href="../reference/check_init.html">check_init()</a></code> report the
+problems of parameter files and initial conditions that Atlantis reads
+silently, and <code><a href="../reference/check_run.html">check_run()</a></code> whether a run reached its end
+(Atlantis exits with status 0 even when it crashes). All three return a
+table with one row per finding (<code>file</code>, <code>check</code>,
+<code>severity</code>, <code>key</code> and <code>message</code>),
+printed as a summary.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/check_run.html">check_run</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"outputs"</span>, <span class="st">"output.nc"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_run.prm"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No problem found.</span></span>
+<span><span class="fu"><a href="../reference/check_prm.html">check_prm</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_run.prm"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 0 errors, 0 warnings, 3 notes.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (tabs): tabs as separators on 21 lines.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (units): 9 values followed by a unit, which Atlantis converts</span></span>
+<span><span class="co">#&gt;   but read_prm() drops (to the comments): checkstart 0 day, checkstop 366666660</span></span>
+<span><span class="co">#&gt;   day, dt 12 hour, tstop 365 day, toutstart 0 day, toutinc 5 day, toutfinc 365</span></span>
+<span><span class="co">#&gt;   day, tburnday 0 day, and tsumout 5 day.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (unknown): 8 keys not in the run template: <span style="color: #00BB00;">flagratio_warn</span>,</span></span>
+<span><span class="co">#&gt;   <span style="color: #00BB00;">K_max_num_zoning</span>, <span style="color: #00BB00;">N_to_C</span>, <span style="color: #00BB00;">N_to_P</span>, <span style="color: #00BB00;">flag_contam_sanity_check</span>, <span style="color: #00BB00;">external_box</span>,</span></span>
+<span><span class="co">#&gt;   <span style="color: #00BB00;">trackWind</span>, and <span style="color: #00BB00;">flag_contamReprodModel</span>.</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="working-with-outputs">Working with outputs<a class="anchor" aria-label="anchor" href="#working-with-outputs"></a>
 </h2>
 <p>Let’s add the main NetCDF output and two biomass tables from the
 example run.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="va">mod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"outputs"</span>, <span class="st">"output.nc"</span><span class="op">)</span>,</span>
@@ -292,7 +338,7 @@ example run.</p>
 <p><code><a href="../reference/get_biomass_by_type.html">get_biomass_by_type()</a></code> returns one of the biomass tables
 (<code>"biomass_all"</code>, <code>"biomass_box"</code>,
 <code>"biomass_age"</code> or <code>"biomass_age_annual"</code>).</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/get_biomass_by_type.html">get_biomass_by_type</a></span><span class="op">(</span><span class="st">"biomass_all"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">WAE</span>, <span class="va">YPH</span>, <span class="va">GZS</span>, <span class="va">RDG</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -313,7 +359,7 @@ example run.</p>
 <p><code><a href="../reference/create_time_series.html">create_time_series()</a></code> extracts any variable of the main
 output as a tidy data frame, optionally restricted to a set of boxes and
 layers. Time is in seconds since the start of the run.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mod</span><span class="op">@</span><span class="va">main_output</span><span class="op">$</span><span class="va">var</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "volume"     "hdsource"   "hdsink"     "eflux"      "vflux"     </span></span>
 <span><span class="co">#&gt;  [6] "porosity"   "nominal_dz" "dz"         "topk"       "numlayers"</span></span>
@@ -331,7 +377,7 @@ layers. Time is in seconds since the start of the run.</p>
 <p><code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> gathers reserve and
 structural nitrogen, numbers and weight for an age-structured group, per
 box, layer and age class.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_yph</span> <span class="op">&lt;-</span> <span class="va">mod</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span>group <span class="op">=</span> <span class="st">"YPH"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ts_yph</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
@@ -343,7 +389,7 @@ box, layer and age class.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1<span style="text-decoration: underline;">296</span>000     0     1 Yellow_Perch 1      207.    78.0 <span style="text-decoration: underline;">308</span>824. 10<span style="text-decoration: underline;">028</span>845. g    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 1<span style="text-decoration: underline;">728</span>000     0     1 Yellow_Perch 1      207.    78.0 <span style="text-decoration: underline;">308</span>824. 10<span style="text-decoration: underline;">028</span>845. g    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2<span style="text-decoration: underline;">160</span>000     0     1 Yellow_Perch 1      207.    78.0 <span style="text-decoration: underline;">308</span>824. 10<span style="text-decoration: underline;">028</span>845. g</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">ts_yph</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>Nums <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">Nums</span><span class="op">)</span>, .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">age</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -359,7 +405,7 @@ box, layer and age class.</p>
 <p>The biology parameter file contains the prey availability matrix
 (<code>pPREY</code> parameters). <code><a href="../reference/create_diet_table.html">create_diet_table()</a></code>
 reshapes it into a prey-by-predator table.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_diet_table.html">create_diet_table</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">diet</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 20 18</span></span>
@@ -374,12 +420,12 @@ reshapes it into a prey-by-predator table.</p>
 <p><code><a href="../reference/create_foodweb.html">create_foodweb()</a></code> goes one step further and returns the
 binary food web as an <code>igraph</code> object, ready for network
 analysis or plotting.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_foodweb.html">create_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="va">fw</span></span>
-<span><span class="co">#&gt; IGRAPH 55e04c7 DNW- 18 62 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 3c218a1 DNW- 18 62 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 55e04c7 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 3c218a1 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] WAE-&gt;WAE YPH-&gt;WAE WAE-&gt;YPH YPH-&gt;YPH WAE-&gt;GZS WAE-&gt;RDG YPH-&gt;RDG RDG-&gt;DRE</span></span>
 <span><span class="co">#&gt;  [9] WAE-&gt;DRE YPH-&gt;DRE GZS-&gt;CHI RDG-&gt;CHI WAE-&gt;CHI YPH-&gt;CHI CAL-&gt;DIA DRE-&gt;DIA</span></span>
 <span><span class="co">#&gt; [17] GZS-&gt;DIA ROT-&gt;DIA CAL-&gt;GRN DRE-&gt;GRN GZS-&gt;GRN ROT-&gt;GRN DRE-&gt;CAL GZS-&gt;CAL</span></span>
@@ -389,7 +435,7 @@ analysis or plotting.</p>
 <span><span class="co">#&gt; [49] CHI-&gt;DR  DRE-&gt;DR  RDG-&gt;DR  ROT-&gt;DR  YPH-&gt;DR  CAL-&gt;DC  CHI-&gt;DC  DRE-&gt;DC </span></span>
 <span><span class="co">#&gt; [57] RDG-&gt;DC  ROT-&gt;DC  YPH-&gt;DC </span></span>
 <span><span class="co">#&gt; + ... omitted several edges</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">fw</span>,</span>
@@ -414,7 +460,7 @@ analysis or plotting.</p>
 the source code. <code><a href="../reference/list_atlantis_parameters.html">list_atlantis_parameters()</a></code> returns
 metadata about the Atlantis version and a list of parameters with their
 description, type and where they are read.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prm_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_atlantis_parameters.html">list_atlantis_parameters</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">prm_list</span><span class="op">$</span><span class="va">meta</span><span class="op">$</span><span class="va">atlantis_version</span></span>
 <span><span class="co">#&gt; [1] 3.6722</span></span>
@@ -466,10 +512,10 @@ parameter file with recommended values and comments. Values that need to
 be provided by the user are marked with
 <code>&lt;&lt;TO_EDIT&gt;&gt;</code>. Only the run file is supported for
 now.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">run_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_file.html">generate_file</a></span><span class="op">(</span><span class="st">"run"</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"run.prm"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">run_file</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "# Generated by atlantio 0.3.0"                                                                        </span></span>
+<span><span class="co">#&gt;  [1] "# Generated by atlantio 0.3.0.9000"                                                                   </span></span>
 <span><span class="co">#&gt;  [2] ""                                                                                                     </span></span>
 <span><span class="co">#&gt;  [3] "# ========= ContaminantSettings"                                                                      </span></span>
 <span><span class="co">#&gt;  [4] "track_contaminants 0  \t# Flag to turn on tracking of contaminants.."                                 </span></span>
@@ -489,7 +535,7 @@ now.</p>
 specification into the table of parameters to calibrate expected by
 <code>calibrar</code>: one row per parameter and position, with bounds,
 the transformation applied and the file the parameter belongs to.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"calibrate"</span>, <span class="st">"mum.yaml"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span>sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; - name: mum_&lt;GRP&gt;</span></span>
 <span><span class="co">#&gt;   GRP: [GZS, RDG, WAE]</span></span>
@@ -517,13 +563,14 @@ the transformation applied and the file the parameter belongs to.</p>
 <p><code><a href="../reference/transform_parameter_value.html">transform_parameter_value()</a></code> and
 <code><a href="../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value()</a></code> map values between the
 calibration scale and the scale used in the parameter file.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/transform_parameter_value.html">transform_parameter_value</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="st">"pow10"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.001</span></span>
 <span><span class="fu"><a href="../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="st">"pow10"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -3</span></span></code></pre></div>
-<p>The full workflow (running Atlantis, computing the objective function
-and driving <code>calibrar</code>) is described in the <a href="calibration/index.html">calibration vignette</a>.</p>
+<p>The full workflow (running Atlantis, computing the objective
+function, driving <code>calibrar</code>, summarising the runs and
+writing the next parameter folder) is described in the <a href="calibration/index.html">calibration vignette</a>.</p>
 </div>
 </div>
 <div class="section level2">

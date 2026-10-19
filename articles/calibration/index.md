@@ -231,16 +231,22 @@ remain owned by the R session.
 An Atlantis fatal error ends in
 [`quit()`](https://rdrr.io/r/base/quit.html), which exits with status 0
 after printing to stderr. A crash therefore usually shows as a truncated
-`output.nc` rather than a non-zero exit status. Read the expected run
-length and output interval from the run file, and compare them with the
-last time step actually written:
+`output.nc` rather than a non-zero exit status.
+[`check_run()`](../../reference/check_run.md) compares the last time
+step of the output with the end of the run: a run counts as complete
+only if it reaches `tstop`, within one output interval (`toutinc`). Both
+are read from the run file with their units, as Atlantis reads them
+(`tstop 15000 day`; a bare number is in seconds).
 
 ``` r
 
-run_prm <- new_atlantis() |> atlantis_load_files("run.prm")
-tstop_days <- run_prm@run$tstop
-toutinc_days <- run_prm@run$toutinc
+check_run("outputFolder/output.nc", "run.prm")
 ```
+
+Like the other checks, it returns an `atlantis_check` table: empty when
+the run completed, otherwise one error, `"missing"` (no output),
+`"unreadable"` or `"incomplete"`, whose message gives the day the run
+stopped at.
 
 ## Step 3: design the objective function
 
@@ -313,7 +319,11 @@ The score is tuned with a few arguments:
   oscillations for drift; `"mean"`, `"median"`, `"min"`, `"max"` or a
   function are also accepted;
 - `exclude`: groups left out of the score, e.g. those known to be poorly
-  initialized and not targeted by this round.
+  initialized and not targeted by this round;
+- `weight`: the weight of the penalty of each tracer, e.g. to make the
+  biomass count more than the individual weights;
+- `target_factor`: the factor applied to the initial value of a tracer
+  to get its target, e.g. a target biomass above the initial one.
 
 ``` r
 
@@ -326,6 +336,59 @@ compute_score(
   exclude = "Detritus_feeders"
 )
 ```
+
+### The objective function of Morell et al.
+
+`method = "lnorm2"` scores instead the objective function of
+@morell_ManualSemiautomated_2026, as implemented in their calibration
+code with `calibrar`’s `lnorm2`, where the targets are built from the
+initial state. There is no tolerance band: every scored value is
+penalized by its squared log ratio to the target,
+`(log(x(t) + tiny) - log(b x(0) + tiny))^2`, and these are summed (not
+averaged) over the scored values of each series. The tracers scored are
+those of Morell et al.: the weight-at-age (`Weight`, the wet weight of
+the average individual in kg, `(StructN + ResN) * 5.7 * 20 / 1e6`) and,
+when `biomass` is given, the biomass of every living group:
+
+``` r
+
+score_table(ts, biomass = biomass, method = "lnorm2")
+```
+
+For the unfished phase of their calibration, the target biomass of a
+theoretical unfished system is the initial biomass times a factor
+`b = 1.3` (values between 1.2 and 1.5 are suggested depending on the
+system), set with `target_factor`; the weight-at-age keeps its initial
+value as target:
+
+``` r
+
+compute_score(
+  ts,
+  biomass = biomass,
+  method = "lnorm2",
+  target_factor = c(Biomass = 1.3)
+)
+```
+
+With this method, a named `weight` also selects the tracers scored,
+among `Nums`, `StructN`, `ResN`, `Weight` and `Biomass`, e.g. to give
+the biomass twice the weight of the weight-at-age:
+
+``` r
+
+compute_score(
+  ts,
+  biomass = biomass,
+  method = "lnorm2",
+  weight = c(Weight = 1, Biomass = 2)
+)
+```
+
+Two terms of Morell et al.’s objective are not covered: the catches,
+which are not read by `atlantio`, and the stability penalty on the
+year-to-year change of the biomass, which is not part of their
+calibration code.
 
 [`window_values()`](../../reference/window_values.md), used internally,
 shows which values of a series are scored for a given window and
@@ -345,17 +408,17 @@ run, a truncated output or a scoring error must return a large penalty
 
 The objective function chains one calibration iteration:
 
-1.  **transform the parameters** from the calibration scale to the model
-    scale with
-    [`transform_parameter_value()`](../../reference/transform_parameter_value.md)
-    and assign them into the biology object (element assignment keeps
-    the array attributes [`write_prm()`](../../reference/read_prm.md)
-    needs);
-2.  **create a unique run directory**, copy the base inputs there and
-    write the modified biology file with
-    [`write_prm()`](../../reference/read_prm.md) together with the run
-    script;
-3.  **run the model**;
+1.  **apply the parameters**:
+    [`apply_parameters()`](../../reference/apply_parameters.md) maps the
+    values from the calibration scale to the model scale and sets them
+    in the parameter files loaded in the model object;
+2.  **create a unique run directory** and write the inputs there with
+    [`write_parameter_folder()`](../../reference/write_parameter_folder.md):
+    it copies the base inputs and writes the biology file with only the
+    calibrated values changed, keeping its comments and units; then add
+    the run script;
+3.  **run the model** and check, with
+    [`check_run()`](../../reference/check_run.md), that it completed;
 4.  **read the output** and compute the score;
 5.  **save** the time series and the parameter values with their score,
     and remove the bulky run files.
@@ -364,35 +427,38 @@ The objective function chains one calibration iteration:
 
 run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
                       groups) {
-  # 1. transformation
-  bio <- atlantis@biology
-  for (i in seq_len(nrow(calib_table))) {
-    value <- transform_parameter_value(par[i], calib_table$transf[i])
-    bio[[calib_table$name[i]]][calib_table$position[i]] <- value
-  }
+  # the names <name>.<position> make every parameters.rds self-describing,
+  # and are what read_calibration_runs() expects
+  names(par) <- paste(calib_table$name, calib_table$position, sep = ".")
+
+  # 1. parameter values, on the model scale in the biology file
+  atlantis <- apply_parameters(atlantis, calib_table, par)
+  par_model <- vapply(seq_len(nrow(calib_table)), function(i) {
+    atlantis@biology[[calib_table$name[i]]][calib_table$position[i]]
+  }, numeric(1))
+  names(par_model) <- names(par)
 
   # 2. run directory and input files
   run_dir <- tempfile("run_", tmpdir = results_dir)
   dir.create(run_dir)
-  file.copy(list.files(base_dir, full.names = TRUE), run_dir)
-  write_prm(bio, file.path(run_dir, "biology.prm"))
+  write_parameter_folder(atlantis, run_dir, from = base_dir, overwrite = TRUE)
   write_run_script(run_dir)
   dir.create(file.path(run_dir, "outputFolder"))
 
-  # 3. model run
+  # 3. model run; a zero exit status does not mean the run completed
   res <- run_atlantis(run_dir)
   out_file <- file.path(run_dir, "outputFolder", "output.nc")
-  if (res$status != 0 || !file.exists(out_file)) {
-    return(failed_run(run_dir, par, res))
+  crash <- check_run(out_file, file.path(run_dir, "run.prm"))
+  if (res$status != 0 || nrow(crash)) {
+    reason <- if (nrow(crash)) crash$message[1] else
+      sprintf("exit status %s", res$status)
+    return(failed_run(run_dir, par, par_model, res, reason))
   }
 
   # 4. output and score; any error becomes the penalty score
   score <- tryCatch({
     out <- atlantis_load_files(atlantis, out_file)
     ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
-    if (max(ts$time) / 86400 < tstop_days - toutinc_days) {
-      stop("output.nc is truncated: the model crashed mid-run")
-    }
     biomass <- read_biomass_index(
       file.path(run_dir, "outputFolder", "outputBiomIndx.txt"),
       atlantis@group
@@ -400,10 +466,15 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
     saveRDS(list(ts = ts, biomass = biomass),
       file.path(run_dir, "time_series.rds"))
     compute_score(ts, biomass = biomass)
-  }, error = function(e) failed_run(run_dir, par, res, conditionMessage(e)))
+  }, error = function(e) {
+    failed_run(run_dir, par, par_model, res, conditionMessage(e))
+  })
 
   # 5. results
-  saveRDS(list(par = par, score = score), file.path(run_dir, "parameters.rds"))
+  saveRDS(
+    list(par = par, par_model = par_model, score = score, failed = FALSE),
+    file.path(run_dir, "parameters.rds")
+  )
   unlink(setdiff(
     list.files(run_dir, full.names = TRUE),
     file.path(run_dir, c("time_series.rds", "parameters.rds"))
@@ -415,10 +486,36 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
 Keeping the results directory outside
 [`tempdir()`](https://rdrr.io/r/base/tempfile.html) matters: it must
 survive the R session, and it is what makes the calibration inspectable
-afterwards. For failed runs, `failed_run()` should record the parameter
-values, the penalty and the failure reason, and keep the tail of the
-model output (where Atlantis prints its
-[`quit()`](https://rdrr.io/r/base/quit.html) message).
+afterwards. For failed runs, `failed_run()` should record the same
+`parameters.rds` with the penalty as score, `failed = TRUE` and the
+failure `reason`, keep the tail of the model output (where Atlantis
+prints its [`quit()`](https://rdrr.io/r/base/quit.html) message), and
+return the penalty:
+
+``` r
+
+failed_run <- function(run_dir, par, par_model, res, reason) {
+  saveRDS(
+    list(par = par, par_model = par_model, score = 1e8, failed = TRUE,
+      reason = reason),
+    file.path(run_dir, "parameters.rds")
+  )
+  writeLines(
+    c(reason, utils::tail(strsplit(res$stderr, "\n")[[1]], 100)),
+    file.path(run_dir, "failure_log.txt")
+  )
+  1e8
+}
+```
+
+Naming the run directories after their generation, e.g. with the prefix
+`gen003_`, lets
+[`summarise_calibration()`](../../reference/summarise_calibration.md)
+follow the values from one generation to the next (see Step 5).
+`calibrar` does not pass the generation to the objective function, but
+evaluates every generation in full before the next one, so it can be
+derived from the number of run directories already present and
+`popsize`.
 
 ### Starting values
 
@@ -461,8 +558,7 @@ registerDoParallel(cl)
 
 # %dopar% ships the objective function to the workers, but not the global
 # objects it relies on: export them and load the packages explicitly
-clusterExport(cl, c("write_run_script", "run_atlantis", "failed_run",
-  "tstop_days", "toutinc_days"))
+clusterExport(cl, c("write_run_script", "run_atlantis", "failed_run"))
 clusterEvalQ(cl, library(atlantio))
 ```
 
@@ -514,32 +610,98 @@ binary.
 ## Step 5: inspect the results and iterate
 
 Every evaluation leaves its time series, parameter values and score in
-one folder of the results directory, which allows two kinds of
-inspection:
+one folder of the results directory, which allows three kinds of
+inspection.
 
-- **the trajectory of the best parameter sets**, to see which groups
-  drive the score and whether the tolerance band or the scoring window
-  need adjusting. [`score_table()`](../../reference/score_table.md) on
-  the saved time series breaks the score down per series:
+### The tuned parameters
 
-  ``` r
+[`read_calibration_runs()`](../../reference/read_calibration_runs.md)
+gathers the `parameters.rds` of every run into one table (one row per
+run and parameter value, with the score, whether the run failed and why,
+and the generation read from the `genNNN_` prefix of the folder name).
+[`summarise_calibration()`](../../reference/summarise_calibration.md)
+summarises it per parameter value of the calibration table:
 
-  run <- readRDS(file.path(best_run_dir, "time_series.rds"))
-  st <- score_table(run$ts, biomass = run$biomass)
-  head(st[order(st$penalty, decreasing = TRUE), ], 10)
-  ```
+``` r
 
-- **the parameter sets that crashed the model**. Gathering the
-  `parameters.rds` of all runs into one table, with the crashed runs
-  first and the range of each parameter in crashed versus completed
-  runs, points at the bound (or bound combination) responsible.
-  Tightening these bounds in the YAML file before the next round is the
-  “nudging” that keeps the optimizer in the region where the model makes
-  sense.
+runs <- read_calibration_runs(results_dir)
+res <- summarise_calibration(runs, calib_table, n_best = 5, n_top = 20)
+res$parameters
+```
 
-The next round then starts from the calibrated values, possibly with a
-new set of parameters, which is how @morell_ManualSemiautomated_2026
+For each parameter value, `res$parameters` gives the starting value, the
+value of the best run, the range over the `n_best` best runs and the
+median over the `n_top` best runs. Values are given as a factor of the
+starting value when the start lies within the bounds, and as values
+otherwise (e.g. a rate started at a placeholder far below its search
+range); set `relative` to choose. Two more columns flag what to revise
+before the next round:
+
+- `at_bound`, the number of the `n_top` best runs at a bound: a
+  parameter pushed against its bound wants a wider range;
+- `failed_shift`, the mean value of the failed runs minus that of the
+  completed runs, on the calibration scale: a large shift points at the
+  region (and the bound) where the model crashes. Tightening these
+  bounds in the YAML file is the “nudging” that keeps the optimizer in
+  the region where the model makes sense.
+
+`res$generations` follows the median of the best runs of each
+generation, to see whether the values have settled, and `res$scores`
+gives the number of runs, of failed runs, and the best and median scores
+per generation. Runs outside the optimization, such as the evaluation at
+the starting values or a final re-evaluation of the best set, can be
+filtered out of `runs` first.
+
+### The best runs
+
+The time series of the best runs show which groups drive the score and
+whether the tolerance band or the scoring window need adjusting.
+[`score_table()`](../../reference/score_table.md) on the saved time
+series breaks the score down per series:
+
+``` r
+
+best_run_dir <- file.path(results_dir, runs$run[which.min(runs$score)])
+run <- readRDS(file.path(best_run_dir, "time_series.rds"))
+st <- score_table(run$ts, biomass = run$biomass)
+head(st[order(st$penalty, decreasing = TRUE), ], 10)
+```
+
+### The next parameter folder
+
+The next round starts from the calibrated values, possibly with a new
+set of parameters, which is how @morell_ManualSemiautomated_2026
 describe calibration as a semi-automated process rather than a single
 optimization.
+[`apply_parameters()`](../../reference/apply_parameters.md) sets the
+values of a run in the model object, here on the model scale as saved in
+`parameters.rds`, and
+[`write_parameter_folder()`](../../reference/write_parameter_folder.md)
+writes the new parameter folder from the previous one. Only the
+calibrated values change in the biology file; the files not loaded in
+the object (physics, forcing) are copied from `from`:
+
+``` r
+
+best <- readRDS(file.path(best_run_dir, "parameters.rds"))
+mod_next <- apply_parameters(mod, calib_table, best$par_model,
+  scale = "model")
+changes <- write_parameter_folder(mod_next, "params_calibration_v2",
+  from = "params_calibration_v1")
+changes
+```
+
+[`compare_prm()`](../../reference/compare_prm.md) compares two parameter
+files by parameter name, so moved lines, comments and layout do not show
+up, only the values that differ and the parameters present in one file
+only:
+
+``` r
+
+compare_prm(
+  "params_calibration_v1/biology.prm",
+  "params_calibration_v2/biology.prm"
+)
+```
 
 ## References

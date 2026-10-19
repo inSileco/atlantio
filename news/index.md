@@ -1,5 +1,56 @@
 # Changelog
 
+## atlantio (development version)
+
+- [`check_run()`](../reference/check_run.md) checks that a run
+  completed: Atlantis exits with status 0 after a fatal error, so a run
+  counts as complete only if the last time step of its main output
+  reaches `tstop` (within one `toutinc`), read with its units as
+  Atlantis reads them.
+- Writing a parameter set back into a parameter folder:
+  - [`apply_parameters()`](../reference/apply_parameters.md) sets the
+    values of a calibration table (on the calibration or the model
+    scale) in the parameter files loaded in an Atlantis object;
+  - [`write_parameter_folder()`](../reference/write_parameter_folder.md)
+    writes the input files of an Atlantis object into a folder,
+    optionally on top of a copy of another folder (for the files not
+    loaded, such as the physics and forcing files). The run and biology
+    files are patched in place, only the values that changed, so their
+    comments, units, layout and line endings are kept
+    ([`write_prm()`](../reference/read_prm.md) drops the units:
+    `tstop 365 day` becomes 365 seconds);
+  - [`compare_prm()`](../reference/compare_prm.md) compares two
+    parameter files by parameter name.
+- Summarising a calibration:
+  [`read_calibration_runs()`](../reference/read_calibration_runs.md)
+  collects the `parameters.rds` of every run, and
+  [`summarise_calibration()`](../reference/summarise_calibration.md)
+  gives, per parameter value, the best run, the range of the best runs
+  and the median of the top runs (as factors of the starting value or as
+  values), how many top runs sit at a bound, how failed runs differ from
+  completed ones, and the values and scores per generation.
+- The `atlantis_check` tables of
+  [`check_init()`](../reference/check_init.md),
+  [`check_prm()`](../reference/check_prm.md) and
+  [`check_run()`](../reference/check_run.md) now print as a summary when
+  the package is installed (the print method was registered on a copy of
+  [`print()`](https://rdrr.io/r/base/print.html) left in the namespace
+  by the S7 print method of `Atlantis`).
+- The vignettes cover the new functions: checking the inputs and the
+  runs in Get Started, and in the calibration vignette,
+  [`check_run()`](../reference/check_run.md) and
+  [`apply_parameters()`](../reference/apply_parameters.md) /
+  [`write_parameter_folder()`](../reference/write_parameter_folder.md)
+  in the objective function, and a new step 5 summarising the runs and
+  writing the next parameter folder.
+- [`score_table()`](../reference/score_table.md) and
+  [`compute_score()`](../reference/score_table.md) gain
+  `method = "lnorm2"`, the objective function of Morell et al. (2026) as
+  in their calibration code (squared log ratio to the target summed over
+  the scored values, no band, on the weight-at-age and the biomass by
+  default), and `weight` and `target_factor` (Morell et al.’s b) per
+  tracer, for both methods.
+
 ## atlantio 0.3.0
 
 - New calibration objective functions:

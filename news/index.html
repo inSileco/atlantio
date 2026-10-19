@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,24 @@
       <small>Source: <a href="https://github.com/inSileco/atlantio/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="atlantio-development-version">atlantio (development version)<a class="anchor" aria-label="anchor" href="#atlantio-development-version"></a></h2>
+<ul><li>
+<code><a href="../reference/check_run.html">check_run()</a></code> checks that a run completed: Atlantis exits with status 0 after a fatal error, so a run counts as complete only if the last time step of its main output reaches <code>tstop</code> (within one <code>toutinc</code>), read with its units as Atlantis reads them.</li>
+<li>Writing a parameter set back into a parameter folder:
+<ul><li>
+<code><a href="../reference/apply_parameters.html">apply_parameters()</a></code> sets the values of a calibration table (on the calibration or the model scale) in the parameter files loaded in an Atlantis object;</li>
+<li>
+<code><a href="../reference/write_parameter_folder.html">write_parameter_folder()</a></code> writes the input files of an Atlantis object into a folder, optionally on top of a copy of another folder (for the files not loaded, such as the physics and forcing files). The run and biology files are patched in place, only the values that changed, so their comments, units, layout and line endings are kept (<code><a href="../reference/read_prm.html">write_prm()</a></code> drops the units: <code>tstop 365 day</code> becomes 365 seconds);</li>
+<li>
+<code><a href="../reference/compare_prm.html">compare_prm()</a></code> compares two parameter files by parameter name.</li>
+</ul></li>
+<li>Summarising a calibration: <code><a href="../reference/read_calibration_runs.html">read_calibration_runs()</a></code> collects the <code>parameters.rds</code> of every run, and <code><a href="../reference/summarise_calibration.html">summarise_calibration()</a></code> gives, per parameter value, the best run, the range of the best runs and the median of the top runs (as factors of the starting value or as values), how many top runs sit at a bound, how failed runs differ from completed ones, and the values and scores per generation.</li>
+<li>The <code>atlantis_check</code> tables of <code><a href="../reference/check_init.html">check_init()</a></code>, <code><a href="../reference/check_prm.html">check_prm()</a></code> and <code><a href="../reference/check_run.html">check_run()</a></code> now print as a summary when the package is installed (the print method was registered on a copy of <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> left in the namespace by the S7 print method of <code>Atlantis</code>).</li>
+<li>The vignettes cover the new functions: checking the inputs and the runs in Get Started, and in the calibration vignette, <code><a href="../reference/check_run.html">check_run()</a></code> and <code><a href="../reference/apply_parameters.html">apply_parameters()</a></code> / <code><a href="../reference/write_parameter_folder.html">write_parameter_folder()</a></code> in the objective function, and a new step 5 summarising the runs and writing the next parameter folder.</li>
+<li>
+<code><a href="../reference/score_table.html">score_table()</a></code> and <code><a href="../reference/score_table.html">compute_score()</a></code> gain <code>method = "lnorm2"</code>, the objective function of Morell et al. (2026) as in their calibration code (squared log ratio to the target summed over the scored values, no band, on the weight-at-age and the biomass by default), and <code>weight</code> and <code>target_factor</code> (Morell et al.’s b) per tracer, for both methods.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="atlantio-030">atlantio 0.3.0<a class="anchor" aria-label="anchor" href="#atlantio-030"></a></h2>
 <ul><li>New calibration objective functions:

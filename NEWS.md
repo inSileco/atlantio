@@ -18,8 +18,7 @@
       into a folder, optionally on top of a copy of another folder (for the
       files not loaded, such as the physics and forcing files). The run and
       biology files are patched in place, only the values that changed, so
-      their comments, units, layout and line endings are kept (`write_prm()`
-      drops the units: `tstop 365 day` becomes 365 seconds);
+      their comments, units, layout and line endings are kept;
     - `compare_prm()` compares two parameter files by parameter name.
 * Summarising a calibration: `read_calibration_runs()` collects the
   `parameters.rds` of every run, and `summarise_calibration()` gives, per
@@ -36,6 +35,9 @@
   `apply_parameters()` / `write_parameter_folder()` in the objective
   function, and a new step 5 summarising the runs and writing the next
   parameter folder.
+* `read_prm()` keeps the time unit after a value (e.g. `day` in
+  `tstop 365 day`) as the attribute `unit`, and `write_prm()` writes it back.
+  `write_prm()` wrote the number alone, which Atlantis reads in seconds.
 * `score_table()` and `compute_score()` gain `method = "lnorm2"`, the
   objective function of Morell et al. (2026) as in their calibration code
   (squared log ratio to the target summed over the scored values, no band,

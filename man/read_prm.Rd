@@ -19,8 +19,9 @@ write_prm(x, file = stdout(), add_comments = TRUE, sep = " ")
 \item{sep}{the separation bewteen key and value.}
 }
 \value{
-A list made of key-value elements.
-Note that comments and length of vectr
+A list made of key-value elements. The comments, the length of arrays and
+the time unit after a value are kept as the attributes \code{comments},
+\code{array_length} and \code{unit} of the elements.
 
 The prm file.
 }
@@ -42,6 +43,11 @@ The key differences between \code{read_prm()} and the Atlantis parser are:
 \itemize{
 \item Comments: lines starting with # are not skipped, they are collected and stored as
 an attributes to the list elements
+\item Units: Atlantis converts a time unit after a value (e.g. \verb{tstop 365 day})
+to seconds; \code{read_prm()} keeps the number and the unit, as the attribute
+\code{unit}, which \code{\link[=write_prm]{write_prm()}} writes back. A number without unit is read in
+seconds, so change values element-wise (\code{x$tstop[1] <- 730}): replacing
+the element (\code{x$tstop <- 730}) drops its attributes.
 \item Array padding: in the original parser, if fewer values than declared size,
 the last value is repeated to fill. \code{read_prm()} will throw an error instead.
 }

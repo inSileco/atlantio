@@ -32,8 +32,8 @@ ignores the extra values, \code{\link[=read_prm]{read_prm()}} aborts;
 \item \code{"duplicate"} (warning): a key given twice;
 \item \code{"line_endings"} (warning): Windows (CRLF) line endings;
 \item \code{"tabs"} (note): tabs as separators;
-\item \code{"units"} (note): time units after values (e.g. \verb{dt 12 hour}); Atlantis
-converts them, \code{\link[=read_prm]{read_prm()}} keeps the numbers only;
+\item \code{"units"} (note): time units after values (e.g. \verb{dt 12 hour}), which
+Atlantis converts to seconds;
 \item \code{"unknown"} (note): keys of the run file missing from the run template.
 }
 

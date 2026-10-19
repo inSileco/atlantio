@@ -142,10 +142,17 @@ S7::method(create_time_series, Atlantis) <- function(
 #'
 #' @description S7 generic for creating biomass time series data from Atlantis objects
 #'
-#' @param x An object to create biomass time series from
-#' @param ... Additional arguments passed to methods
+#' With `aggregate = TRUE`, the series are reduced over boxes and layers as
+#' they are read (see [aggregate_time_series()]): one cohort of one group at a
+#' time, so the full per-box table is never held in memory. For a whole run
+#' that table can weigh more than 1 GB and building it peaks at several GB.
 #'
-#' @return A biomass time series data structure
+#' @param x An object to create biomass time series from
+#' @param ... Additional arguments passed to methods: `group`, `age`, `box`,
+#'   `layer`, `use_group_code` and `aggregate` (`FALSE` by default).
+#'
+#' @return A biomass time series data structure: one row per group x age x
+#'   box x layer x time, or per group x age x time with `aggregate = TRUE`.
 #'
 #' @examples
 #' \dontrun{
@@ -158,7 +165,7 @@ S7::method(create_time_series, Atlantis) <- function(
 #'       system.file("examples", "outputs", "output.nc", package = "atlantio")
 #'     )
 #'   ) |>
-#'   create_time_series_biomass(group = "YPH")
+#'   create_time_series_biomass(group = "YPH", aggregate = TRUE)
 #' }
 #'
 #' @export
@@ -176,6 +183,9 @@ create_time_series_biomass <- S7::new_generic("create_time_series_biomass", "x")
 #' @param use_group_code Should the group code be used. Default is set to TRUE.
 #' If `FALSE`, then the full name of the group as found in the main output file
 #' should be used.
+#' @param aggregate Should the series be aggregated over boxes and layers
+#' while they are read, one cohort at a time (see [aggregate_time_series()])?
+#' Biomass pools get their weight summed.
 #' @param ... Additional arguments (unused)
 #'
 #' @return A biomass time series data structure
@@ -191,6 +201,7 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
   box = NULL,
   layer = NULL,
   use_group_code = TRUE,
+  aggregate = FALSE,
   ...
 ) {
   require_main_output(x)
@@ -245,38 +256,46 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
       k_wetdry <- x@biology$k_wetdry
       # this will likely change for age structured biomass pools
       v_field <- c("_ResN", "_StructN", "_Nums")
-      out[[i]] <- x |>
-        create_time_series(
-          variable = paste0(i, do.call(paste0, expand.grid(v_age, v_field))),
-          box = box,
-          layer = layer
-        ) |>
-        dplyr::mutate(
-          group = stringr::str_extract(
-            variable,
-            "^([A-Za-z _]+)([0-9])+_(ResN|Nums|StructN)$",
-            group = 1
-          ),
-          age = stringr::str_extract(
-            variable,
-            "^[A-Za-z _]+([0-9]+)_(ResN|Nums|StructN)$",
-            group = 1
-          ),
-          var_type = stringr::str_extract(
-            variable,
-            "^[A-Za-z0-9 _]+_(ResN|Nums|StructN)$",
-            group = 1
+      age_ts <- \(ages) {
+        x |>
+          create_time_series(
+            variable = paste0(i, do.call(paste0, expand.grid(ages, v_field))),
+            box = box,
+            layer = layer
+          ) |>
+          dplyr::mutate(
+            group = stringr::str_extract(
+              variable,
+              "^([A-Za-z _]+)([0-9])+_(ResN|Nums|StructN)$",
+              group = 1
+            ),
+            age = stringr::str_extract(
+              variable,
+              "^[A-Za-z _]+([0-9]+)_(ResN|Nums|StructN)$",
+              group = 1
+            ),
+            var_type = stringr::str_extract(
+              variable,
+              "^[A-Za-z0-9 _]+_(ResN|Nums|StructN)$",
+              group = 1
+            )
+          ) |>
+          dplyr::select(!c(variable, units)) |>
+          tidyr::pivot_wider(
+            values_from = value,
+            names_from = var_type
+          ) |>
+          dplyr::mutate(
+            weight = (ResN + StructN) * Nums * k_wetdry * x_cn * 1e-3,
+            units = "g"
           )
-        ) |>
-        dplyr::select(!c(variable, units)) |>
-        tidyr::pivot_wider(
-          values_from = value,
-          names_from = var_type
-        ) |>
-        dplyr::mutate(
-          weight = (ResN + StructN) * Nums * k_wetdry * x_cn * 1e-3,
-          units = "g"
-        )
+      }
+      if (aggregate) {
+        out[[i]] <- lapply(v_age, \(a) aggregate_time_series(age_ts(a))) |>
+          dplyr::bind_rows()
+      } else {
+        out[[i]] <- age_ts(v_age)
+      }
     } else {
       atlantio_inform("{i} has no age structure, `age` ignored.")
       v_age <- ""
@@ -308,6 +327,13 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
           age = ""
         ) |>
         dplyr::select(!c(volume, N))
+      if (aggregate) {
+        out[[i]] <- out[[i]] |>
+          dplyr::summarise(
+            weight = sum(.data$weight, na.rm = TRUE),
+            .by = c("group", "age", "time", "units")
+          )
+      }
     }
   }
 

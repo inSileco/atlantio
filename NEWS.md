@@ -1,4 +1,4 @@
-# atlantio 0.2.3
+# atlantio (devel)
 
 * New calibration objective functions:
     - `score_table()` and `compute_score()` score how far a run drifts from
@@ -12,6 +12,11 @@
       `create_time_series_biomass()` over boxes and layers (Nums summed,
       StructN and ResN weighted by Nums);
     - `read_biomass_index()` reads the biomass index of the living groups.
+* `create_time_series_biomass()` gains `aggregate`: with `aggregate = TRUE`
+  the series are reduced over boxes and layers while they are read, one
+  cohort at a time, so the per-box table of a whole run is never held in
+  memory (peak memory of a Lake Erie run roughly halved).
+* `aggregate_time_series()` sums a `weight` column and keeps `units`.
 
 
 # atlantio 0.2.2

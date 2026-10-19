@@ -44,3 +44,40 @@ test_that("create_time_series_biomass() handles groups with 10 or more cohorts",
   expect_identical(nrow(res), 12L * 2L * 3L * 4L)
   expect_equal(unique(res$weight), (1 + 1) * 1 * 20 * 5.7 * 1e-3)
 })
+
+test_that("create_time_series_biomass(aggregate = TRUE) matches aggregating after", {
+  nc_file <- withr::local_tempfile(fileext = ".nc")
+  write_mock_main_output(nc_file, group = "Fish", n_cohorts = 3)
+  nc <- ncdf4::nc_open(nc_file, write = TRUE)
+  withr::defer(ncdf4::nc_close(nc))
+  # cells that differ, and an empty one
+  nums <- array(seq_len(2 * 3 * 4), dim = c(2, 3, 4))
+  nums[1, 1, ] <- 0
+  ncdf4::ncvar_put(nc, "Fish2_Nums", nums)
+  ncdf4::ncvar_put(nc, "Fish2_ResN", array(runif(24, 1, 5), dim = c(2, 3, 4)))
+
+  mod <- new_atlantis(
+    main_output = nc,
+    biology = list(X_CN = 5.7, k_wetdry = 20)
+  )
+  raw <- suppressMessages(
+    create_time_series_biomass(mod, group = "Fish", use_group_code = FALSE)
+  )
+  agg <- suppressMessages(
+    create_time_series_biomass(
+      mod,
+      group = "Fish",
+      use_group_code = FALSE,
+      aggregate = TRUE
+    )
+  )
+  # 3 cohorts x 4 time steps
+  expect_identical(nrow(agg), 3L * 4L)
+  expect_false(any(c("box", "layer") %in% names(agg)))
+  expect_equal(agg, aggregate_time_series(raw))
+  expect_equal(
+    agg$weight,
+    (agg$ResN + agg$StructN) * agg$Nums * 20 * 5.7 * 1e-3
+  )
+  expect_identical(unique(agg$units), "g")
+})

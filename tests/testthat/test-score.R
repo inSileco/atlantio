@@ -105,3 +105,13 @@ test_that("read_biomass_index() keeps the living groups", {
   expect_equal(bm$Biomass[bm$group == "Freshwater_Drum"], c(2, 4))
   expect_error(read_biomass_index(path, groups[, -3]), "GroupType")
 })
+
+test_that("aggregate_time_series() sums weight and keeps units", {
+  ts <- data.frame(
+    group = "Walleye", age = 1, time = 0, box = 0:1, layer = 1,
+    StructN = 1, ResN = 1, Nums = 1, weight = c(2, NA), units = "g"
+  )
+  agg <- aggregate_time_series(ts)
+  expect_equal(agg$weight, 2)
+  expect_identical(agg$units, "g")
+})

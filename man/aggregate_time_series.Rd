@@ -8,11 +8,12 @@ aggregate_time_series(ts)
 }
 \arguments{
 \item{ts}{Tracer table with columns \code{group}, \code{age}, \code{time}, \code{StructN},
-\code{ResN} and \code{Nums}, and optionally \code{box} and \code{layer}.}
+\code{ResN} and \code{Nums}, and optionally \code{box}, \code{layer}, \code{weight} and \code{units}.}
 }
 \value{
 A data frame with one row per \code{group} x \code{age} x \code{time} and the
-columns \code{StructN}, \code{ResN} and \code{Nums}.
+columns \code{StructN}, \code{ResN} and \code{Nums} (and \code{weight} and \code{units} when \code{ts}
+has them).
 }
 \description{
 Reduces a tracer table with one row per group x age x box x layer x time
@@ -20,7 +21,8 @@ Reduces a tracer table with one row per group x age x box x layer x time
 time: \code{Nums} summed, \code{StructN} and \code{ResN} as Nums-weighted means, i.e.
 the condition of the average individual. Empty cells do not count, and a
 cohort with no individual left gets 0, so a collapse also shows in its
-condition. A table without \code{box} or \code{layer} column is returned as is.
+condition. A \code{weight} column is summed and a \code{units} column kept. A table
+without \code{box} or \code{layer} column is returned as is.
 }
 \examples{
 ts <- data.frame(

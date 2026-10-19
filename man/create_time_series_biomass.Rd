@@ -9,13 +9,20 @@ create_time_series_biomass(x, ...)
 \arguments{
 \item{x}{An object to create biomass time series from}
 
-\item{...}{Additional arguments passed to methods}
+\item{...}{Additional arguments passed to methods: \code{group}, \code{age}, \code{box},
+\code{layer}, \code{use_group_code} and \code{aggregate} (\code{FALSE} by default).}
 }
 \value{
-A biomass time series data structure
+A biomass time series data structure: one row per group x age x
+box x layer x time, or per group x age x time with \code{aggregate = TRUE}.
 }
 \description{
 S7 generic for creating biomass time series data from Atlantis objects
+
+With \code{aggregate = TRUE}, the series are reduced over boxes and layers as
+they are read (see \code{\link[=aggregate_time_series]{aggregate_time_series()}}): one cohort of one group at a
+time, so the full per-box table is never held in memory. For a whole run
+that table can weigh more than 1 GB and building it peaks at several GB.
 }
 \examples{
 \dontrun{
@@ -28,7 +35,7 @@ new_atlantis() |>
       system.file("examples", "outputs", "output.nc", package = "atlantio")
     )
   ) |>
-  create_time_series_biomass(group = "YPH")
+  create_time_series_biomass(group = "YPH", aggregate = TRUE)
 }
 
 }

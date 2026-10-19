@@ -230,13 +230,15 @@ window_values <- function(time, value, stat = "snapshot", years = 2) {
 #' time: `Nums` summed, `StructN` and `ResN` as Nums-weighted means, i.e.
 #' the condition of the average individual. Empty cells do not count, and a
 #' cohort with no individual left gets 0, so a collapse also shows in its
-#' condition. A table without `box` or `layer` column is returned as is.
+#' condition. A `weight` column is summed and a `units` column kept. A table
+#' without `box` or `layer` column is returned as is.
 #'
 #' @param ts Tracer table with columns `group`, `age`, `time`, `StructN`,
-#'   `ResN` and `Nums`, and optionally `box` and `layer`.
+#'   `ResN` and `Nums`, and optionally `box`, `layer`, `weight` and `units`.
 #'
 #' @return A data frame with one row per `group` x `age` x `time` and the
-#'   columns `StructN`, `ResN` and `Nums`.
+#'   columns `StructN`, `ResN` and `Nums` (and `weight` and `units` when `ts`
+#'   has them).
 #'
 #' @examples
 #' ts <- data.frame(
@@ -255,13 +257,25 @@ aggregate_time_series <- function(ts) {
   if (!any(c("box", "layer") %in% names(ts))) {
     return(ts)
   }
-  ts |>
+  has_weight <- "weight" %in% names(ts)
+  if (!has_weight) {
+    ts$weight <- NA_real_
+  }
+  out <- ts |>
     dplyr::summarise(
       StructN = weighted_mean_nums(.data$StructN, .data$Nums),
       ResN = weighted_mean_nums(.data$ResN, .data$Nums),
       Nums = sum(.data$Nums, na.rm = TRUE),
+      weight = sum(.data$weight, na.rm = TRUE),
       .by = c("group", "age", "time")
     )
+  if (!has_weight) {
+    out$weight <- NULL
+  }
+  if ("units" %in% names(ts)) {
+    out$units <- ts$units[1L]
+  }
+  out
 }
 
 

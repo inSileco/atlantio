@@ -67,3 +67,7 @@ test_that("require_valid_group() reports only invalid groups", {
   )
   expect_error(require_valid_group(NULL, mod), "Undefined group")
 })
+
+test_that("functions of Atlantis objects reject other objects", {
+  expect_snapshot(create_time_series(list(), "Temp"), error = TRUE)
+})

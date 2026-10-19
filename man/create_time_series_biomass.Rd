@@ -2,34 +2,64 @@
 % Please edit documentation in R/atlantis_methods-ts.R
 \name{create_time_series_biomass}
 \alias{create_time_series_biomass}
-\title{Create Time Series Biomass for Atlantis objects}
+\title{Create biomass time series}
 \usage{
-create_time_series_biomass(x, ...)
+create_time_series_biomass(
+  x,
+  group,
+  age = NULL,
+  box = NULL,
+  layer = NULL,
+  use_group_code = TRUE,
+  aggregate = FALSE,
+  boundary = TRUE
+)
 }
 \arguments{
-\item{x}{An object to create biomass time series from}
+\item{x}{An \code{Atlantis} object with the main output and the biology file
+loaded, and the groups file when \code{use_group_code = TRUE}.}
 
-\item{...}{Additional arguments passed to methods: \code{group}, \code{age}, \code{box},
-\code{layer}, \code{use_group_code} and \code{aggregate} (\code{FALSE} by default).}
+\item{group}{Groups: their codes, or with \code{use_group_code = FALSE} their
+names as in the main output.}
+
+\item{age}{Age classes of the age-structured groups; all if \code{NULL}.}
+
+\item{box}{Boxes, numbered from 0 as in Atlantis; all boxes if \code{NULL}.}
+
+\item{layer}{Layers, numbered from 1; all layers if \code{NULL}.}
+
+\item{use_group_code}{Are the groups given by code (\code{TRUE}) or by name?}
+
+\item{aggregate}{Should the series be aggregated over boxes and layers
+while they are read, one cohort at a time (see \code{\link[=aggregate_time_series]{aggregate_time_series()}})?
+Biomass pools get their weight summed.}
+
+\item{boundary}{Keep the boundary boxes? \code{FALSE} leaves them out, as
+Atlantis' biomass index does, and needs the geometry file.}
 }
 \value{
-A biomass time series data structure: one row per group x age x
-box x layer x time, or per group x age x time with \code{aggregate = TRUE}.
+A data frame with one row per group x age x box x layer x time, or
+per group x age x time with \code{aggregate = TRUE}: \code{group} (the group name),
+\code{age} (\code{NA} for biomass pools), \code{time} (seconds), \code{box}, \code{layer}, the
+tracers, \code{weight} and \code{units}.
 }
 \description{
-S7 generic for creating biomass time series data from Atlantis objects
-
-With \code{aggregate = TRUE}, the series are reduced over boxes and layers as
-they are read (see \code{\link[=aggregate_time_series]{aggregate_time_series()}}): one cohort of one group at a
-time, so the full per-box table is never held in memory. For a whole run
-that table can weigh more than 1 GB and building it peaks at several GB.
-
+Reads the tracers of functional groups from the main output: reserve and
+structural nitrogen and numbers (\code{ResN}, \code{StructN}, \code{Nums}) for the
+age-structured groups, nitrogen for the biomass pools, with their weight.
+}
+\details{
 \code{weight} is the wet weight in g: the nitrogen (mg N) times \code{X_CN} and
 \code{k_wetdry} from the biology file. For a biomass pool, the nitrogen is its
 concentration times the cell volume, or times the box area for the
 epibenthic groups (one value per box, in mg N m-2), which needs the
 geometry file. Atlantis' own biomass index uses a wet-to-dry ratio of 20,
-whatever \code{k_wetdry} is.
+whatever \code{k_wetdry} is, and leaves out the boundary boxes (see \code{boundary}).
+
+With \code{aggregate = TRUE}, the series are reduced over boxes and layers as
+they are read (see \code{\link[=aggregate_time_series]{aggregate_time_series()}}): one cohort of one group at a
+time, so the full per-box table is never held in memory. For a whole run
+that table can weigh more than 1 GB and building it peaks at several GB.
 }
 \examples{
 \dontrun{
@@ -45,4 +75,9 @@ new_atlantis() |>
   create_time_series_biomass(group = "YPH", aggregate = TRUE)
 }
 
+}
+\references{
+\itemize{
+\item https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/quarto_site/part1/11-consumer-processes.html#size-refuge-from-predation
+}
 }

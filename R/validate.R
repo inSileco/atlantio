@@ -13,16 +13,10 @@ validate_file <- function(x, template) {
   nm_ref <- ref |> lapply(\(x) x$Name)
 
   missing_params <- nm_ref[!is.element(nm_ref, nm_x)]
-  unknown_params <- nm_x[!is.element(nm_x, nm_ref)]
 
   if (length(missing_params)) {
     cli::cli_abort(
       "{length(missing_params)} Parameter{?s} missing: {missing_params}"
-    )
-  }
-  if (length(unknown_params)) {
-    cli::cli_warn(
-      "{length(unknown_params)} Unknown parameter{?s}: {unknown_params}"
     )
   }
 

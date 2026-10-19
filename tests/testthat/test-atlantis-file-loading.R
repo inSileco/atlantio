@@ -113,6 +113,18 @@ test_that("atlantis_load_files() skips existing files of unsupported type", {
   expect_identical(res, atlantis_obj)
 })
 
+test_that("atlantis_load_files() says why a file cannot be read", {
+  withr::local_dir(withr::local_tempdir())
+  writeLines(c("arr 3", "1 2"), "bad.prm")
+  run <- readLines(atlantis_examples("inputs", "tiny_run.prm"))
+  writeLines(run[!startsWith(run, "verbose")], "run.prm")
+  expect_snapshot(
+    res <- suppressMessages(
+      atlantis_load_files(new_atlantis(), c("bad.prm", "run.prm"))
+    )
+  )
+})
+
 test_that("atlantis_load_files() loads diet output", {
   diet_file <- atlantis_examples("outputs", "outputDietCheck.txt")
   atlantis_obj <- suppressMessages(

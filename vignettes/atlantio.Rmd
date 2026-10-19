@@ -189,7 +189,7 @@ ts_yph |>
 
 # Diet table and food web
 
-The biology parameter file contains the prey availability matrix (`pPREY` parameters). `create_diet_table()` reshapes it into a prey-by-predator table.
+The biology parameter file contains the prey availability matrix (`pPREY` parameters). `create_diet_table()` reshapes it into a table with one row per predator (and stages) and one column per prey.
 
 ```{r diet}
 diet <- create_diet_table(mod)
@@ -197,7 +197,7 @@ dim(diet)
 diet[1:6, 1:6]
 ```
 
-`create_foodweb()` goes one step further and returns the binary food web as an `igraph` object, ready for network analysis or plotting.
+`create_foodweb()` goes one step further and returns the binary food web as an `igraph` object, with edges from predator to prey, ready for network analysis or plotting.
 
 ```{r foodweb}
 fw <- create_foodweb(mod)

@@ -1,10 +1,11 @@
 #' Generate a calibration table
 #'
-#' @description S7 generic for building the list of parameters to calibrate
-#' from a YAML specification file.
+#' @description Builds the list of parameters to calibrate from a YAML
+#' specification file.
 #'
 #' @param x An `Atlantis` object.
-#' @param ... Additional arguments passed to methods
+#' @param path Path to the YAML file describing the parameters to calibrate.
+#' @param version Atlantis version identifier. Default is `"3-6722"`.
 #'
 #' @return A data frame with one row per value to calibrate and columns
 #' `name`, `cur_value`, `min`, `max`, `position`, `transf` and `source_file`.
@@ -95,24 +96,8 @@
 #' }
 #'
 #' @export
-
-generate_calibration_table <- S7::new_generic("generate_calibration_table", "x")
-
-
-#' Generate a calibration table
-#'
-#' Build the list of parameters to calibrate from a YAML specification file.
-#'
-#' @param x An `Atlantis` object.
-#' @param path Path to a YAML file describing the parameters to calibrate.
-#' @param version Atlantis version identifier. Default is `"3-6722"`.
-#'
-#' @noRd
-S7::method(generate_calibration_table, Atlantis) <- function(
-  x,
-  path,
-  version = "3-6722"
-) {
+generate_calibration_table <- function(x, path, version = "3-6722") {
+  require_atlantis(x)
   yaml::read_yaml(path) |>
     lapply(
       format_calibration_entry,

@@ -8,12 +8,6 @@
 #' @rawNamespace if (getRversion() < "4.3.0") importFrom("S7", "@")
 #' @importFrom rlang .data
 NULL
-
-# igraph is only used within an S7 method registration, which R CMD check
-# does not scan when looking for namespace usage
-ignore_unused_imports <- function() {
-  igraph::graph_from_data_frame
-}
 # nocov end
 
 `%||%` <- function(x, y) if (is.null(x)) y else x

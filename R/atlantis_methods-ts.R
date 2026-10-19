@@ -1,11 +1,17 @@
-#' Create Time Series for Atlantis objects
+#' Create time series from the main output
 #'
-#' @description S7 generic for creating time series data from Atlantis objects
+#' Extracts variables of the main netCDF output of an Atlantis model as a tidy
+#' data frame, optionally restricted to a set of boxes and layers.
 #'
-#' @param x An object to create time series from
-#' @param ... Additional arguments passed to methods
+#' @param x An `Atlantis` object with the main output loaded.
+#' @param variable Names of the variables (see `names(x@main_output$var)`).
+#' @param box Boxes, numbered from 0 as in Atlantis; all boxes if `NULL`.
+#' @param layer Layers, numbered from 1; all layers if `NULL`. Ignored for 2D
+#'   variables, whose rows have `layer` -1.
 #'
-#' @return A time series data structure
+#' @return A data frame with one row per variable x box x layer x time and
+#'   the columns `time` (seconds), `box`, `layer`, `value`, `variable` and
+#'   `units`.
 #'
 #' @export
 #'
@@ -28,29 +34,8 @@
 #'   ggplot(aes(x = Time, y = value, color = box)) +
 #'   geom_line()
 #' }
-
-create_time_series <- S7::new_generic("create_time_series", "x")
-
-
-#' Create Time Series for Atlantis objects
-#'
-#' @description S7 method for creating time series data from Atlantis objects
-#'
-#' @param x An Atlantis S7 object
-#' @param box Box ID from 0 to n-1.
-#' @param layer Layer ID from 1 to n.
-#' @param ... Additional arguments (unused)
-#'
-#' @return A time series data structure
-#'
-#' @noRd
-
-S7::method(create_time_series, Atlantis) <- function(
-  x,
-  variable,
-  box = NULL,
-  layer = NULL
-) {
+create_time_series <- function(x, variable, box = NULL, layer = NULL) {
+  require_atlantis(x)
   require_main_output(x)
   nc <- x@main_output
 
@@ -120,7 +105,7 @@ S7::method(create_time_series, Atlantis) <- function(
           variable = v,
           units = nc$var[[v]]$units
         ) |>
-          dplyr::arrange(box, layer, time)
+          dplyr::arrange(.data$box, .data$layer, .data$time)
       } else {
         cli::cli_abort("Unknown type of variable (dimension mismatch).")
       }
@@ -130,32 +115,49 @@ S7::method(create_time_series, Atlantis) <- function(
   }) |>
     do.call(what = dplyr::bind_rows)
   out |>
-    dplyr::mutate(box = box - 1)
+    dplyr::mutate(box = .data$box - 1)
 }
 
 
-#' Create Time Series Biomass for Atlantis objects
+#' Create biomass time series
 #'
-#' @description S7 generic for creating biomass time series data from Atlantis objects
-#'
-#' With `aggregate = TRUE`, the series are reduced over boxes and layers as
-#' they are read (see [aggregate_time_series()]): one cohort of one group at a
-#' time, so the full per-box table is never held in memory. For a whole run
-#' that table can weigh more than 1 GB and building it peaks at several GB.
+#' Reads the tracers of functional groups from the main output: reserve and
+#' structural nitrogen and numbers (`ResN`, `StructN`, `Nums`) for the
+#' age-structured groups, nitrogen for the biomass pools, with their weight.
 #'
 #' `weight` is the wet weight in g: the nitrogen (mg N) times `X_CN` and
 #' `k_wetdry` from the biology file. For a biomass pool, the nitrogen is its
 #' concentration times the cell volume, or times the box area for the
 #' epibenthic groups (one value per box, in mg N m-2), which needs the
 #' geometry file. Atlantis' own biomass index uses a wet-to-dry ratio of 20,
-#' whatever `k_wetdry` is.
+#' whatever `k_wetdry` is, and leaves out the boundary boxes (see `boundary`).
 #'
-#' @param x An object to create biomass time series from
-#' @param ... Additional arguments passed to methods: `group`, `age`, `box`,
-#'   `layer`, `use_group_code` and `aggregate` (`FALSE` by default).
+#' With `aggregate = TRUE`, the series are reduced over boxes and layers as
+#' they are read (see [aggregate_time_series()]): one cohort of one group at a
+#' time, so the full per-box table is never held in memory. For a whole run
+#' that table can weigh more than 1 GB and building it peaks at several GB.
 #'
-#' @return A biomass time series data structure: one row per group x age x
-#'   box x layer x time, or per group x age x time with `aggregate = TRUE`.
+#' @param x An `Atlantis` object with the main output and the biology file
+#'   loaded, and the groups file when `use_group_code = TRUE`.
+#' @param group Groups: their codes, or with `use_group_code = FALSE` their
+#'   names as in the main output.
+#' @param age Age classes of the age-structured groups; all if `NULL`.
+#' @param box Boxes, numbered from 0 as in Atlantis; all boxes if `NULL`.
+#' @param layer Layers, numbered from 1; all layers if `NULL`.
+#' @param use_group_code Are the groups given by code (`TRUE`) or by name?
+#' @param aggregate Should the series be aggregated over boxes and layers
+#'   while they are read, one cohort at a time (see [aggregate_time_series()])?
+#'   Biomass pools get their weight summed.
+#' @param boundary Keep the boundary boxes? `FALSE` leaves them out, as
+#'   Atlantis' biomass index does, and needs the geometry file.
+#'
+#' @return A data frame with one row per group x age x box x layer x time, or
+#'   per group x age x time with `aggregate = TRUE`: `group` (the group name),
+#'   `age` (`NA` for biomass pools), `time` (seconds), `box`, `layer`, the
+#'   tracers, `weight` and `units`.
+#'
+#' @references
+#' * https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/quarto_site/part1/11-consumer-processes.html#size-refuge-from-predation
 #'
 #' @examples
 #' \dontrun{
@@ -172,32 +174,7 @@ S7::method(create_time_series, Atlantis) <- function(
 #' }
 #'
 #' @export
-create_time_series_biomass <- S7::new_generic("create_time_series_biomass", "x")
-
-
-#' Create Time Series Biomass for Atlantis objects
-#'
-#' @description S7 method for creating biomass time series data from Atlantis objects
-#'
-#' @param x An Atlantis S7 object
-#' @param age Stanza age identifier.
-#' @param box Box ID from 0 to n-1.
-#' @param layer Layer ID from 1 to n.
-#' @param use_group_code Should the group code be used. Default is set to TRUE.
-#' If `FALSE`, then the full name of the group as found in the main output file
-#' should be used.
-#' @param aggregate Should the series be aggregated over boxes and layers
-#' while they are read, one cohort at a time (see [aggregate_time_series()])?
-#' Biomass pools get their weight summed.
-#' @param ... Additional arguments (unused)
-#'
-#' @return A biomass time series data structure
-#'
-#' @references
-#' * https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/quarto_site/part1/11-consumer-processes.html#size-refuge-from-predation
-#'
-#' @noRd
-S7::method(create_time_series_biomass, Atlantis) <- function(
+create_time_series_biomass <- function(
   x,
   group,
   age = NULL,
@@ -205,8 +182,9 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
   layer = NULL,
   use_group_code = TRUE,
   aggregate = FALSE,
-  ...
+  boundary = TRUE
 ) {
+  require_atlantis(x)
   require_main_output(x)
   require_biology_file(x)
 
@@ -214,8 +192,13 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
     require_group_file(x)
     require_valid_group(group, x)
     group <- x@group |>
-      dplyr::filter(Code %in% group) |>
-      dplyr::pull(Name)
+      dplyr::filter(.data$Code %in% group) |>
+      dplyr::pull("Name")
+  }
+  if (!boundary) {
+    require_geometry_file(x)
+    inside <- which(!x@geometry$boundary) - 1
+    box <- if (is.null(box)) inside else intersect(box, inside)
   }
 
   var_names <- x@main_output$var |>
@@ -226,11 +209,13 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
   for (i in group) {
     # this could be done using x@group$NumCohorts but it mean that group file
     # is always required even though all the info is in the mainoutput
+    pattern <- paste0(
+      "^",
+      stringr::str_escape(i),
+      "([0-9]+)_(ResN|StructN|Nums)$"
+    )
     v_age <- var_names |>
-      stringr::str_extract(
-        paste0("^", stringr::str_escape(i), "([0-9]+)_(ResN|StructN|Nums)$"),
-        group = 1
-      ) |>
+      stringr::str_extract(pattern, group = 1) |>
       unique()
     v_age <- v_age[!is.na(v_age)]
 
@@ -259,29 +244,21 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
             layer = layer
           ) |>
           dplyr::mutate(
-            group = stringr::str_extract(
-              variable,
-              "^([A-Za-z _]+)([0-9])+_(ResN|Nums|StructN)$",
-              group = 1
-            ),
-            age = stringr::str_extract(
-              variable,
-              "^[A-Za-z _]+([0-9]+)_(ResN|Nums|StructN)$",
-              group = 1
-            ),
-            var_type = stringr::str_extract(
-              variable,
-              "^[A-Za-z0-9 _]+_(ResN|Nums|StructN)$",
-              group = 1
-            )
+            group = i,
+            age = stringr::str_match(.data$variable, pattern)[, 2],
+            var_type = stringr::str_match(.data$variable, pattern)[, 3]
           ) |>
-          dplyr::select(!c(variable, units)) |>
+          dplyr::select(!c("variable", "units")) |>
           tidyr::pivot_wider(
-            values_from = value,
-            names_from = var_type
+            values_from = "value",
+            names_from = "var_type"
           ) |>
           dplyr::mutate(
-            weight = (ResN + StructN) * Nums * k_wetdry * x_cn * 1e-3,
+            weight = (.data$ResN + .data$StructN) *
+              .data$Nums *
+              k_wetdry *
+              x_cn *
+              1e-3,
             units = "g"
           )
       }
@@ -301,9 +278,10 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
           layer = layer
         ) |>
         dplyr::rename(
-          N = value,
-          group = variable
-        )
+          N = "value",
+          group = "variable"
+        ) |>
+        dplyr::mutate(group = i)
       # cell size: volume (m3), or box area (m2) for the epibenthic groups,
       # whose single value per box is in mg N m-2
       if (length(x@main_output$var[[v_pool]]$varsize) == 2) {
@@ -318,18 +296,18 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
               box = box,
               layer = layer
             ) |>
-              dplyr::select(!c(variable, units)) |>
-              dplyr::rename(size = value),
+              dplyr::select(!c("variable", "units")) |>
+              dplyr::rename(size = "value"),
             by = c("time", "box", "layer")
           )
       }
       out[[i]] <- out[[i]] |>
         dplyr::mutate(
-          weight = N * size * k_wetdry * x_cn * 1e-3,
+          weight = .data$N * .data$size * k_wetdry * x_cn * 1e-3,
           units = "g",
-          age = ""
+          age = NA_character_
         ) |>
-        dplyr::select(!c(size, N))
+        dplyr::select(!c("size", "N"))
       if (aggregate) {
         out[[i]] <- out[[i]] |>
           dplyr::summarise(

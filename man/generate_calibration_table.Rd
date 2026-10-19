@@ -4,20 +4,22 @@
 \alias{generate_calibration_table}
 \title{Generate a calibration table}
 \usage{
-generate_calibration_table(x, ...)
+generate_calibration_table(x, path, version = "3-6722")
 }
 \arguments{
 \item{x}{An \code{Atlantis} object.}
 
-\item{...}{Additional arguments passed to methods}
+\item{path}{Path to the YAML file describing the parameters to calibrate.}
+
+\item{version}{Atlantis version identifier. Default is \code{"3-6722"}.}
 }
 \value{
 A data frame with one row per value to calibrate and columns
 \code{name}, \code{cur_value}, \code{min}, \code{max}, \code{position}, \code{transf} and \code{source_file}.
 }
 \description{
-S7 generic for building the list of parameters to calibrate
-from a YAML specification file.
+Builds the list of parameters to calibrate from a YAML
+specification file.
 }
 \details{
 The YAML file is a list of entries, one per parameter, each expanded into

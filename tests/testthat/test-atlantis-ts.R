@@ -94,12 +94,16 @@ test_that("create_time_series_biomass() weights match the biomass index", {
   withr::defer(ncdf4::nc_close(mod@main_output))
   # Dressenids and Chironomids are epibenthic: one value per box
   res <- suppressMessages(
-    create_time_series_biomass(mod, c("WAE", "DIA", "DRE", "CHI"))
+    create_time_series_biomass(
+      mod,
+      c("WAE", "DIA", "DRE", "CHI"),
+      boundary = FALSE
+    )
   )
-  # the index leaves out the boundary boxes
-  inside <- res$time == 0 &
-    res$box %in% mod@geometry$.bx0[!mod@geometry$boundary]
-  tonnes <- tapply(res$weight[inside], res$group[inside], sum, na.rm = TRUE)
+  # box 0 is the boundary box
+  expect_setequal(res$box, 1:10)
+  t0 <- res[res$time == 0, ]
+  tonnes <- tapply(t0$weight, t0$group, sum, na.rm = TRUE)
   index <- read_biomass_index(
     atlantis_examples("outputs", "outputBiomIndx.txt"),
     mod@group
@@ -107,10 +111,28 @@ test_that("create_time_series_biomass() weights match the biomass index", {
   index <- index[index$time == 0, ]
   groups <- c("Walleye", "Diatom", "Dressenids", "Chironomids")
   expect_equal(
-    as.vector(tonnes[c(groups[1], paste0(groups[-1], "_N"))]) * 1e-6,
+    as.vector(tonnes[groups]) * 1e-6,
     index$Biomass[match(groups, index$group)],
     tolerance = 1e-6
   )
+  expect_identical(unique(res$age[res$group != "Walleye"]), NA_character_)
+})
+
+test_that("create_time_series_biomass() labels groups whose name ends in a digit", {
+  nc_file <- withr::local_tempfile(fileext = ".nc")
+  write_mock_main_output(nc_file, group = "Fish2", n_cohorts = 3)
+  nc <- ncdf4::nc_open(nc_file)
+  withr::defer(ncdf4::nc_close(nc))
+
+  mod <- new_atlantis(
+    main_output = nc,
+    biology = list(X_CN = 5.7, k_wetdry = 20)
+  )
+  res <- suppressMessages(
+    create_time_series_biomass(mod, group = "Fish2", use_group_code = FALSE)
+  )
+  expect_identical(unique(res$group), "Fish2")
+  expect_setequal(res$age, c("1", "2", "3"))
 })
 
 test_that("create_time_series_biomass() needs the geometry for epibenthic groups", {

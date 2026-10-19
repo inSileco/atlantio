@@ -2,18 +2,20 @@
 % Please edit documentation in R/atlantis_methods.R
 \name{create_foodweb}
 \alias{create_foodweb}
-\title{Create Food Web for Atlantis objects}
+\title{Create a food web}
 \usage{
-create_foodweb(x, ...)
+create_foodweb(x)
 }
 \arguments{
-\item{x}{An object to create food web from}
-
-\item{...}{Additional arguments passed to methods}
+\item{x}{An \code{Atlantis} object with the biology and groups files loaded.}
 }
 \value{
-A food web data structure
+A directed igraph object with one vertex per group (and per
+detritus in the sediment) and an edge, of \code{weight} 1, from each predator
+to each of its prey.
 }
 \description{
-S7 generic for creating food web data structures from Atlantis objects
+Builds the binary food web of a model from its diet table (see
+\code{\link[=create_diet_table]{create_diet_table()}}): a predator eats a prey when any of their \code{pPREY}
+values, whatever the stages, is positive.
 }

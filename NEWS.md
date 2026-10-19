@@ -1,3 +1,19 @@
+# atlantio 0.2.3
+
+* New calibration objective functions:
+    - `score_table()` and `compute_score()` score how far a run drifts from
+      its initial state (log ratio to t = 0, a no-penalty band per tracer,
+      squared excess beyond the band), per group x age x tracer or in total,
+      on the age-structured tracers and optionally on the biomass of every
+      living group;
+    - `window_values()` reduces a series to its scored values over the last
+      years of a run (yearly snapshots or a statistic such as the mean);
+    - `aggregate_time_series()` aggregates the tracer table of
+      `create_time_series_biomass()` over boxes and layers (Nums summed,
+      StructN and ResN weighted by Nums);
+    - `read_biomass_index()` reads the biomass index of the living groups.
+
+
 # atlantio 0.2.2
 
 * `generate_calibration_table()` can calibrate the linear and quadratic

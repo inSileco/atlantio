@@ -6,6 +6,7 @@
 
 # enable usage of <S7_object>@name in package code
 #' @rawNamespace if (getRversion() < "4.3.0") importFrom("S7", "@")
+#' @importFrom rlang .data
 NULL
 
 # these packages are only used within S7 method registrations, which R CMD

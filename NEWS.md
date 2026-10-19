@@ -4,6 +4,17 @@
   after a fatal error, so a run counts as complete only if the last time step
   of its main output reaches `tstop` (within one `toutinc`), read with its
   units as Atlantis reads them.
+* Writing a parameter set back into a parameter folder:
+    - `apply_parameters()` sets the values of a calibration table (on the
+      calibration or the model scale) in the parameter files loaded in an
+      Atlantis object;
+    - `write_parameter_folder()` writes the input files of an Atlantis object
+      into a folder, optionally on top of a copy of another folder (for the
+      files not loaded, such as the physics and forcing files). The run and
+      biology files are patched in place, only the values that changed, so
+      their comments, units, layout and line endings are kept (`write_prm()`
+      drops the units: `tstop 365 day` becomes 365 seconds);
+    - `compare_prm()` compares two parameter files by parameter name.
 * `score_table()` and `compute_score()` gain `method = "lnorm2"`, the
   objective function of Morell et al. (2026) as in their calibration code
   (squared log ratio to the target summed over the scored values, no band,

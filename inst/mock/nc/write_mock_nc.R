@@ -50,4 +50,22 @@ write_mock_init <- function(path) {
   invisible(path)
 }
 
+# The main output of a run that crashed at day 50: an output every 5 days
+# from day 0, time in seconds as Atlantis writes it.
+write_mock_output_truncated <- function(path) {
+  dim_b <- ncdf4::ncdim_def("b", "", 1:3, create_dimvar = FALSE)
+  dim_t <- ncdf4::ncdim_def(
+    "t",
+    "seconds since 2000-01-01 00:00:00 +10",
+    seq(0, 50, by = 5) * 86400,
+    unlim = TRUE
+  )
+  var <- ncdf4::ncvar_def("Diatom_N", "mg N m-3", list(dim_b, dim_t), missval = 0)
+  nc <- ncdf4::nc_create(path, list(var))
+  ncdf4::ncvar_put(nc, "Diatom_N", array(50, c(3, 11)))
+  ncdf4::nc_close(nc)
+  invisible(path)
+}
+
 write_mock_init(file.path("inst", "mock", "nc", "init.nc"))
+write_mock_output_truncated(file.path("inst", "mock", "nc", "output_truncated.nc"))

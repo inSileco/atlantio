@@ -165,6 +165,40 @@ test_that("check_prm() flags stocking traps", {
   expect_match(spawn$message, "no fish is delivered")
 })
 
+test_that("check_run() tells a completed run from a crashed one", {
+  out <- system.file("examples", "outputs", "output.nc", package = "atlantio")
+  run <- system.file("examples", "inputs", "tiny_run.prm", package = "atlantio")
+  res <- check_run(out, run)
+  expect_s3_class(res, "atlantis_check")
+  expect_identical(nrow(res), 0L)
+
+  # ends at day 50
+  trunc <- system.file("mock", "nc", "output_truncated.nc", package = "atlantio")
+  run <- withr::local_tempfile(fileext = ".prm")
+  writeLines(c("tstop 100 days # end", "toutinc 5 day"), run)
+  res <- check_run(trunc, run)
+  expect_identical(res$check, "incomplete")
+  expect_identical(res$severity, "error")
+  expect_match(res$message, "ends at day 50 of 100")
+  # within one output interval of tstop, units read as Atlantis does
+  writeLines(c("tstop 54 Day", "toutinc 5 day"), run)
+  expect_identical(nrow(check_run(trunc, run)), 0L)
+  writeLines(c("tstop 4320000", "toutinc 432000"), run)
+  expect_identical(nrow(check_run(trunc, run)), 0L)
+  writeLines("tstop 10 week", run)
+  expect_identical(check_run(trunc, run)$check, "incomplete")
+
+  expect_identical(check_run(tempfile(fileext = ".nc"), run)$check, "missing")
+  bad <- withr::local_tempfile(fileext = ".nc")
+  writeLines("not a netCDF file", bad)
+  expect_identical(check_run(bad, run)$check, "unreadable")
+
+  writeLines("tstop 10 fortnight", run)
+  expect_error(check_run(trunc, run), "as a time")
+  writeLines("dt 1", run)
+  expect_error(check_run(trunc, run), "not found")
+})
+
 test_that("atlantis_check results print", {
   # fixed file names keep the snapshot stable
   path <- local_mock_init()

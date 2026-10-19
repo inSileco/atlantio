@@ -1,3 +1,11 @@
+# atlantio (development version)
+
+* `check_run()` checks that a run completed: Atlantis exits with status 0
+  after a fatal error, so a run counts as complete only if the last time step
+  of its main output reaches `tstop` (within one `toutinc`), read with its
+  units as Atlantis reads them.
+
+
 # atlantio 0.3.0
 
 * New calibration objective functions:

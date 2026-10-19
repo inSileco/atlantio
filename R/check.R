@@ -187,6 +187,80 @@ check_prm <- function(bio = NULL, run = NULL, force = NULL) {
 }
 
 
+#' Check that an Atlantis run completed
+#'
+#' Atlantis ends a fatal error with `quit()`, which prints the error to
+#' stderr and exits with status 0, leaving the output written so far. The
+#' exit status therefore does not tell a completed run from a crashed one:
+#' only the time reached by the main output does. A run counts as complete
+#' if the last time step of its main output is within one output interval
+#' (`toutinc`) of the end of the run (`tstop`).
+#'
+#' The checks (column `check` of the result) are:
+#' * `"missing"` (error): no main output, the run failed before writing it;
+#' * `"unreadable"` (error): the main output cannot be opened;
+#' * `"incomplete"` (error): the main output stops before `tstop`.
+#'
+#' `tstop` and `toutinc` are read with their units as Atlantis reads them
+#' (e.g. `tstop 365 day`; a bare number is in seconds).
+#'
+#' @param output Path to the main netCDF output of the run (e.g.
+#'   `output.nc`).
+#' @param run Path to the run parameter file of the run.
+#'
+#' @inherit check_init return
+#'
+#' @seealso [check_prm()] for the parameter files.
+#'
+#' @examples
+#' check_run(
+#'   system.file("examples", "outputs", "output.nc", package = "atlantio"),
+#'   system.file("examples", "inputs", "tiny_run.prm", package = "atlantio")
+#' )
+#'
+#' @export
+check_run <- function(output, run) {
+  tstop <- prm_seconds(run, "tstop")
+  toutinc <- prm_seconds(run, "toutinc", 0)
+  file <- basename(output)
+  if (!file.exists(output)) {
+    finding <- check_finding(
+      file, "missing", "error", "",
+      "not found: the run failed before writing its output."
+    )
+    return(new_atlantis_check(list(finding)))
+  }
+  # ncdf4 prints its own error before signalling it
+  utils::capture.output(
+    nc <- tryCatch(ncdf4::nc_open(output), error = \(e) NULL)
+  )
+  if (is.null(nc) || is.null(nc$dim$t)) {
+    finding <- check_finding(
+      file, "unreadable", "error", "",
+      "cannot be read as an Atlantis output (no time dimension)."
+    )
+    return(new_atlantis_check(list(finding)))
+  }
+  on.exit(ncdf4::nc_close(nc))
+  time <- nc$dim$t$vals
+  end <- if (length(time)) max(time) else 0
+  if (grepl("^day", nc$dim$t$units)) {
+    end <- end * 86400
+  }
+  findings <- list()
+  if (end < tstop - toutinc) {
+    days <- round(end / 86400, 1)
+    days_stop <- round(tstop / 86400, 1)
+    findings[[1]] <- check_finding(
+      file, "incomplete", "error", "tstop",
+      "ends at day {days} of {days_stop}: the run stopped early (Atlantis
+      exits with status 0 after a fatal error, see its stderr)."
+    )
+  }
+  new_atlantis_check(findings)
+}
+
+
 #' Set the values of a variable of an Atlantis initial-conditions file
 #'
 #' Writes values per box (and per layer for a 3D variable) into a variable of
@@ -506,6 +580,38 @@ prm_units <- c(
   "s", "sec", "secs", "second", "seconds", "min", "mins", "minute", "minutes",
   "h", "hr", "hrs", "hour", "hours", "d", "day", "days", "week", "weeks",
   "month", "months", "y", "yr", "yrs", "year", "years"
+)
+
+# a time of a parameter file in seconds, with its unit read as Atlantis does
+# (strtosecs() in sjwlib/time.c): case-insensitive, optional trailing "s",
+# seconds when there is no unit
+prm_seconds <- function(path, key, default = NULL) {
+  lines <- sub("\r$", "", readLines(path, warn = FALSE))
+  code <- stringr::str_squish(sub("#.*$", "", lines))
+  tok <- strsplit(code, "[[:blank:]]+")
+  hit <- Filter(\(x) length(x) > 1 && x[1] == key, tok)
+  if (!length(hit)) {
+    if (!is.null(default)) {
+      return(default)
+    }
+    cli::cli_abort("{.field {key}} not found in {.path {path}}.")
+  }
+  x <- hit[[length(hit)]]
+  value <- suppressWarnings(as.numeric(x[2]))
+  unit <- if (length(x) > 2) sub("^(.{2,})s$", "\\1", tolower(x[3])) else "s"
+  if (is.na(value) || !unit %in% names(atlantis_seconds)) {
+    cli::cli_abort(
+      "Cannot read {.field {key}} {paste(x[-1], collapse = ' ')} in
+      {.path {path}} as a time."
+    )
+  }
+  value * atlantis_seconds[[unit]]
+}
+
+atlantis_seconds <- c(
+  us = 1e-6, usec = 1e-6, ms = 1e-3, msec = 1e-3, s = 1, sec = 1, second = 1,
+  min = 60, minute = 60, h = 3600, hr = 3600, hour = 3600, d = 86400,
+  day = 86400, week = 604800
 )
 
 prm_value <- function(scan, key, default = NA) {

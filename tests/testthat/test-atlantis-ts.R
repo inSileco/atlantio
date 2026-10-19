@@ -92,7 +92,10 @@ test_that("create_time_series_biomass() weights match the biomass index", {
       atlantis_examples("outputs", "output.nc")
     ))
   withr::defer(ncdf4::nc_close(mod@main_output))
-  res <- suppressMessages(create_time_series_biomass(mod, c("WAE", "DIA")))
+  # Dressenids and Chironomids are epibenthic: one value per box
+  res <- suppressMessages(
+    create_time_series_biomass(mod, c("WAE", "DIA", "DRE", "CHI"))
+  )
   # the index leaves out the boundary boxes
   inside <- res$time == 0 &
     res$box %in% mod@geometry$.bx0[!mod@geometry$boundary]
@@ -102,9 +105,24 @@ test_that("create_time_series_biomass() weights match the biomass index", {
     mod@group
   )
   index <- index[index$time == 0, ]
+  groups <- c("Walleye", "Diatom", "Dressenids", "Chironomids")
   expect_equal(
-    as.vector(tonnes[c("Walleye", "Diatom_N")]) * 1e-6,
-    index$Biomass[match(c("Walleye", "Diatom"), index$group)],
+    as.vector(tonnes[c(groups[1], paste0(groups[-1], "_N"))]) * 1e-6,
+    index$Biomass[match(groups, index$group)],
     tolerance = 1e-6
+  )
+})
+
+test_that("create_time_series_biomass() needs the geometry for epibenthic groups", {
+  mod <- new_atlantis() |>
+    atlantis_load_files(c(
+      atlantis_examples("inputs", "tiny_biol.prm"),
+      atlantis_examples("inputs", "tiny_groups.csv"),
+      atlantis_examples("outputs", "output.nc")
+    ))
+  withr::defer(ncdf4::nc_close(mod@main_output))
+  expect_snapshot(
+    suppressMessages(create_time_series_biomass(mod, "DRE")),
+    error = TRUE
   )
 })

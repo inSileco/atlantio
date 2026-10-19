@@ -1,4 +1,4 @@
-# atlantio (devel)
+# atlantio 0.3.0
 
 * New calibration objective functions:
     - `score_table()` and `compute_score()` score how far a run drifts from

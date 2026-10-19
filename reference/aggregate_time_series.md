@@ -6,8 +6,9 @@ Reduces a tracer table with one row per group x age x box x layer x time
 row per group x age x time: `Nums` summed, `StructN` and `ResN` as
 Nums-weighted means, i.e. the condition of the average individual. Empty
 cells do not count, and a cohort with no individual left gets 0, so a
-collapse also shows in its condition. A table without `box` or `layer`
-column is returned as is.
+collapse also shows in its condition. A `weight` column is summed and a
+`units` column kept. A table without `box` or `layer` column is returned
+as is.
 
 ## Usage
 
@@ -20,12 +21,13 @@ aggregate_time_series(ts)
 - ts:
 
   Tracer table with columns `group`, `age`, `time`, `StructN`, `ResN`
-  and `Nums`, and optionally `box` and `layer`.
+  and `Nums`, and optionally `box`, `layer`, `weight` and `units`.
 
 ## Value
 
 A data frame with one row per `group` x `age` x `time` and the columns
-`StructN`, `ResN` and `Nums`.
+`StructN`, `ResN` and `Nums` (and `weight` and `units` when `ts` has
+them).
 
 ## Examples
 

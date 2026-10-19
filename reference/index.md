@@ -11,6 +11,9 @@
   files into model object
 - [`atlantis_supported_versions`](atlantis_supported_versions.md) :
   Atlantis versions supported by atlantio
+- [`check_init()`](check_init.md) : Check an Atlantis initial-conditions
+  file
+- [`check_prm()`](check_prm.md) : Check Atlantis parameter files
 - [`create_diet_table()`](create_diet_table.md) : Create Diet Table
 - [`create_foodweb()`](create_foodweb.md) : Create Food Web for Atlantis
   objects
@@ -46,6 +49,8 @@
   file contents into structured list
 - [`score_table()`](score_table.md) [`compute_score()`](score_table.md)
   : Calibration objective: deviation from the initial state
+- [`set_init_values()`](set_init_values.md) : Set the values of a
+  variable of an Atlantis initial-conditions file
 - [`transform_parameter_value()`](transform_parameter_value.md) :
   Transform a parameter value
 - [`window_values()`](window_values.md) : Values of a series scored over

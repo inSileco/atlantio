@@ -14,6 +14,8 @@
 <url><loc>/reference/atlantis_examples.html</loc></url>
 <url><loc>/reference/atlantis_load_files.html</loc></url>
 <url><loc>/reference/atlantis_supported_versions.html</loc></url>
+<url><loc>/reference/check_init.html</loc></url>
+<url><loc>/reference/check_prm.html</loc></url>
 <url><loc>/reference/create_diet_table.html</loc></url>
 <url><loc>/reference/create_foodweb.html</loc></url>
 <url><loc>/reference/create_time_series.html</loc></url>
@@ -31,6 +33,7 @@
 <url><loc>/reference/read_biomass_index.html</loc></url>
 <url><loc>/reference/read_prm.html</loc></url>
 <url><loc>/reference/score_table.html</loc></url>
+<url><loc>/reference/set_init_values.html</loc></url>
 <url><loc>/reference/transform_parameter_value.html</loc></url>
 <url><loc>/reference/window_values.html</loc></url>
 </urlset>

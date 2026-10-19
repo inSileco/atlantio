@@ -101,7 +101,7 @@ read_prm <- function(file) {
     }
 
     # row
-    if (grepl("^[0-9\\.]", prm_line[1])) {
+    if (grepl("^[-+]?([0-9]|\\.[0-9])", prm_line[1])) {
       if (nm == "") {
         cli::cli_abort("Array ({prm_line}) without key.")
       }

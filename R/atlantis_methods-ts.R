@@ -143,6 +143,11 @@ S7::method(create_time_series, Atlantis) <- function(
 #' time, so the full per-box table is never held in memory. For a whole run
 #' that table can weigh more than 1 GB and building it peaks at several GB.
 #'
+#' `weight` is the wet weight in g: the nitrogen (mg N) times `X_CN` and
+#' `k_wetdry` from the biology file. For a biomass pool, the nitrogen is its
+#' concentration times the cell volume. Atlantis' own biomass index uses a
+#' wet-to-dry ratio of 20, whatever `k_wetdry` is.
+#'
 #' @param x An object to create biomass time series from
 #' @param ... Additional arguments passed to methods: `group`, `age`, `box`,
 #'   `layer`, `use_group_code` and `aggregate` (`FALSE` by default).
@@ -213,6 +218,8 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
 
   var_names <- x@main_output$var |>
     names()
+  x_cn <- x@biology$X_CN
+  k_wetdry <- x@biology$k_wetdry
   out <- list()
   for (i in group) {
     # this could be done using x@group$NumCohorts but it mean that group file
@@ -241,8 +248,6 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
         }
       }
 
-      x_cn <- x@biology$X_CN
-      k_wetdry <- x@biology$k_wetdry
       v_field <- c("_ResN", "_StructN", "_Nums")
       age_ts <- \(ages) {
         x |>
@@ -286,7 +291,6 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
       }
     } else {
       atlantio_inform("{i} has no age structure, `age` ignored.")
-      x_rs <- x@biology$X_RS
       out[[i]] <- x |>
         create_time_series(
           variable = paste0(i, "_N"),
@@ -309,7 +313,7 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
           by = c("time", "box", "layer")
         ) |>
         dplyr::mutate(
-          weight = (1 + x_rs) * N * volume * 1e-3,
+          weight = N * volume * k_wetdry * x_cn * 1e-3,
           units = "g",
           age = ""
         ) |>

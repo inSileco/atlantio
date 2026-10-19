@@ -81,3 +81,30 @@ test_that("create_time_series_biomass(aggregate = TRUE) matches aggregating afte
   )
   expect_identical(unique(agg$units), "g")
 })
+
+test_that("create_time_series_biomass() weights match the biomass index", {
+  skip_if_not_installed("sf")
+  mod <- new_atlantis() |>
+    atlantis_load_files(c(
+      atlantis_examples("inputs", "tiny.bgm"),
+      atlantis_examples("inputs", "tiny_biol.prm"),
+      atlantis_examples("inputs", "tiny_groups.csv"),
+      atlantis_examples("outputs", "output.nc")
+    ))
+  withr::defer(ncdf4::nc_close(mod@main_output))
+  res <- suppressMessages(create_time_series_biomass(mod, c("WAE", "DIA")))
+  # the index leaves out the boundary boxes
+  inside <- res$time == 0 &
+    res$box %in% mod@geometry$.bx0[!mod@geometry$boundary]
+  tonnes <- tapply(res$weight[inside], res$group[inside], sum, na.rm = TRUE)
+  index <- read_biomass_index(
+    atlantis_examples("outputs", "outputBiomIndx.txt"),
+    mod@group
+  )
+  index <- index[index$time == 0, ]
+  expect_equal(
+    as.vector(tonnes[c("Walleye", "Diatom_N")]) * 1e-6,
+    index$Biomass[match(c("Walleye", "Diatom"), index$group)],
+    tolerance = 1e-6
+  )
+})

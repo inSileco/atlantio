@@ -4,6 +4,9 @@
   after a fatal error, so a run counts as complete only if the last time step
   of its main output reaches `tstop` (within one `toutinc`), read with its
   units as Atlantis reads them.
+* `create_time_series_biomass()` converts the nitrogen of biomass pools to wet
+  weight with `X_CN` and `k_wetdry`, as for the age-structured groups. It used
+  `1 + X_RS`, which made pool weights about 30 times too low.
 * Writing a parameter set back into a parameter folder:
     - `apply_parameters()` sets the values of a calibration table (on the
       calibration or the model scale) in the parameter files loaded in an

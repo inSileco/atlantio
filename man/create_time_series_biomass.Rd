@@ -23,6 +23,11 @@ With \code{aggregate = TRUE}, the series are reduced over boxes and layers as
 they are read (see \code{\link[=aggregate_time_series]{aggregate_time_series()}}): one cohort of one group at a
 time, so the full per-box table is never held in memory. For a whole run
 that table can weigh more than 1 GB and building it peaks at several GB.
+
+\code{weight} is the wet weight in g: the nitrogen (mg N) times \code{X_CN} and
+\code{k_wetdry} from the biology file. For a biomass pool, the nitrogen is its
+concentration times the cell volume. Atlantis' own biomass index uses a
+wet-to-dry ratio of 20, whatever \code{k_wetdry} is.
 }
 \examples{
 \dontrun{

@@ -298,16 +298,7 @@ aggregate_time_series <- function(ts) {
 #'
 #' @export
 read_biomass_index <- function(path, groups) {
-  if (is.character(groups)) {
-    if (!file.exists(groups)) {
-      cli::cli_abort("Cannot find the groups file {.path {groups}}.")
-    }
-    groups <- utils::read.csv(groups)
-  }
-  missing <- setdiff(c("Code", "Name", "GroupType"), names(groups))
-  if (length(missing)) {
-    cli::cli_abort("{.arg groups} lacks column{?s} {.field {missing}}.")
-  }
+  groups <- resolve_groups(groups, c("Code", "Name", "GroupType"))
   living <- groups[!groups$GroupType %in% c("LAB_DET", "REF_DET", "CARRION"), ]
   bi <- utils::read.table(path, header = TRUE, check.names = FALSE)
   codes <- intersect(living$Code, names(bi))

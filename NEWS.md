@@ -17,6 +17,19 @@
   cohort at a time, so the per-box table of a whole run is never held in
   memory (peak memory of a Lake Erie run roughly halved).
 * `aggregate_time_series()` sums a `weight` column and keeps `units`.
+* New checks of the model input files, both returning an `atlantis_check`
+  table (one row per finding: file, check, severity, key, message):
+    - `check_init()` checks an initial-conditions file in the cells Atlantis
+      uses: NaN, negative values, cells left unset where Atlantis silently
+      uses a non-zero `_FillValue`, groups switched on but empty or missing,
+      and pools far from the other groups of their type;
+    - `check_prm()` scans parameter files line by line (so a malformed array
+      does not stop it): array counts that do not match their values,
+      duplicated keys, CRLF line endings, tabs, units after values, unknown
+      run keys, and the stocking traps (`flagstocking` with `flagrecruit`
+      18, `flagrandom` 1 with stocking, stocking never on the spawn day).
+* `set_init_values()` sets a variable of an initial-conditions file per box
+  and layer from a table.
 
 
 # atlantio 0.2.2

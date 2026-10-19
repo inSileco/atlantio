@@ -107,7 +107,8 @@ test_that("check_prm() scans every file", {
   expect_match(res$message[res$check == "line_endings"], "9 lines")
 
   run <- withr::local_tempfile(fileext = ".prm")
-  writeLines(c("dt 12 hour # time step", "tstop 100 day", "notakey 1"), run)
+  # writeBin() keeps LF line endings on Windows
+  writeBin(charToRaw("dt 12 hour # time step\ntstop 100 day\nnotakey 1\n"), run)
   res <- check_prm(run = run)
   expect_setequal(res$check, c("units", "unknown"))
   expect_match(res$message[res$check == "units"], "dt 12 hour.*tstop 100 day")
@@ -169,6 +170,6 @@ test_that("atlantis_check results print", {
   path <- local_mock_init()
   expect_snapshot(print(check_init(path, mock_groups())))
   run <- file.path(dirname(path), "run.prm")
-  writeLines("dt 1", run)
+  writeBin(charToRaw("dt 1\n"), run)
   expect_snapshot(print(check_prm(bio = run)))
 })

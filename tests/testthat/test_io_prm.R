@@ -79,6 +79,14 @@ test_that("read_prm() works", {
   expect_identical(as.numeric(res1$RelTol), 0.1)
 })
 
+test_that("read_prm() reads arrays starting with a signed value", {
+  fl <- withr::local_tempfile(lines = c("arr 3", "-1 2 3", "brr 2", "+.5 1"))
+  res <- read_prm(fl)
+  expect_identical(as.vector(res$arr), c(-1, 2, 3))
+  expect_identical(attr(res$arr, "array_length"), 3L)
+  expect_identical(as.vector(res$brr), c(0.5, 1))
+})
+
 
 test_that("write_prm() warns when it must", {
   fl <- withr::local_file("filew.prm")

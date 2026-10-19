@@ -38,6 +38,8 @@
 * `read_prm()` keeps the time unit after a value (e.g. `day` in
   `tstop 365 day`) as the attribute `unit`, and `write_prm()` writes it back.
   `write_prm()` wrote the number alone, which Atlantis reads in seconds.
+* `read_prm()` reads arrays whose first value has a sign (e.g. `-1 2 3`).
+  Such rows were skipped, so the array was read as its count.
 * `score_table()` and `compute_score()` gain `method = "lnorm2"`, the
   objective function of Morell et al. (2026) as in their calibration code
   (squared log ratio to the target summed over the scored values, no band,

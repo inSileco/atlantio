@@ -115,3 +115,65 @@ test_that("aggregate_time_series() sums weight and keeps units", {
   expect_equal(agg$weight, 2)
   expect_identical(agg$units, "g")
 })
+
+test_that("score_table() scores the lnorm2 objective of Morell et al.", {
+  ts <- make_ts(resn_end = 330)
+  # no band: a 10% drift of ResN is penalized on the weight-at-age
+  out <- score_table(ts, method = "lnorm2")
+  expect_identical(out$tracer, "Weight")
+  w0 <- (100 + 300) * 5.7 * 20 / 1e6
+  w1 <- (100 + 330) * 5.7 * 20 / 1e6
+  # two yearly snapshots in the default 2-year window, summed
+  expected <- 2 * (log(w1 + 0.01) - log(w0 + 0.01))^2
+  expect_equal(out$penalty, expected)
+  # weight multiplies, a named weight selects the tracers
+  out <- score_table(ts, method = "lnorm2", weight = c(ResN = 2, Nums = 1))
+  expect_setequal(out$tracer, c("ResN", "Nums"))
+  expect_equal(
+    out$penalty[out$tracer == "ResN"],
+    2 * 2 * (log(330.01) - log(300.01))^2
+  )
+  expect_equal(out$penalty[out$tracer == "Nums"], 0)
+})
+
+test_that("lnorm2 scores the biomass against b times its initial value", {
+  time <- seq(0, 5 * year, by = 73 * 86400)
+  bm <- data.frame(group = "Diatom", time = time, Biomass = 1.3)
+  bm$Biomass[1] <- 1
+  out <- score_table(
+    make_ts(),
+    bm,
+    method = "lnorm2",
+    target_factor = c(Biomass = 1.3)
+  )
+  expect_setequal(out$tracer, c("Weight", "Biomass"))
+  expect_equal(out$penalty, c(0, 0))
+  out <- score_table(make_ts(), bm, method = "lnorm2")
+  expect_equal(
+    out$penalty[out$tracer == "Biomass"],
+    2 * (log(1.31) - log(1.01))^2
+  )
+})
+
+test_that("weight and target_factor are validated", {
+  expect_error(
+    score_table(make_ts(), method = "lnorm2", weight = c(Foo = 1)),
+    "unknown"
+  )
+  expect_error(
+    score_table(make_ts(), method = "lnorm2", weight = c(Biomass = 1)),
+    "biomass"
+  )
+  expect_error(score_table(make_ts(), weight = -1), "non-negative")
+  expect_error(score_table(make_ts(), target_factor = c(1, 2)), "one number")
+  expect_error(score_table(make_ts(), method = "foo"), "should be one of")
+  # the band method applies weight and target_factor too
+  expect_equal(
+    compute_score(make_ts(resn_end = 600), weight = c(ResN = 3)),
+    3 * compute_score(make_ts(resn_end = 600))
+  )
+  expect_equal(
+    compute_score(make_ts(resn_end = 600), target_factor = c(ResN = 2)),
+    0
+  )
+})

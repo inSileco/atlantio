@@ -12,7 +12,10 @@ score_table(
   summary = "snapshot",
   window_years = 2,
   tiny = 0.01,
-  exclude = character()
+  exclude = character(),
+  method = c("band", "lnorm2"),
+  weight = 1,
+  target_factor = 1
 )
 
 compute_score(ts, ...)
@@ -43,6 +46,19 @@ from the last output step.}
 \item{exclude}{Names of the groups left out of the score (their tracers
 and their biomass).}
 
+\item{method}{\code{"band"} (default) penalizes the excess beyond the
+tolerance band, averaged over the scored values; \code{"lnorm2"} the squared
+log ratio to the target, summed over them, as Morell et al. (2026).}
+
+\item{weight}{Weight of the penalty of each series: one number for every
+tracer, or a vector named by tracer, the tracers left out weighing 1.
+With \code{method = "lnorm2"}, a named \code{weight} also sets the tracers scored,
+among \code{Nums}, \code{StructN}, \code{ResN}, \code{Weight} and \code{Biomass}.}
+
+\item{target_factor}{Factor applied to the initial value to get the
+target (Morell et al.'s \eqn{b}): one number for every tracer, or a
+vector named by tracer, the tracers left out using 1.}
+
 \item{...}{Arguments passed on to \code{score_table()}.}
 }
 \value{
@@ -69,6 +85,19 @@ excesses are averaged over the scored values of each series.
 \code{score_table()} returns that penalty per series, \code{compute_score()} their
 sum.
 
+\code{method = "lnorm2"} scores instead the objective function of Morell et al.
+(2026) as implemented in their calibration code (calibrar's \code{lnorm2},
+targets built from the initial state): no tolerance band, the squared log
+ratio \eqn{(log(x + tiny) - log(b x_0 + tiny))^2} is summed over the
+scored values of each series. Its tracers are the ones \code{weight} names,
+by default those of Morell et al.: the weight-at-age (\code{Weight}, wet
+weight of the average individual in kg, \code{(StructN + ResN) * 5.7 * 20 / 1e6}) and, when \code{biomass} is given, the \code{Biomass}. For the unfished phase
+of their calibration, the biomass target is the initial biomass times
+\eqn{b = 1.3} (\code{target_factor = c(Biomass = 1.3)}).
+
+With either method, the penalty of a series is multiplied by the
+\code{weight} of its tracer, and the initial value by its \code{target_factor}.
+
 The age-structured tracers are aggregated over boxes and layers first
 (see \code{\link[=aggregate_time_series]{aggregate_time_series()}}), so \code{ts} can be the raw table of
 \code{\link[=create_time_series_biomass]{create_time_series_biomass()}} or its aggregate. Biomass series that
@@ -83,6 +112,8 @@ ts <- data.frame(
 )
 score_table(ts)
 compute_score(ts, tolerance = c(Nums = 0.5, StructN = 0.2, ResN = 0.2))
+# Morell et al. (2026): weight-at-age, no band, summed squared log ratio
+score_table(ts, method = "lnorm2")
 
 }
 \references{

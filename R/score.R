@@ -17,6 +17,20 @@
 #' `score_table()` returns that penalty per series, `compute_score()` their
 #' sum.
 #'
+#' `method = "lnorm2"` scores instead the objective function of Morell et al.
+#' (2026) as implemented in their calibration code (calibrar's `lnorm2`,
+#' targets built from the initial state): no tolerance band, the squared log
+#' ratio \eqn{(log(x + tiny) - log(b x_0 + tiny))^2} is summed over the
+#' scored values of each series. Its tracers are the ones `weight` names,
+#' by default those of Morell et al.: the weight-at-age (`Weight`, wet
+#' weight of the average individual in kg, `(StructN + ResN) * 5.7 * 20 /
+#' 1e6`) and, when `biomass` is given, the `Biomass`. For the unfished phase
+#' of their calibration, the biomass target is the initial biomass times
+#' \eqn{b = 1.3} (`target_factor = c(Biomass = 1.3)`).
+#'
+#' With either method, the penalty of a series is multiplied by the
+#' `weight` of its tracer, and the initial value by its `target_factor`.
+#'
 #' The age-structured tracers are aggregated over boxes and layers first
 #' (see [aggregate_time_series()]), so `ts` can be the raw table of
 #' [create_time_series_biomass()] or its aggregate. Biomass series that
@@ -40,6 +54,16 @@
 #' @param tiny Offset keeping zero values finite on the log scale.
 #' @param exclude Names of the groups left out of the score (their tracers
 #'   and their biomass).
+#' @param method `"band"` (default) penalizes the excess beyond the
+#'   tolerance band, averaged over the scored values; `"lnorm2"` the squared
+#'   log ratio to the target, summed over them, as Morell et al. (2026).
+#' @param weight Weight of the penalty of each series: one number for every
+#'   tracer, or a vector named by tracer, the tracers left out weighing 1.
+#'   With `method = "lnorm2"`, a named `weight` also sets the tracers scored,
+#'   among `Nums`, `StructN`, `ResN`, `Weight` and `Biomass`.
+#' @param target_factor Factor applied to the initial value to get the
+#'   target (Morell et al.'s \eqn{b}): one number for every tracer, or a
+#'   vector named by tracer, the tracers left out using 1.
 #'
 #' @return `score_table()`: a data frame with one row per `group` x `age` x
 #'   `tracer` and its `penalty` (`age` is `NA` for biomass).
@@ -57,6 +81,8 @@
 #' )
 #' score_table(ts)
 #' compute_score(ts, tolerance = c(Nums = 0.5, StructN = 0.2, ResN = 0.2))
+#' # Morell et al. (2026): weight-at-age, no band, summed squared log ratio
+#' score_table(ts, method = "lnorm2")
 #'
 #' @export
 score_table <- function(
@@ -66,10 +92,26 @@ score_table <- function(
   summary = "snapshot",
   window_years = 2,
   tiny = 0.01,
-  exclude = character()
+  exclude = character(),
+  method = c("band", "lnorm2"),
+  weight = 1,
+  target_factor = 1
 ) {
-  tolerance <- resolve_tolerance(tolerance)
-  summary <- resolve_summary(summary, names(tolerance))
+  method <- match.arg(method)
+  if (method == "band") {
+    tolerance <- resolve_tolerance(tolerance)
+    tracers <- names(tolerance)
+  } else {
+    tracers <- lnorm2_tracers(weight, biomass)
+  }
+  summary <- resolve_summary(summary, tracers)
+  weight <- resolve_per_tracer(weight, tracers, "weight")
+  target_factor <- resolve_per_tracer(target_factor, tracers, "target_factor")
+  if (any(weight < 0) || any(target_factor <= 0)) {
+    cli::cli_abort(
+      "{.arg weight} must be non-negative and {.arg target_factor} positive."
+    )
+  }
   if (
     !is.numeric(window_years) || length(window_years) != 1 || window_years <= 0
   ) {
@@ -85,15 +127,17 @@ score_table <- function(
       .data$time == 0 | .data$time > max(.data$time) - window_s
     ) |>
     aggregate_time_series() |>
+    dplyr::mutate(Weight = (.data$StructN + .data$ResN) * 5.7 * 20 / 1e6) |>
     tidyr::pivot_longer(
-      c("StructN", "ResN", "Nums"),
+      c("StructN", "ResN", "Nums", "Weight"),
       names_to = "tracer",
       values_to = "value"
     ) |>
+    dplyr::filter(.data$tracer %in% tracers) |>
     dplyr::mutate(age = as.character(.data$age))
 
-  if (!is.null(biomass)) {
-    if (!"Biomass" %in% names(tolerance)) {
+  if (!is.null(biomass) && (method == "band" || "Biomass" %in% tracers)) {
+    if (!"Biomass" %in% tracers) {
       cli::cli_abort(
         "{.arg tolerance} must name a {.val Biomass} band to score
          {.arg biomass}."
@@ -130,15 +174,28 @@ score_table <- function(
     ) |>
     dplyr::inner_join(init, by = c("group", "age", "tracer"))
 
+  scored <- dplyr::mutate(
+    scored,
+    log_ratio = log(.data$value + tiny) -
+      log(unname(target_factor[.data$tracer]) * .data$init + tiny)
+  )
+  if (method == "lnorm2") {
+    return(
+      dplyr::summarise(
+        scored,
+        penalty = weight[[.data$tracer[1]]] * sum(.data$log_ratio^2),
+        .by = c("group", "age", "tracer")
+      )
+    )
+  }
   scored |>
     dplyr::mutate(
       tol = tolerance[.data$tracer],
-      log_ratio = log(.data$value + tiny) - log(.data$init + tiny),
       excess = pmax(.data$log_ratio - log(1 + .data$tol), 0) +
         pmax(log(1 - .data$tol) - .data$log_ratio, 0)
     ) |>
     dplyr::summarise(
-      penalty = mean(.data$excess^2),
+      penalty = weight[[.data$tracer[1]]] * mean(.data$excess^2),
       .by = c("group", "age", "tracer")
     )
 }
@@ -375,7 +432,7 @@ resolve_summary <- function(summary, tracers) {
       "{.arg summary} must be one statistic or a vector named by tracer."
     )
   }
-  unknown <- setdiff(names(summary), c("Nums", "StructN", "ResN", "Biomass"))
+  unknown <- setdiff(names(summary), score_tracers)
   if (length(unknown)) {
     cli::cli_abort("{.arg summary} names unknown tracer{?s} {.val {unknown}}.")
   }
@@ -383,6 +440,63 @@ resolve_summary <- function(summary, tracers) {
   for (tr in intersect(names(summary), tracers)) {
     out[[tr]] <- summary[[tr]]
   }
+  out
+}
+
+# tracers score_table() knows
+score_tracers <- c("Nums", "StructN", "ResN", "Weight", "Biomass")
+
+#' Tracers scored by the lnorm2 objective
+#'
+#' @param weight The `weight` argument: its names when named, otherwise the
+#'   tracers of Morell et al. (2026).
+#' @param biomass The `biomass` argument.
+#'
+#' @noRd
+lnorm2_tracers <- function(weight, biomass) {
+  tracers <- names(weight)
+  if (is.null(tracers)) {
+    return(if (is.null(biomass)) "Weight" else c("Weight", "Biomass"))
+  }
+  unknown <- setdiff(tracers, score_tracers)
+  if (length(unknown)) {
+    cli::cli_abort("{.arg weight} names unknown tracer{?s} {.val {unknown}}.")
+  }
+  if ("Biomass" %in% tracers && is.null(biomass)) {
+    cli::cli_abort("{.arg biomass} is needed to score {.val Biomass}.")
+  }
+  tracers
+}
+
+#' Per-tracer value of a numeric argument
+#'
+#' @param x One number for every tracer, or a vector named by tracer; the
+#'   tracers left out get 1.
+#' @param tracers Tracers scored.
+#' @param arg Name of the argument, for the messages.
+#'
+#' @return A vector named by `tracers`.
+#'
+#' @noRd
+resolve_per_tracer <- function(x, tracers, arg) {
+  if (!is.numeric(x) || anyNA(x)) {
+    cli::cli_abort("{.arg {arg}} must be numeric.")
+  }
+  if (is.null(names(x))) {
+    if (length(x) != 1) {
+      cli::cli_abort(
+        "{.arg {arg}} must be one number or a vector named by tracer."
+      )
+    }
+    return(stats::setNames(rep(x, length(tracers)), tracers))
+  }
+  unknown <- setdiff(names(x), score_tracers)
+  if (length(unknown)) {
+    cli::cli_abort("{.arg {arg}} names unknown tracer{?s} {.val {unknown}}.")
+  }
+  out <- stats::setNames(rep(1, length(tracers)), tracers)
+  common <- intersect(names(x), tracers)
+  out[common] <- x[common]
   out
 }
 

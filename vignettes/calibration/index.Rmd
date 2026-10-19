@@ -299,7 +299,11 @@ The score is tuned with a few arguments:
   for drift; `"mean"`, `"median"`, `"min"`, `"max"` or a function are also
   accepted;
 - `exclude`: groups left out of the score, e.g. those known to be poorly
-  initialized and not targeted by this round.
+  initialized and not targeted by this round;
+- `weight`: the weight of the penalty of each tracer, e.g. to make the
+  biomass count more than the individual weights;
+- `target_factor`: the factor applied to the initial value of a tracer to
+  get its target, e.g. a target biomass above the initial one.
 
 ```R
 compute_score(
@@ -311,6 +315,55 @@ compute_score(
   exclude = "Detritus_feeders"
 )
 ```
+
+## The objective function of Morell et al.
+
+`method = "lnorm2"` scores instead the objective function of
+@morell_ManualSemiautomated_2026, as implemented in their calibration code
+with `calibrar`'s `lnorm2`, where the targets are built from the initial
+state. There is no tolerance band: every scored value is penalized by its
+squared log ratio to the target, `(log(x(t) + tiny) - log(b x(0) + tiny))^2`,
+and these are summed (not averaged) over the scored values of each series.
+The tracers scored are those of Morell et al.: the weight-at-age (`Weight`,
+the wet weight of the average individual in kg,
+`(StructN + ResN) * 5.7 * 20 / 1e6`) and, when `biomass` is given, the
+biomass of every living group:
+
+```R
+score_table(ts, biomass = biomass, method = "lnorm2")
+```
+
+For the unfished phase of their calibration, the target biomass of a
+theoretical unfished system is the initial biomass times a factor
+`b = 1.3` (values between 1.2 and 1.5 are suggested depending on the
+system), set with `target_factor`; the weight-at-age keeps its initial value
+as target:
+
+```R
+compute_score(
+  ts,
+  biomass = biomass,
+  method = "lnorm2",
+  target_factor = c(Biomass = 1.3)
+)
+```
+
+With this method, a named `weight` also selects the tracers scored, among
+`Nums`, `StructN`, `ResN`, `Weight` and `Biomass`, e.g. to give the biomass
+twice the weight of the weight-at-age:
+
+```R
+compute_score(
+  ts,
+  biomass = biomass,
+  method = "lnorm2",
+  weight = c(Weight = 1, Biomass = 2)
+)
+```
+
+Two terms of Morell et al.'s objective are not covered: the catches, which
+are not read by `atlantio`, and the stability penalty on the year-to-year
+change of the biomass, which is not part of their calibration code.
 
 `window_values()`, used internally, shows which values of a series are
 scored for a given window and statistic:

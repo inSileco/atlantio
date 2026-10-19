@@ -4,6 +4,11 @@
   after a fatal error, so a run counts as complete only if the last time step
   of its main output reaches `tstop` (within one `toutinc`), read with its
   units as Atlantis reads them.
+* `score_table()` and `compute_score()` gain `method = "lnorm2"`, the
+  objective function of Morell et al. (2026) as in their calibration code
+  (squared log ratio to the target summed over the scored values, no band,
+  on the weight-at-age and the biomass by default), and `weight` and
+  `target_factor` (Morell et al.'s b) per tracer, for both methods.
 
 
 # atlantio 0.3.0

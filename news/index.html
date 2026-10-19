@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,19 @@
       <small>Source: <a href="https://github.com/inSileco/atlantio/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.3" id="atlantio-023">atlantio 0.2.3<a class="anchor" aria-label="anchor" href="#atlantio-023"></a></h2>
+<ul><li>New calibration objective functions:
+<ul><li>
+<code><a href="../reference/score_table.html">score_table()</a></code> and <code><a href="../reference/score_table.html">compute_score()</a></code> score how far a run drifts from its initial state (log ratio to t = 0, a no-penalty band per tracer, squared excess beyond the band), per group x age x tracer or in total, on the age-structured tracers and optionally on the biomass of every living group;</li>
+<li>
+<code><a href="../reference/window_values.html">window_values()</a></code> reduces a series to its scored values over the last years of a run (yearly snapshots or a statistic such as the mean);</li>
+<li>
+<code><a href="../reference/aggregate_time_series.html">aggregate_time_series()</a></code> aggregates the tracer table of <code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> over boxes and layers (Nums summed, StructN and ResN weighted by Nums);</li>
+<li>
+<code><a href="../reference/read_biomass_index.html">read_biomass_index()</a></code> reads the biomass index of the living groups.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="atlantio-022">atlantio 0.2.2<a class="anchor" aria-label="anchor" href="#atlantio-022"></a></h2>
 <ul><li>

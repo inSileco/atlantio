@@ -3,6 +3,8 @@
 ## All functions
 
 - [`Atlantis()`](Atlantis.md) : Atlantis Ecosystem Model Container
+- [`aggregate_time_series()`](aggregate_time_series.md) : Aggregate
+  age-structured tracers over boxes and layers
 - [`atlantis_examples()`](atlantis_examples.md) : Helper function to
   quickly access example files.
 - [`atlantis_load_files()`](atlantis_load_files.md) : Load Atlantis
@@ -38,7 +40,13 @@
   [`read_txt_files()`](read_atlantis_files.md)
   [`read_xml()`](read_atlantis_files.md) : Read Atlantis inputs and
   outputs files
+- [`read_biomass_index()`](read_biomass_index.md) : Read the biomass of
+  the living groups from the Atlantis biomass index
 - [`read_prm()`](read_prm.md) [`write_prm()`](read_prm.md) : Parse .prm
   file contents into structured list
+- [`score_table()`](score_table.md) [`compute_score()`](score_table.md)
+  : Calibration objective: deviation from the initial state
 - [`transform_parameter_value()`](transform_parameter_value.md) :
   Transform a parameter value
+- [`window_values()`](window_values.md) : Values of a series scored over
+  the last years of a run

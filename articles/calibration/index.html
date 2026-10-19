@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../../logo.png" class="logo" alt=""><h1>Calibrating Atlantis model with atlantio and calibrar</h1>
             
-            <h4 data-toc-skip class="date">2026-10-07</h4>
+            <h4 data-toc-skip class="date">2026-10-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/inSileco/atlantio/blob/main/vignettes/calibration/index.Rmd" class="external-link"><code>vignettes/calibration/index.Rmd</code></a></small>
       <div class="d-none name"><code>index.Rmd</code></div>
@@ -342,7 +342,7 @@ their score, and remove the bulky run files.</li>
 <span>      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"output.nc is truncated: the model crashed mid-run"</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">ts</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu">compute_score</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span></span>
 <span>  <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">conditionMessage</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># 5. results</span></span>

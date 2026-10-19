@@ -110,7 +110,7 @@ generate_calibration_table <- S7::new_generic("generate_calibration_table", "x")
 #' @noRd
 S7::method(generate_calibration_table, Atlantis) <- function(
   x,
-  path, # would be better to use a function to check the list first!
+  path,
   version = "3-6722"
 ) {
   yaml::read_yaml(path) |>
@@ -149,60 +149,53 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
   if (is.na(prm_idx)) {
     cli::cli_abort("Unknown parameter.")
   }
-  if (length(prm$name) != 1) {
-    cli::cli_abort("Parameter name should have a length of 1.")
-  }
   prm_info <- ls_prm_all[[prm_idx]]
 
   if (stringr::str_detect(prm$name, "<[A-Za-z]+>")) {
     abbrev <- prm$name |>
       stringr::str_extract_all("<[A-Za-z]+>") |>
       unlist()
-    if (length(abbrev)) {
-      abb_prm_name <- abbrev |>
-        stringr::str_replace_all("[<>]", "") |>
-        unlist()
-      mis_abb_prm <- setdiff(abb_prm_name, names(prm))
-      if (length(mis_abb_prm)) {
-        cli::cli_abort("{mis_abb_prm} missing from calibrarion file.")
-      }
-      # each expanded key is its own entry: a key of non-array type (e.g.
-      # mum_<GRP>_T15, one double per group) holds a single value, whatever
-      # dimension the dictionary lists for the family
-      key_dimension <- if (grepl("_array$", prm_info$value_type)) {
-        prm_info$dimension
-      } else {
-        "scalar"
-      }
-      # compting all combinations
-      df_key_val <- prm[abb_prm_name] |>
-        expand.grid(stringsAsFactors = FALSE)
-
-      ls_prm_pos <- ls_prm_nam <- list()
-      for (i in df_key_val |>
-        nrow() |>
-        seq_len()) {
-        tmp <- prm$name
-        for (j in seq_len(ncol(df_key_val))) {
-          tmp <- tmp |>
-            stringr::str_replace(
-              stringr::fixed(abbrev[j]),
-              as.character(df_key_val[i, j])
-            )
-        }
-        # the group a per_group/per_cohort dimension refers to: GRP, or the
-        # predator of a diet key (pPREY...)
-        prm_dim <- compute_parameter_dimension(
-          x,
-          key_dimension,
-          group = df_key_val$GRP[i] %||% df_key_val$PRED[i]
-        )
-        ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
-        ls_prm_nam[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
-      }
-      ls_prm_nam <- ls_prm_nam |> unlist()
-      ls_prm_pos <- ls_prm_pos |> unlist()
+    abb_prm_name <- abbrev |>
+      stringr::str_replace_all("[<>]", "")
+    mis_abb_prm <- setdiff(abb_prm_name, names(prm))
+    if (length(mis_abb_prm)) {
+      cli::cli_abort("{mis_abb_prm} missing from calibrarion file.")
     }
+    # each expanded key is its own entry: a key of non-array type (e.g.
+    # mum_<GRP>_T15, one double per group) holds a single value, whatever
+    # dimension the dictionary lists for the family
+    key_dimension <- if (grepl("_array$", prm_info$value_type)) {
+      prm_info$dimension
+    } else {
+      "scalar"
+    }
+    df_key_val <- prm[abb_prm_name] |>
+      expand.grid(stringsAsFactors = FALSE)
+
+    ls_prm_pos <- ls_prm_nam <- list()
+    for (i in df_key_val |>
+      nrow() |>
+      seq_len()) {
+      tmp <- prm$name
+      for (j in seq_len(ncol(df_key_val))) {
+        tmp <- tmp |>
+          stringr::str_replace(
+            stringr::fixed(abbrev[j]),
+            as.character(df_key_val[i, j])
+          )
+      }
+      # the group a per_group/per_cohort dimension refers to: GRP, or the
+      # predator of a diet key (pPREY...)
+      prm_dim <- compute_parameter_dimension(
+        x,
+        key_dimension,
+        group = df_key_val$GRP[i] %||% df_key_val$PRED[i]
+      )
+      ls_prm_pos[[i]] <- generate_position_set(prm$position, prm_dim)
+      ls_prm_nam[[i]] <- rep(tmp, ls_prm_pos[[i]] |> length())
+    }
+    ls_prm_nam <- ls_prm_nam |> unlist()
+    ls_prm_pos <- ls_prm_pos |> unlist()
   } else {
     ls_prm_nam <- prm$name
     prm_dim <- compute_parameter_dimension(x, prm_info$dimension)
@@ -242,7 +235,7 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       ls_prm_val * transform_parameter_value(out_max, transf),
       transf
     )
-  } else {}
+  }
   # Atlantis aborts when a proportion is outside [0, 1]
   if (identical(prm_info$reader$check, "proportion_check")) {
     out_min <- clamp_file_scale(out_min, transf, 0, 1)

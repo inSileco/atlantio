@@ -2,8 +2,6 @@ test_that("create_foodweb() requires diet information", {
   expect_error(new_atlantis() |> create_foodweb(), "No bio data available")
 })
 
-# TODO READ biological file make the foodweb very simple and check
-
 test_that("create_foodweb() builds a directed food web graph", {
   atl <- create_atlantis_model()
   g <- create_foodweb(atl)

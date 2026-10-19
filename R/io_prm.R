@@ -32,7 +32,7 @@ read_prm <- function(file) {
   # read line by line and split using ending white space or tab
   prm_lines <- readLines(file) |>
     lapply(stringr::str_squish) |>
-    Filter(f = \(x) x != "") |> # move empty lines
+    Filter(f = \(x) x != "") |>
     unlist() |>
     strsplit(split = "[ \t]+")
 
@@ -83,7 +83,6 @@ read_prm <- function(file) {
       out[[nm]] <- val
       if (length(comments)) {
         attr(out[[nm]], "comments") <- comments |> unlist()
-        # reset
         comments <- list()
       }
     }

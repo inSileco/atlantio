@@ -41,7 +41,6 @@ read_atlantis_files <- function(files, filenames = basename(files)) {
   }
 
   out <- list(path = files)
-  # read files according to their extension
   res <- tryCatch(
     switch(
       fs::path_ext(files),
@@ -201,12 +200,8 @@ read_xml <- function(path) {
   if (is.null(xml_doc)) {
     return(list(type = "unknown", object = NULL))
   }
-  xml_list <- xml2::as_list(xml_doc)
-  if (is.null(xml_list)) {
-    return(list(type = "unknown", object = NULL))
-  }
   list(
     type = "xml_file",
-    object = xml_list
+    object = xml2::as_list(xml_doc)
   )
 }

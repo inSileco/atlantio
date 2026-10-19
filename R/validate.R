@@ -9,7 +9,6 @@ validate_file <- function(x, template) {
   ) |>
     yaml::read_yaml()
 
-  # Logic will be more complicated with Atlantis version
   nm_x <- names(x)
   nm_ref <- ref |> lapply(\(x) x$Name)
 
@@ -27,13 +26,10 @@ validate_file <- function(x, template) {
     )
   }
 
-  # TODO : Add logic to check actual values
-
   x
 }
 
 
-# consider switching to https://github.com/hadley/assertthat
 valid_values <- function(type, value, name) {
   switch(
     type,
@@ -47,8 +43,6 @@ valid_values <- function(type, value, name) {
   )
 }
 
-
-# Pretty basic checks
 
 check_boolean <- function(value, name) {
   # everything that is not 0 will be 1
@@ -79,7 +73,6 @@ check_float <- function(value, name) {
 }
 
 check_float_array <- function(value, name) {
-  # everything that is not 0 will be 1
   out <- value
   if (!length(out) || any(is.na(out))) {
     cli::cli_abort("{name} must be a float array.")

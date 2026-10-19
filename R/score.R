@@ -253,7 +253,7 @@ window_values <- function(time, value, stat = "snapshot", years = 2) {
     cli::cli_abort("{.arg years} must be a single positive number.")
   }
   window_days <- years * 365
-  if (is.character(stat) && identical(stat, "snapshot")) {
+  if (identical(stat, "snapshot")) {
     snaps <- snapshot_times(time, window_days)
     return(value[match(snaps, time)])
   }

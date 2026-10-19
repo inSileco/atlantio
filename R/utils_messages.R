@@ -5,7 +5,6 @@
 atlantio_inform <- function(..., .envir = parent.frame()) {
   is_verbose_mode <- getOption("atlantio.verbose", "verbose") == "verbose"
   if (is_verbose_mode) {
-    # Options local to this function only; reset on exit!
     rlang::local_options(rlib_message_verbosity = "verbose")
     cli::cli_inform(..., .envir = .envir)
   }
@@ -17,12 +16,6 @@ msg_generated_by <- function() {
 
 vec_to_ul <- function(..., .envir = parent.frame()) {
   cli::cli_ul()
-  lapply(list(...), cli::cli_li, .envir = .envir)
-  cli::cli_end()
-}
-
-vec_to_ol <- function(..., .envir = parent.frame()) {
-  cli::cli_ol()
   lapply(list(...), cli::cli_li, .envir = .envir)
   cli::cli_end()
 }

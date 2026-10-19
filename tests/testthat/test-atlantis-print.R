@@ -4,7 +4,6 @@ test_that("print method works for empty Atlantis object", {
 })
 
 test_that("print method shows correct status for populated object", {
-  # Create object with some data
   test_geometry <- data.frame(box = 1:5, depth = runif(5))
   test_bio <- list(param1 = "value1")
 
@@ -22,7 +21,6 @@ test_that("print method shows geometry details when available", {
 })
 
 test_that("print method shows main output details when available", {
-  # Create mock main output structure
   mock_main_output <- list(
     var = list(temp = list(), salt = list(), biomass = list()),
     dim = list(t = list(len = 100))
@@ -35,13 +33,11 @@ test_that("print method shows main output details when available", {
 test_that("print method returns object invisibly", {
   atlantis_obj <- new_atlantis()
 
-  # Should return the object invisibly
   suppressMessages(result <- print(atlantis_obj))
   expect_identical(result, atlantis_obj)
 })
 
 test_that("print method handles complex object with multiple data types", {
-  # Create object with multiple data types
   atlantis_obj <- new_atlantis(
     geometry = data.frame(box = 1:15, depth = runif(15)),
     biology = list(species = "cod", growth_rate = 0.3),

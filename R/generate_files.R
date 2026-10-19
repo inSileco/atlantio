@@ -51,7 +51,6 @@ generate_run_file <- function(version, description, file, ...) {
 
   tmp <- system.file("parameters", "run.yaml", package = "atlantio") |>
     yaml::read_yaml() |>
-    # ensure field 'Category' exists
     lapply(\(x) {
       x$Category <- x$Category %||% "other"
       x
@@ -60,9 +59,7 @@ generate_run_file <- function(version, description, file, ...) {
     extract_field("Name") |>
     unlist()
 
-  # Update values (if any)
   if (length(args)) {
-    # filter
     args <- args[names(args) %in% vc_nm]
     for (i in seq_along(args)) {
       idx <- which(vc_nm == names(args)[i])

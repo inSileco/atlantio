@@ -178,7 +178,7 @@ check_prm <- function(bio = NULL, run = NULL, force = NULL) {
       check_stocking(
         scans$bio,
         basename(bio),
-        if (!is.null(force)) scans$force,
+        scans$force,
         force
       )
     )

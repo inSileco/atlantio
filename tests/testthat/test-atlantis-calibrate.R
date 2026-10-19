@@ -52,7 +52,6 @@ test_that("Error handling works correctly", {
       ),
     "Group info required"
   )
-  #
   expect_error(
     new_atlantis() |>
       atlantis_load_files(

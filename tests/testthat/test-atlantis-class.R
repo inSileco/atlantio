@@ -1,5 +1,4 @@
 test_that("Atlantis S7 class can be created", {
-  # Test basic class creation
   atlantis_obj <- new_atlantis()
 
   expect_s3_class(atlantis_obj, "atlantio::atlantis")
@@ -10,7 +9,6 @@ test_that("new_atlantis() creates empty object with correct structure", {
   atlantis_obj <- new_atlantis()
   expect_snapshot(atlantis_obj)
 
-  # All properties should be initialized as NULL
   expect_null(atlantis_obj@geometry)
   expect_null(atlantis_obj@initial)
   expect_null(atlantis_obj@biology)
@@ -29,9 +27,7 @@ test_that("new_atlantis() creates empty object with correct structure", {
 })
 
 test_that("new_atlantis() accepts initial values", {
-  # Create with some initial data
   test_data <- list("test_data")
-  # TODO use better type still thinking about tis but custim check for read or # direct with certain type would be best
   expect_warning(
     atlantis_obj <- new_atlantis(
       geometry = test_data,
@@ -42,5 +38,5 @@ test_that("new_atlantis() accepts initial values", {
 
   expect_equal(atlantis_obj@geometry, test_data)
   expect_equal(atlantis_obj@biology, test_data)
-  expect_null(atlantis_obj@group) # Should still be NULL
+  expect_null(atlantis_obj@group)
 })

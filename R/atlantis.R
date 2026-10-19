@@ -101,11 +101,6 @@ Atlantis <- S7::new_class(
     file_paths = S7::class_any,
     version = S7::class_character
   )
-  # validator = function(self) {
-  #     if (length(self@animals) != self@enclosure) {
-  #         "@enclosure should equal length(@animals)"
-  #     }
-  # }
 )
 
 #' Create new Atlantis model object
@@ -139,25 +134,24 @@ Atlantis <- S7::new_class(
 new_atlantis <- function(...) {
   args <- list(...)
 
-  # Initialize all properties as NULL if not provided
   properties <- list(
-    geometry = args$geometry %||% NULL,
-    run = args$run %||% NULL,
-    initial = args$initial %||% NULL,
-    biology = args$biology %||% NULL,
-    group = args$group %||% NULL,
-    physics = args$physics %||% NULL,
-    forcing = args$forcing %||% NULL,
-    fisheries = args$fisheries %||% NULL,
-    harvest = args$harvest %||% NULL,
-    main_output = args$main_output %||% NULL,
-    biomass_all = args$biomass_all %||% NULL,
-    biomass_box = args$biomass_box %||% NULL,
-    biomass_age = args$biomass_age %||% NULL,
-    biomass_age_annual = args$biomass_age_annual %||% NULL,
-    diet = args$diet %||% NULL,
-    diet_detailed = args$diet_detailed %||% NULL,
-    yoy = args$yoy %||% NULL,
+    geometry = args$geometry,
+    run = args$run,
+    initial = args$initial,
+    biology = args$biology,
+    group = args$group,
+    physics = args$physics,
+    forcing = args$forcing,
+    fisheries = args$fisheries,
+    harvest = args$harvest,
+    main_output = args$main_output,
+    biomass_all = args$biomass_all,
+    biomass_box = args$biomass_box,
+    biomass_age = args$biomass_age,
+    biomass_age_annual = args$biomass_age_annual,
+    diet = args$diet,
+    diet_detailed = args$diet_detailed,
+    yoy = args$yoy,
     file_paths = args$file_paths %||%
       cbind(atlantio::input_files, path = NA_character_),
     version = args$version %||% "latest"
@@ -224,8 +218,6 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
     return(atlantis)
   }
 
-  # check if multiple file of the same type use duplicated
-  # cli::cli_alert_warning()
   v_types <- vapply(files, \(x) x$type, character(1))
   dups <- duplicated(v_types)
   if (any(dups)) {
@@ -296,7 +288,6 @@ get_biomass_by_type <- function(atlantis, bm_type) {
     bm_type,
     "biomass_all" = atlantis@biomass_all,
     "biomass_box" = atlantis@biomass_box,
-    "biomass_age" = atlantis@biomass_age,
-    NULL
+    "biomass_age" = atlantis@biomass_age
   )
 }

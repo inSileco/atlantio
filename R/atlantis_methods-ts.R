@@ -56,7 +56,6 @@ S7::method(create_time_series, Atlantis) <- function(
 
   chk <- variable[!variable %in% names(x@main_output$var)]
   if (length(chk)) {
-    # NB: some should be excluded, need a get_output_varname methods?
     cli::cli_abort(
       "{length(chk)} unknown variable{?s}: {cli::col_yellow(chk)}.
       Use `names(x@main_output$var)` to check the list of available variables."
@@ -83,10 +82,8 @@ S7::method(create_time_series, Atlantis) <- function(
     }
   }
 
-  # sequence 2D
   sq_2d_time <- rep.int(vc_time, length(box))
   sq_2d_box <- rep(box, each = length(vc_time))
-  # sequence 3D
   sq_3d_time <- rep(vc_time, each = length(box) * length(layer))
   sq_3d_box <- rep(box, each = length(layer)) |> rep.int(length(vc_time))
   sq_3d_layer <- rep.int(layer, length(vc_time) * length(box))
@@ -94,7 +91,6 @@ S7::method(create_time_series, Atlantis) <- function(
   out <- lapply(variable, \(v) {
     sz <- nc$var[[v]]$varsize
     if (length(sz) == 2) {
-      # check the correspondance
       if (sz[1L] == nc$dim$b$len && sz[2L] == nc$dim$t$len) {
         atlantio_inform("2D variable, 'layer' ignored.")
         tmp <- ncdf4::ncvar_get(nc, v)
@@ -129,7 +125,7 @@ S7::method(create_time_series, Atlantis) <- function(
         cli::cli_abort("Unknown type of variable (dimension mismatch).")
       }
     } else {
-      cli::cli_abort("Unknown variable dimension", type = "error")
+      cli::cli_abort("Unknown variable dimension")
     }
   }) |>
     do.call(what = dplyr::bind_rows)
@@ -210,13 +206,6 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
   if (use_group_code) {
     require_group_file(x)
     require_valid_group(group, x)
-    #  age_group <- c("FISH", "FISH_INVERT", "SHARK", "MAMMAL", "BIRD", "REPTILE")
-    grp_missing <- group[group %notin% x@group$Code]
-    if (length(grp_missing)) {
-      cli::cli_abort(
-        "{length(grp_missing)} unknown group{?s} name: {grp_missing}"
-      )
-    }
     group <- x@group |>
       dplyr::filter(Code %in% group) |>
       dplyr::pull(Name)
@@ -254,7 +243,6 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
 
       x_cn <- x@biology$X_CN
       k_wetdry <- x@biology$k_wetdry
-      # this will likely change for age structured biomass pools
       v_field <- c("_ResN", "_StructN", "_Nums")
       age_ts <- \(ages) {
         x |>
@@ -298,11 +286,10 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
       }
     } else {
       atlantio_inform("{i} has no age structure, `age` ignored.")
-      v_age <- ""
       x_rs <- x@biology$X_RS
       out[[i]] <- x |>
         create_time_series(
-          variable = paste0(i, v_age, "_N"),
+          variable = paste0(i, "_N"),
           box = box,
           layer = layer
         ) |>

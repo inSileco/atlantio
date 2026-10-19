@@ -3,8 +3,6 @@
 #' @description S7 method for printing Atlantis objects with a summary of loaded data.
 #'
 #' @param x An Atlantis S7 object
-#' @param ontogenetic_stage Logical, if `TRUE` keeps predator juvenile/adult
-#' variants as separate nodes in the food web.
 #' @param ... Additional arguments (unused)
 #'
 #' @noRd
@@ -12,7 +10,6 @@ S7::method(print, Atlantis) <- function(x, ...) {
   cli::col_green("Atlantis Model") |>
     cli::cli_h2()
 
-  # Check and display data availability
   data_status <- list(
     "Geometry (BGM)" = !is.null(x@geometry),
     "Run file" = !is.null(x@run),
@@ -26,7 +23,6 @@ S7::method(print, Atlantis) <- function(x, ...) {
     "Biomass (per age)" = !is.null(x@biomass_age)
   )
 
-  # would probably move all this to summary method
   cli::cli_h3("Data availability:")
   for (name in names(data_status)) {
     cli::cli_text(
@@ -35,7 +31,6 @@ S7::method(print, Atlantis) <- function(x, ...) {
     )
   }
 
-  # Additional details for key components
   if (!is.null(x@group)) {
     cli::cli_h3("Group details:")
     vec_to_ul(
@@ -201,7 +196,6 @@ S7::method(create_foodweb, Atlantis) <- function(x, ...) {
     to = colnames(diet_adj_mat)[idx[, 2]],
     weight = 1
   )
-  # we could add various details
   df_vertices <- data.frame(
     names = unique(c(rownames(diet_adj_mat), colnames(diet_adj_mat)))
   )

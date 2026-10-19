@@ -13,7 +13,6 @@ bgm_file <- system.file(
 
 
 test_that("atlantis_load_files() works with character paths", {
-  # Test with example files from the package
   atlantis_obj <- new_atlantis() |>
     atlantis_load_files(bio_file)
 
@@ -23,9 +22,6 @@ test_that("atlantis_load_files() works with character paths", {
 })
 
 test_that("atlantis_load_files() works with atlantis_file objects", {
-  skip_if(bgm_file == "", "Example BGM file not available")
-
-  # Create atlantis_file object
   files <- read_atlantis_files(bio_file)
 
   atlantis_obj <- new_atlantis() |>
@@ -37,46 +33,36 @@ test_that("atlantis_load_files() works with atlantis_file objects", {
 
 test_that("atlantis_load_files() preserves existing data", {
   skip_if_not_installed("sf")
-  # Create object with some initial data
   initial_bio <- list(param1 = "initial_value")
   atlantis_obj <- new_atlantis(biology = initial_bio)
 
   expect_false(is.null(atlantis_obj@biology))
   expect_true(is.null(atlantis_obj@geometry))
 
-  # Load BGM file (should not affect bio data)
-  skip_if(bgm_file == "", "Example BGM file not available")
-
   updated_obj <- atlantis_load_files(atlantis_obj, bgm_file)
 
-  expect_true(!is.null(updated_obj@biology)) # Should still have bio
-  expect_true(!is.null(updated_obj@geometry)) # Should now have bgm
-  expect_equal(updated_obj@biology, initial_bio) # Bio data should be unchanged
+  expect_true(!is.null(updated_obj@biology))
+  expect_true(!is.null(updated_obj@geometry))
+  expect_equal(updated_obj@biology, initial_bio)
 })
 
 test_that("atlantis_load_files() overwrites existing data of same type", {
   skip_if_not_installed("sf")
-  # Create object with initial BGM data
   initial_bgm <- data.frame(x = 1:3, y = 4:6)
   atlantis_obj <- new_atlantis(geometry = initial_bgm)
 
   expect_equal(atlantis_obj@geometry, initial_bgm)
 
-  # Load new BGM file (should overwrite)
-  skip_if(bgm_file == "", "Example BGM file not available")
-
   updated_obj <- atlantis_load_files(atlantis_obj, bgm_file)
 
   new_bgm <- updated_obj@geometry
-  expect_false(identical(new_bgm, initial_bgm)) # Should be different
-  expect_true(nrow(new_bgm) > 3) # Real BGM should have more rows
+  expect_false(identical(new_bgm, initial_bgm))
+  expect_true(nrow(new_bgm) > 3)
 })
 
 
 test_that("atlantis_load_files() works with multiple file types", {
   skip_if_not_installed("sf")
-
-  skip_if(bgm_file == "" || bio_file == "", "Example files not available")
 
   atlantis_obj <- new_atlantis()
   updated_obj <- atlantis_load_files(atlantis_obj, c(bgm_file, bio_file))

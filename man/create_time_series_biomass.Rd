@@ -26,8 +26,10 @@ that table can weigh more than 1 GB and building it peaks at several GB.
 
 \code{weight} is the wet weight in g: the nitrogen (mg N) times \code{X_CN} and
 \code{k_wetdry} from the biology file. For a biomass pool, the nitrogen is its
-concentration times the cell volume. Atlantis' own biomass index uses a
-wet-to-dry ratio of 20, whatever \code{k_wetdry} is.
+concentration times the cell volume, or times the box area for the
+epibenthic groups (one value per box, in mg N m-2), which needs the
+geometry file. Atlantis' own biomass index uses a wet-to-dry ratio of 20,
+whatever \code{k_wetdry} is.
 }
 \examples{
 \dontrun{

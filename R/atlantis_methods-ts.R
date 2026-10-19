@@ -145,8 +145,10 @@ S7::method(create_time_series, Atlantis) <- function(
 #'
 #' `weight` is the wet weight in g: the nitrogen (mg N) times `X_CN` and
 #' `k_wetdry` from the biology file. For a biomass pool, the nitrogen is its
-#' concentration times the cell volume. Atlantis' own biomass index uses a
-#' wet-to-dry ratio of 20, whatever `k_wetdry` is.
+#' concentration times the cell volume, or times the box area for the
+#' epibenthic groups (one value per box, in mg N m-2), which needs the
+#' geometry file. Atlantis' own biomass index uses a wet-to-dry ratio of 20,
+#' whatever `k_wetdry` is.
 #'
 #' @param x An object to create biomass time series from
 #' @param ... Additional arguments passed to methods: `group`, `age`, `box`,
@@ -291,33 +293,43 @@ S7::method(create_time_series_biomass, Atlantis) <- function(
       }
     } else {
       atlantio_inform("{i} has no age structure, `age` ignored.")
+      v_pool <- paste0(i, "_N")
       out[[i]] <- x |>
         create_time_series(
-          variable = paste0(i, "_N"),
+          variable = v_pool,
           box = box,
           layer = layer
         ) |>
         dplyr::rename(
           N = value,
           group = variable
-        ) |>
-        dplyr::inner_join(
-          create_time_series(
-            x,
-            variable = "volume",
-            box = box,
-            layer = layer
-          ) |>
-            dplyr::select(!c(variable, units)) |>
-            dplyr::rename(volume = value),
-          by = c("time", "box", "layer")
-        ) |>
+        )
+      # cell size: volume (m3), or box area (m2) for the epibenthic groups,
+      # whose single value per box is in mg N m-2
+      if (length(x@main_output$var[[v_pool]]$varsize) == 2) {
+        require_geometry_file(x)
+        out[[i]]$size <- x@geometry$area[out[[i]]$box + 1]
+      } else {
+        out[[i]] <- out[[i]] |>
+          dplyr::inner_join(
+            create_time_series(
+              x,
+              variable = "volume",
+              box = box,
+              layer = layer
+            ) |>
+              dplyr::select(!c(variable, units)) |>
+              dplyr::rename(size = value),
+            by = c("time", "box", "layer")
+          )
+      }
+      out[[i]] <- out[[i]] |>
         dplyr::mutate(
-          weight = N * volume * k_wetdry * x_cn * 1e-3,
+          weight = N * size * k_wetdry * x_cn * 1e-3,
           units = "g",
           age = ""
         ) |>
-        dplyr::select(!c(volume, N))
+        dplyr::select(!c(size, N))
       if (aggregate) {
         out[[i]] <- out[[i]] |>
           dplyr::summarise(

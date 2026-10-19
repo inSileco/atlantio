@@ -92,18 +92,19 @@ prm <- read_prm(atlantis_examples("inputs", "tiny_run.prm"))
 length(prm)
 prm$tstop
 
-prm$tstop <- 730
+prm$tstop[1] <- 730
 write_prm(prm[c("tstop", "dt", "toutstart", "toutinc")])
 ```
 
 Pass a path to `file` to write to disk instead of the console.
 
-Note that `read_prm()` keeps the numbers only: the time units of the run
-file go to the comments, so `tstop 365 day` is written back as `tstop 365`,
-which Atlantis reads as 365 seconds. To write modified parameters into a
-copy of an existing file, keeping its units, comments and layout, use
-`write_parameter_folder()`, which changes only the values that differ (see
-the [calibration vignette](calibration/index.html)).
+The time units of the run file (`day` in `tstop 365 day`) are kept as the
+attribute `unit` and written back. Change values element-wise, as
+`prm$tstop[1] <- 730` above: `prm$tstop <- 730` would drop the unit and the
+comments, and Atlantis reads a number without unit in seconds. To write
+modified parameters into a copy of an existing file, keeping its comments
+and layout, use `write_parameter_folder()`, which changes only the values
+that differ (see the [calibration vignette](calibration/index.html)).
 
 `compare_prm()` compares two parameter files, or parameter lists, by
 parameter name, so that moved lines, comments and layout do not show up:

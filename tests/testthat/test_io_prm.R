@@ -113,6 +113,23 @@ test_that("write_prm() works", {
   )
 })
 
+test_that("read_prm() and write_prm() keep time units", {
+  run <- read_prm(atlantis_examples("inputs", "tiny_run.prm"))
+  expect_identical(attr(run$tstop, "unit"), "day")
+  expect_identical(attr(run$dt, "unit"), "hour")
+  expect_identical(
+    attr(run$tstop, "comments"),
+    "1-year run; set 5 day for a quick smoke test"
+  )
+  fl <- withr::local_tempfile(fileext = ".prm")
+  write_prm(run[c("tstop", "dt", "toutinc")], fl, add_comments = FALSE)
+  expect_identical(
+    readLines(fl),
+    c("tstop 365 day", "dt 12 hour", "toutinc 5 day")
+  )
+  expect_identical(prm_seconds(fl, "tstop"), 365 * 86400)
+})
+
 
 test_that("read_prm_files() works", {
   expect_snapshot(

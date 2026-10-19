@@ -3,8 +3,9 @@
 #' @param file Either a path to a file or a connection.
 #'
 #' @return
-#' A list made of key-value elements.
-#' Note that comments and length of vectr
+#' A list made of key-value elements. The comments, the length of arrays and
+#' the time unit after a value are kept as the attributes `comments`,
+#' `array_length` and `unit` of the elements.
 #'
 #' @details
 #' .prm files are simple key-value text files:
@@ -19,6 +20,11 @@
 #' The key differences between `read_prm()` and the Atlantis parser are:
 #'  * Comments: lines starting with # are not skipped, they are collected and stored as
 #'  an attributes to the list elements
+#'  * Units: Atlantis converts a time unit after a value (e.g. `tstop 365 day`)
+#'  to seconds; `read_prm()` keeps the number and the unit, as the attribute
+#'  `unit`, which [write_prm()] writes back. A number without unit is read in
+#'  seconds, so change values element-wise (`x$tstop[1] <- 730`): replacing
+#'  the element (`x$tstop <- 730`) drops its attributes.
 #'  * Array padding: in the original parser, if fewer values than declared size,
 #'  the last value is repeated to fill. `read_prm()` will throw an error instead.
 #'
@@ -69,10 +75,16 @@ read_prm <- function(file) {
         cli::cli_abort("`{nm}` has no value.")
       }
       val <- prm_line[2] |> to_num()
-      if (length(prm_line) > 2) {
+      rest <- prm_line[-(1L:2L)]
+      unit <- NULL
+      if (is.numeric(val) && length(rest) && tolower(rest[1]) %in% prm_units) {
+        unit <- rest[1]
+        rest <- rest[-1]
+      }
+      if (length(rest)) {
         comments <- c(
           comments,
-          paste(prm_line[-(1L:2L)], collapse = " ") |>
+          paste(rest, collapse = " ") |>
             stringr::str_remove("^#+") |>
             stringr::str_squish()
         )
@@ -85,6 +97,7 @@ read_prm <- function(file) {
         attr(out[[nm]], "comments") <- comments |> unlist()
         comments <- list()
       }
+      attr(out[[nm]], "unit") <- unit
     }
 
     # row
@@ -144,9 +157,10 @@ write_prm <- function(x, file = stdout(), add_comments = TRUE, sep = " ") {
       }
 
       if (is.null(attr(x[[y]], "array_length"))) {
+        unit <- attr(x[[y]], "unit")
         txt <- c(
           txt,
-          paste0(y, sep, x[[y]])
+          paste0(y, sep, x[[y]], if (!is.null(unit)) paste0(sep, unit))
         )
       } else {
         txt <- c(

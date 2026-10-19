@@ -92,10 +92,9 @@ apply_parameters <- function(x, calib_table, par,
 #'
 #' The run and biology parameter files are written from their source file
 #' with only the values that differ from it changed, token by token: the
-#' comments, the units (e.g. `tstop 365 day`, which [write_prm()] would turn
-#' into 365 seconds), the layout and the line endings are kept. The other
-#' input files loaded (geometry, groups, initial conditions, ...) are copied.
-#' Every file keeps the name of its source.
+#' comments, the units (e.g. `tstop 365 day`), the layout and the line
+#' endings are kept. The other input files loaded (geometry, groups, initial
+#' conditions, ...) are copied. Every file keeps the name of its source.
 #'
 #' Files that are not loaded in `x`, such as the physics and forcing
 #' parameter files or the forcing time series, come from `from`: a folder

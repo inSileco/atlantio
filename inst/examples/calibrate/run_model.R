@@ -28,8 +28,7 @@ df_prm_calib <- mod |>
 # Copy the tiny model inputs once and extend the run to 4 years so the score
 # window (last 2 years) excludes the transient first years. tiny_hydro.nc only
 # covers 400 days but Atlantis loops hydro files automatically, and the solar
-# series has Solar_radiation_rewind 1. The tstop edit is a plain-text
-# substitution: read_prm()/write_prm() would drop the `day` unit token.
+# series has Solar_radiation_rewind 1.
 
 base_dir <- file.path(tempdir(), "atlantis_base_inputs")
 dir.create(base_dir, showWarnings = FALSE)

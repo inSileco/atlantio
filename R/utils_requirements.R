@@ -42,3 +42,10 @@ require_valid_group <- function(group, x) {
   }
   invisible(TRUE)
 }
+
+require_atlantis <- function(x) {
+  if (!S7::S7_inherits(x, Atlantis)) {
+    cli::cli_abort("{.arg x} must be an {.cls Atlantis} object.")
+  }
+  invisible(TRUE)
+}

@@ -40,3 +40,11 @@ test_that("new_atlantis() accepts initial values", {
   expect_equal(atlantis_obj@biology, test_data)
   expect_null(atlantis_obj@group)
 })
+
+test_that("new_atlantis() matches property names exactly", {
+  d <- data.frame(x = 1)
+  atl <- new_atlantis(diet_detailed = d, biomass_age_annual = d)
+  expect_null(atl@diet)
+  expect_null(atl@biomass_age)
+  expect_identical(atl@diet_detailed, d)
+})

@@ -1,15 +1,31 @@
 # atlantio (development version)
 
+* `atlantis_load_files()` says why a file cannot be read. It said that the
+  file did not exist, and reported only the first of several such files.
+  Loading a run file no longer warns about the keys missing from the run
+  template, which `check_prm()` reports.
 * `check_run()` checks that a run completed: Atlantis exits with status 0
   after a fatal error, so a run counts as complete only if the last time step
   of its main output reaches `tstop` (within one `toutinc`), read with its
   units as Atlantis reads them.
+* `create_diet_table()`, `create_foodweb()`, `create_time_series()`,
+  `create_time_series_biomass()` and `generate_calibration_table()` are
+  functions rather than S7 generics, so their help pages document their
+  arguments. They no longer accept unused arguments.
+* The help of `create_diet_table()` swapped predator and prey: its rows are
+  the predators (with the stages) and its columns the prey, and the edges of
+  `create_foodweb()` go from predator to prey.
 * `create_time_series_biomass()` converts the nitrogen of biomass pools to wet
   weight with `X_CN` and `k_wetdry`, as for the age-structured groups. It used
   `1 + X_RS`, which made pool weights about 30 times too low.
 * `create_time_series_biomass()` returns the epibenthic groups (one value per
   box, in mg N m-2), weighted by the box area of the geometry file. It
   returned no row for them.
+* `create_time_series_biomass()` gains `boundary`: `boundary = FALSE` leaves
+  out the boundary boxes, as Atlantis' biomass index does.
+* `create_time_series_biomass()` labels biomass pools with the group name (it
+  used the variable name, e.g. `Diatom_N`) and an `NA` age, and labels
+  correctly the groups whose name holds a digit.
 * Writing a parameter set back into a parameter folder:
     - `apply_parameters()` sets the values of a calibration table (on the
       calibration or the model scale) in the parameter files loaded in an
@@ -35,6 +51,10 @@
   `apply_parameters()` / `write_parameter_folder()` in the objective
   function, and a new step 5 summarising the runs and writing the next
   parameter folder.
+* `new_atlantis()` matches property names exactly: `new_atlantis(diet_detailed
+  = d)` also set `diet`.
+* `read_atlantis_files()` uses `filenames` when given several files. It
+  ignored them, so renamed outputs (e.g. Shiny uploads) were not recognised.
 * `read_prm()` keeps the time unit after a value (e.g. `day` in
   `tstop 365 day`) as the attribute `unit`, and `write_prm()` writes it back.
   `write_prm()` wrote the number alone, which Atlantis reads in seconds.

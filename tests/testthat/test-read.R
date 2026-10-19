@@ -13,6 +13,22 @@ test_that("read_atlantis_files() handles wrong file type", {
   expect_identical(unclass(res2), rese2)
 })
 
+test_that("read_atlantis_files() uses filenames for several files", {
+  dir <- withr::local_tempdir()
+  copies <- file.path(dir, c("upload1.txt", "upload2.txt"))
+  file.copy(
+    atlantis_examples(
+      "outputs",
+      c("outputBiomIndx.txt", "outputDietCheck.txt")
+    ),
+    copies
+  )
+  res <- suppressMessages(
+    read_atlantis_files(copies, c("outputBiomIndx.txt", "outputDietCheck.txt"))
+  )
+  expect_identical(vapply(res, \(x) x$type, ""), c("biomass_all", "diet"))
+})
+
 test_that("read_bgm() works", {
   skip_if_not_installed("sf")
   fl1 <- system.file("examples", "inputs", "tiny.bgm", package = "atlantio")

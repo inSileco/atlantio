@@ -35,7 +35,8 @@
 
 read_atlantis_files <- function(files, filenames = basename(files)) {
   if (length(files) > 1) {
-    out <- lapply(files, read_atlantis_files) |>
+    out <- Map(read_atlantis_files, files, filenames) |>
+      unname() |>
       do.call(what = "c")
     return(structure(out, class = "atlantis_file"))
   }

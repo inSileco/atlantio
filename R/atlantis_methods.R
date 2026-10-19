@@ -60,12 +60,13 @@ S7::method(print, Atlantis) <- function(x, ...) {
   invisible(x)
 }
 
-#' Create Diet Table
+#' Create a diet table
 #'
-#' @description Generic function for creating diet tables from model data.
+#' @description Collects the prey availabilities (`pPREY` parameters) of the
+#' biology file in a table.
 #'
-#' @param x Object containing diet/bio data
-#' @param ... Additional arguments
+#' @param x An `Atlantis` object with the biology file loaded; the groups file
+#'   gives the column names.
 #'
 #' @details
 #' In Atlantis model, the availability of prey is determined by the product of
@@ -79,15 +80,17 @@ S7::method(print, Atlantis) <- function(x, ...) {
 #' `age_structured_prey_XXX` is set to one. Note that for those species the
 #' first mature age group is given by `XXX_age_mat`. Therefore there are up to
 #' 4 `pPREY` values per prey-predator combination:
-#' * pPREY1XXX1: juvenile-juvenile
-#' * pPREY1XXX2: juvenile-adult
-#' * pPREY2XXX1: adult-juvenile
-#' * pPREY2XXX2: adult-adult
-#' where XXX denotes the code for the prey species. Note that the realised diet
+#' * pPREY1XXX1: juvenile prey, juvenile predator
+#' * pPREY1XXX2: juvenile prey, adult predator
+#' * pPREY2XXX1: adult prey, juvenile predator
+#' * pPREY2XXX2: adult prey, adult predator
+#' where XXX denotes the code of the predator. Note that the realised diet
 #' in Atlantis will depend on other factor, for instance the coeficient `mum`,
 #' assuming it is used by the functional response (see `predcase_XXXX`).
 #'
-#' @return A data.frame representing the diet table with predator-prey relationships
+#' @return A data frame with one row per `pPREY` key (a predator and the
+#'   stages of prey and predator) and one column per prey: the groups, then
+#'   the detritus in the sediment (`DLsed`, `DRsed`, `DCsed`).
 #'
 #' @references
 #' * Asta Audzijonyte, Rebecca Gorton, Isaac Kaplan, Jacob M. Kasper, Elizabeth
@@ -104,20 +107,9 @@ S7::method(print, Atlantis) <- function(x, ...) {
 #'       system.file("examples", "inputs", "tiny_groups.csv", package = "atlantio")
 #'     )
 #'   )
-create_diet_table <- S7::new_generic("create_diet_table", "x")
-
-#' Create Diet Table for Atlantis objects
-#'
-#' @description S7 method for creating diet tables from Atlantis objects using
-#' bio and group data.
-#'
-#' @param x An Atlantis S7 object containing bio and optionally group data
-#' @param ... Additional arguments (unused)
-#'
-#' @return A data.frame representing the diet table with predator-prey relationships
-#'
-#' @noRd
-S7::method(create_diet_table, Atlantis) <- function(x, ...) {
+#' create_diet_table(my_model)
+create_diet_table <- function(x) {
+  require_atlantis(x)
   require_biology_file(x)
 
   nms <- x@biology |> names()
@@ -144,30 +136,21 @@ S7::method(create_diet_table, Atlantis) <- function(x, ...) {
 }
 
 
-#' Create Food Web for Atlantis objects
+#' Create a food web
 #'
-#' @description S7 generic for creating food web data structures from Atlantis objects
+#' @description Builds the binary food web of a model from its diet table (see
+#' [create_diet_table()]): a predator eats a prey when any of their `pPREY`
+#' values, whatever the stages, is positive.
 #'
-#' @param x An object to create food web from
-#' @param ... Additional arguments passed to methods
+#' @param x An `Atlantis` object with the biology and groups files loaded.
 #'
-#' @return A food web data structure
+#' @return A directed igraph object with one vertex per group (and per
+#'   detritus in the sediment) and an edge, of `weight` 1, from each predator
+#'   to each of its prey.
 #'
 #' @export
-create_foodweb <- S7::new_generic("create_foodweb", "x")
-
-#' Create Food Web for Atlantis objects
-#'
-#' @description S7 method for creating food web data structures from Atlantis objects
-#'
-#' @param x An Atlantis S7 object
-#' @param ... Additional arguments (unused).
-#'
-#' @return A food web data structure represented as an igraph object with
-#' binary (presence/absence) edges
-#'
-#' @noRd
-S7::method(create_foodweb, Atlantis) <- function(x, ...) {
+create_foodweb <- function(x) {
+  require_atlantis(x)
   diet_table <- create_diet_table(x)
 
   require_group_file(x)
@@ -176,12 +159,12 @@ S7::method(create_foodweb, Atlantis) <- function(x, ...) {
     cli::cli_abort("Diet table is empty; cannot create food web.")
   }
 
-  vc_prey <- rownames(diet_table) |>
+  vc_pred <- rownames(diet_table) |>
     stringr::str_extract("pPREY[1-2]?([A-Z]+)[1-2]?", group = 1)
 
   diet_adj_mat <- (diet_table > 0) |>
     apply(2, \(x) {
-      split(x, vc_prey) |>
+      split(x, vc_pred) |>
         lapply(any) |>
         unlist()
     })

@@ -2,20 +2,28 @@
 % Please edit documentation in R/atlantis_methods-ts.R
 \name{create_time_series}
 \alias{create_time_series}
-\title{Create Time Series for Atlantis objects}
+\title{Create time series from the main output}
 \usage{
-create_time_series(x, ...)
+create_time_series(x, variable, box = NULL, layer = NULL)
 }
 \arguments{
-\item{x}{An object to create time series from}
+\item{x}{An \code{Atlantis} object with the main output loaded.}
 
-\item{...}{Additional arguments passed to methods}
+\item{variable}{Names of the variables (see \code{names(x@main_output$var)}).}
+
+\item{box}{Boxes, numbered from 0 as in Atlantis; all boxes if \code{NULL}.}
+
+\item{layer}{Layers, numbered from 1; all layers if \code{NULL}. Ignored for 2D
+variables, whose rows have \code{layer} -1.}
 }
 \value{
-A time series data structure
+A data frame with one row per variable x box x layer x time and
+the columns \code{time} (seconds), \code{box}, \code{layer}, \code{value}, \code{variable} and
+\code{units}.
 }
 \description{
-S7 generic for creating time series data from Atlantis objects
+Extracts variables of the main netCDF output of an Atlantis model as a tidy
+data frame, optionally restricted to a set of boxes and layers.
 }
 \examples{
 \dontrun{

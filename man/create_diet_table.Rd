@@ -2,20 +2,22 @@
 % Please edit documentation in R/atlantis_methods.R
 \name{create_diet_table}
 \alias{create_diet_table}
-\title{Create Diet Table}
+\title{Create a diet table}
 \usage{
-create_diet_table(x, ...)
+create_diet_table(x)
 }
 \arguments{
-\item{x}{Object containing diet/bio data}
-
-\item{...}{Additional arguments}
+\item{x}{An \code{Atlantis} object with the biology file loaded; the groups file
+gives the column names.}
 }
 \value{
-A data.frame representing the diet table with predator-prey relationships
+A data frame with one row per \code{pPREY} key (a predator and the
+stages of prey and predator) and one column per prey: the groups, then
+the detritus in the sediment (\code{DLsed}, \code{DRsed}, \code{DCsed}).
 }
 \description{
-Generic function for creating diet tables from model data.
+Collects the prey availabilities (\code{pPREY} parameters) of the
+biology file in a table.
 }
 \details{
 In Atlantis model, the availability of prey is determined by the product of
@@ -30,11 +32,11 @@ distinction exists if species have ontogenetic stages and if the flag
 first mature age group is given by \code{XXX_age_mat}. Therefore there are up to
 4 \code{pPREY} values per prey-predator combination:
 \itemize{
-\item pPREY1XXX1: juvenile-juvenile
-\item pPREY1XXX2: juvenile-adult
-\item pPREY2XXX1: adult-juvenile
-\item pPREY2XXX2: adult-adult
-where XXX denotes the code for the prey species. Note that the realised diet
+\item pPREY1XXX1: juvenile prey, juvenile predator
+\item pPREY1XXX2: juvenile prey, adult predator
+\item pPREY2XXX1: adult prey, juvenile predator
+\item pPREY2XXX2: adult prey, adult predator
+where XXX denotes the code of the predator. Note that the realised diet
 in Atlantis will depend on other factor, for instance the coeficient \code{mum},
 assuming it is used by the functional response (see \code{predcase_XXXX}).
 }
@@ -48,6 +50,7 @@ my_model <- new_atlantis() |>
       system.file("examples", "inputs", "tiny_groups.csv", package = "atlantio")
     )
   )
+create_diet_table(my_model)
 }
 \references{
 \itemize{

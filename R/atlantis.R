@@ -133,37 +133,15 @@ Atlantis <- S7::new_class(
 #' @export
 new_atlantis <- function(...) {
   args <- list(...)
-
-  properties <- list(
-    geometry = args$geometry,
-    run = args$run,
-    initial = args$initial,
-    biology = args$biology,
-    group = args$group,
-    physics = args$physics,
-    forcing = args$forcing,
-    fisheries = args$fisheries,
-    harvest = args$harvest,
-    main_output = args$main_output,
-    biomass_all = args$biomass_all,
-    biomass_box = args$biomass_box,
-    biomass_age = args$biomass_age,
-    biomass_age_annual = args$biomass_age_annual,
-    diet = args$diet,
-    diet_detailed = args$diet_detailed,
-    yoy = args$yoy,
-    file_paths = args$file_paths %||%
-      cbind(atlantio::input_files, path = NA_character_),
-    version = args$version %||% "latest"
-  )
-
-  nm <- args |> names()
-  ind <- !nm %in% names(properties)
-  if (any(ind)) {
-    cli::cli_warn("unknown properties: {nm[ind]}")
+  unknown <- setdiff(names(args), names(formals(Atlantis)))
+  if (length(unknown)) {
+    cli::cli_warn("unknown properties: {unknown}")
   }
-
-  do.call(Atlantis, properties)
+  args <- args[setdiff(names(args), unknown)]
+  args$file_paths <- args[["file_paths"]] %||%
+    cbind(atlantio::input_files, path = NA_character_)
+  args$version <- args[["version"]] %||% "latest"
+  do.call(Atlantis, args)
 }
 
 #' Load Atlantis files into model object
@@ -219,7 +197,7 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
   }
 
   v_types <- vapply(files, \(x) x$type, character(1))
-  dups <- duplicated(v_types)
+  dups <- duplicated(v_types) & v_types %in% S7::prop_names(atlantis)
   if (any(dups)) {
     cli::cli_alert_warning(
       "Several files available for: {unique(v_types[dups])}; only the first one is used."
@@ -230,7 +208,14 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
   for (i in seq_along(files)) {
     tmp <- files[[i]]
     if (tmp$type == "cannot read") {
-      cli::cli_warn("{tmp$path} does not exist.")
+      if (file.exists(tmp$path)) {
+        cli::cli_warn(c(
+          "Cannot read {.path {tmp$path}}.",
+          "x" = "{tmp$object}"
+        ))
+      } else {
+        cli::cli_warn("{tmp$path} does not exist.")
+      }
       next
     }
     if (!tmp$type %in% S7::prop_names(atlantis)) {

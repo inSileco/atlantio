@@ -33,10 +33,11 @@ Each round involves the same steps:
 4.  running the optimization, usually in parallel;
 5.  inspecting the results, including the runs that crashed.
 
-`atlantio` handles the Atlantis-specific parts: reading and writing the
-parameter files, expanding a calibration table, transforming parameter
-values, and reading the model output. `calibrar` handles the
-optimization. @morell_ManualSemiautomated_2026 use `atlantis2ls`
+`atlantio` handles the Atlantis-specific parts: checking the input
+files, reading and writing the parameter files, expanding a calibration
+table, transforming parameter values, reading the model output and
+scoring it. `calibrar` handles the optimization.
+@morell_ManualSemiautomated_2026 use `atlantis2ls`
 (<https://github.com/alaiam/atlantis2ls>) for the same role as
 `atlantio`.
 
@@ -111,6 +112,62 @@ files that contain calibrated parameters, typically the biology file.
 Large forcing data (often several GB) should not be copied per run:
 mount it read-only into the container, or symlink it into each run
 directory.
+
+### Checking the inputs
+
+A calibration multiplies the cost of every input error by the number of
+runs, and many errors do not stop Atlantis: they silently change what it
+reads. Check the base inputs once before launching anything.
+[`check_prm()`](../../reference/check_prm.md) scans the parameter files
+line by line and reports, among others, arrays whose declared length
+does not match their values (Atlantis pads or truncates them,
+[`read_prm()`](../../reference/read_prm.md) aborts), duplicated keys,
+Windows line endings, and the stocking flag combinations known to give
+wrong results. [`check_init()`](../../reference/check_init.md) checks
+the initial-conditions file in the cells Atlantis actually uses: NaN or
+negative values, cells left unset where Atlantis silently uses a
+non-zero `_FillValue`, groups switched on but missing or empty, and
+pools orders of magnitude away from the other groups of their type.
+
+``` r
+
+check_prm(bio = "biology.prm", run = "run.prm", force = "force.prm")
+check_init("init.nc", "groups.csv")
+```
+
+Both return an `atlantis_check` table with one row per finding (`file`,
+`check`, `severity`, `key`, `message`), sorted from errors to notes, so
+it can be filtered or used to stop a script:
+
+``` r
+
+findings <- rbind(
+  check_prm(bio = "biology.prm", run = "run.prm", force = "force.prm"),
+  check_init("init.nc", "groups.csv")
+)
+if (any(findings$severity == "error")) {
+  print(findings[findings$severity == "error", ])
+  stop("fix the input files before calibrating")
+}
+```
+
+Values of the initial-conditions file reported by
+[`check_init()`](../../reference/check_init.md) can be fixed with
+[`set_init_values()`](../../reference/set_init_values.md), which sets a
+variable per box (and layer) from a table, in place or in a copy of the
+file:
+
+``` r
+
+# fill the cells left unset of the refractory detritus in boxes 1 and 2
+set_init_values(
+  "init.nc",
+  "Refractory_detritus_N",
+  data.frame(box = 1:2, layer = 1, value = 30),
+  file = "init_fixed.nc"
+)
+check_init("init_fixed.nc", "groups.csv")
+```
 
 ### Running the model
 
@@ -196,28 +253,88 @@ group. When observations are scarce, a useful first target is
 persistence: every group should stay close to its initial state over the
 whole run rather than collapse or explode.
 
-One way to express this is, for every group and age class, to aggregate
-the tracers of interest (numbers, structural and reserve weight) over
-boxes and layers, compare them with their initial values on the log
-scale (`log(x(t) + tiny) - log(x(0) + tiny)`, as in `calibrar`’s
-`lnorm2`), and penalize only the excess beyond a tolerance band
-(e.g. 20%). Comparing annual snapshots taken at the same phase of the
-seasonal cycle avoids mistaking seasonal oscillations for drift.
+`atlantio` implements this persistence score. For every group and age
+class, the tracers of interest (numbers, structural and reserve weight)
+are aggregated over boxes and layers, compared with their initial values
+on the log scale (`log(x(t) + tiny) - log(x(0) + tiny)`, as in
+`calibrar`’s `lnorm2`), and only the excess beyond a tolerance band (20%
+by default) is penalized, squared, which keeps the objective continuous
+at the edge of the band. Only the last years of the run are scored, so
+that the model is allowed a spin-up period.
 
-`atlantio` provides the ingredients:
+The model output is first read into a tracer table.
 [`atlantis_load_files()`](../../reference/atlantis_load_files.md) reads
 the output NetCDF into the model object, and
 [`create_time_series_biomass()`](../../reference/create_time_series_biomass.md)
-returns a tidy table of the age-structured tracers, one row per group,
-age, box, layer and time.
+returns a tidy table of the age-structured tracers. With
+`aggregate = TRUE`, the series are reduced over boxes and layers while
+they are read, one cohort at a time, so the per-box table of a whole run
+(several GB for a long run) is never held in memory, which matters when
+many runs are scored in parallel on the same node:
 
 ``` r
 
-compute_score <- function(ts) {
-  # ts: tidy tracer table from create_time_series_biomass()
-  # aggregate over space, compare with t = 0, sum the penalties
-  ...
-}
+out <- atlantis_load_files(mod, "outputFolder/output.nc")
+ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
+```
+
+[`aggregate_time_series()`](../../reference/aggregate_time_series.md)
+does the same reduction on a table already read per box and layer
+(numbers are summed, `StructN` and `ResN` are weighted by numbers). The
+biomass of every living group, including those without age structure
+(plankton, benthos), is in the biomass index Atlantis writes next to the
+output file, read with
+[`read_biomass_index()`](../../reference/read_biomass_index.md):
+
+``` r
+
+biomass <- read_biomass_index("outputFolder/outputBiomIndx.txt", mod@group)
+```
+
+[`score_table()`](../../reference/score_table.md) then returns the
+penalty of every series (group x age class x tracer, and group for the
+biomass), and [`compute_score()`](../../reference/score_table.md) their
+sum, the single number `calibrar` minimizes:
+
+``` r
+
+score_table(ts, biomass = biomass)
+compute_score(ts, biomass = biomass)
+```
+
+The score is tuned with a few arguments:
+
+- `tolerance`: the half-width of the no-penalty band, one value or one
+  per tracer, e.g. a looser band on numbers than on weights;
+- `window_years` and `summary`: the scoring window (counted back from
+  the last output step) and the statistic each series is scored on over
+  it. The default, `"snapshot"`, compares yearly snapshots taken at the
+  same phase of the seasonal cycle, which avoids mistaking seasonal
+  oscillations for drift; `"mean"`, `"median"`, `"min"`, `"max"` or a
+  function are also accepted;
+- `exclude`: groups left out of the score, e.g. those known to be poorly
+  initialized and not targeted by this round.
+
+``` r
+
+compute_score(
+  ts,
+  biomass = biomass,
+  tolerance = c(Nums = 0.5, StructN = 0.2, ResN = 0.2, Biomass = 0.3),
+  summary = c(Biomass = "mean"),
+  window_years = 5,
+  exclude = "Detritus_feeders"
+)
+```
+
+[`window_values()`](../../reference/window_values.md), used internally,
+shows which values of a series are scored for a given window and
+statistic:
+
+``` r
+
+walleye <- ts[ts$group == "Walleye" & ts$age == 1, ]
+window_values(walleye$time, walleye$Nums, "snapshot", years = 5)
 ```
 
 Whatever the score, it must be robust to the failure cases: a crashed
@@ -272,12 +389,17 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
   # 4. output and score; any error becomes the penalty score
   score <- tryCatch({
     out <- atlantis_load_files(atlantis, out_file)
-    ts <- create_time_series_biomass(out, groups)
+    ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
     if (max(ts$time) / 86400 < tstop_days - toutinc_days) {
       stop("output.nc is truncated: the model crashed mid-run")
     }
-    saveRDS(ts, file.path(run_dir, "time_series.rds"))
-    compute_score(ts)
+    biomass <- read_biomass_index(
+      file.path(run_dir, "outputFolder", "outputBiomIndx.txt"),
+      atlantis@group
+    )
+    saveRDS(list(ts = ts, biomass = biomass),
+      file.path(run_dir, "time_series.rds"))
+    compute_score(ts, biomass = biomass)
   }, error = function(e) failed_run(run_dir, par, res, conditionMessage(e)))
 
   # 5. results
@@ -339,8 +461,8 @@ registerDoParallel(cl)
 
 # %dopar% ships the objective function to the workers, but not the global
 # objects it relies on: export them and load the packages explicitly
-clusterExport(cl, c("write_run_script", "run_atlantis", "compute_score",
-  "failed_run", "tstop_days", "toutinc_days"))
+clusterExport(cl, c("write_run_script", "run_atlantis", "failed_run",
+  "tstop_days", "toutinc_days"))
 clusterEvalQ(cl, library(atlantio))
 ```
 
@@ -397,7 +519,16 @@ inspection:
 
 - **the trajectory of the best parameter sets**, to see which groups
   drive the score and whether the tolerance band or the scoring window
-  need adjusting;
+  need adjusting. [`score_table()`](../../reference/score_table.md) on
+  the saved time series breaks the score down per series:
+
+  ``` r
+
+  run <- readRDS(file.path(best_run_dir, "time_series.rds"))
+  st <- score_table(run$ts, biomass = run$biomass)
+  head(st[order(st$penalty, decreasing = TRUE), ], 10)
+  ```
+
 - **the parameter sets that crashed the model**. Gathering the
   `parameters.rds` of all runs into one table, with the crashed runs
   first and the range of each parameter in crashed versus completed

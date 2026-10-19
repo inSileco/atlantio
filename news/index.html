@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,31 @@
       <small>Source: <a href="https://github.com/inSileco/atlantio/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="atlantio-030">atlantio 0.3.0<a class="anchor" aria-label="anchor" href="#atlantio-030"></a></h2>
+<ul><li>New calibration objective functions:
+<ul><li>
+<code><a href="../reference/score_table.html">score_table()</a></code> and <code><a href="../reference/score_table.html">compute_score()</a></code> score how far a run drifts from its initial state (log ratio to t = 0, a no-penalty band per tracer, squared excess beyond the band), per group x age x tracer or in total, on the age-structured tracers and optionally on the biomass of every living group;</li>
+<li>
+<code><a href="../reference/window_values.html">window_values()</a></code> reduces a series to its scored values over the last years of a run (yearly snapshots or a statistic such as the mean);</li>
+<li>
+<code><a href="../reference/aggregate_time_series.html">aggregate_time_series()</a></code> aggregates the tracer table of <code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> over boxes and layers (Nums summed, StructN and ResN weighted by Nums);</li>
+<li>
+<code><a href="../reference/read_biomass_index.html">read_biomass_index()</a></code> reads the biomass index of the living groups.</li>
+</ul></li>
+<li>
+<code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> gains <code>aggregate</code>: with <code>aggregate = TRUE</code> the series are reduced over boxes and layers while they are read, one cohort at a time, so the per-box table of a whole run is never held in memory (peak memory of a Lake Erie run roughly halved).</li>
+<li>
+<code><a href="../reference/aggregate_time_series.html">aggregate_time_series()</a></code> sums a <code>weight</code> column and keeps <code>units</code>.</li>
+<li>New checks of the model input files, both returning an <code>atlantis_check</code> table (one row per finding: file, check, severity, key, message):
+<ul><li>
+<code><a href="../reference/check_init.html">check_init()</a></code> checks an initial-conditions file in the cells Atlantis uses: NaN, negative values, cells left unset where Atlantis silently uses a non-zero <code>_FillValue</code>, groups switched on but empty or missing, and pools far from the other groups of their type;</li>
+<li>
+<code><a href="../reference/check_prm.html">check_prm()</a></code> scans parameter files line by line (so a malformed array does not stop it): array counts that do not match their values, duplicated keys, CRLF line endings, tabs, units after values, unknown run keys, and the stocking traps (<code>flagstocking</code> with <code>flagrecruit</code> 18, <code>flagrandom</code> 1 with stocking, stocking never on the spawn day).</li>
+</ul></li>
+<li>
+<code><a href="../reference/set_init_values.html">set_init_values()</a></code> sets a variable of an initial-conditions file per box and layer from a table.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="atlantio-022">atlantio 0.2.2<a class="anchor" aria-label="anchor" href="#atlantio-022"></a></h2>
 <ul><li>

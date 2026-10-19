@@ -1,5 +1,48 @@
 # Changelog
 
+## atlantio 0.3.0
+
+- New calibration objective functions:
+  - [`score_table()`](../reference/score_table.md) and
+    [`compute_score()`](../reference/score_table.md) score how far a run
+    drifts from its initial state (log ratio to t = 0, a no-penalty band
+    per tracer, squared excess beyond the band), per group x age x
+    tracer or in total, on the age-structured tracers and optionally on
+    the biomass of every living group;
+  - [`window_values()`](../reference/window_values.md) reduces a series
+    to its scored values over the last years of a run (yearly snapshots
+    or a statistic such as the mean);
+  - [`aggregate_time_series()`](../reference/aggregate_time_series.md)
+    aggregates the tracer table of
+    [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+    over boxes and layers (Nums summed, StructN and ResN weighted by
+    Nums);
+  - [`read_biomass_index()`](../reference/read_biomass_index.md) reads
+    the biomass index of the living groups.
+- [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  gains `aggregate`: with `aggregate = TRUE` the series are reduced over
+  boxes and layers while they are read, one cohort at a time, so the
+  per-box table of a whole run is never held in memory (peak memory of a
+  Lake Erie run roughly halved).
+- [`aggregate_time_series()`](../reference/aggregate_time_series.md)
+  sums a `weight` column and keeps `units`.
+- New checks of the model input files, both returning an
+  `atlantis_check` table (one row per finding: file, check, severity,
+  key, message):
+  - [`check_init()`](../reference/check_init.md) checks an
+    initial-conditions file in the cells Atlantis uses: NaN, negative
+    values, cells left unset where Atlantis silently uses a non-zero
+    `_FillValue`, groups switched on but empty or missing, and pools far
+    from the other groups of their type;
+  - [`check_prm()`](../reference/check_prm.md) scans parameter files
+    line by line (so a malformed array does not stop it): array counts
+    that do not match their values, duplicated keys, CRLF line endings,
+    tabs, units after values, unknown run keys, and the stocking traps
+    (`flagstocking` with `flagrecruit` 18, `flagrandom` 1 with stocking,
+    stocking never on the spawn day).
+- [`set_init_values()`](../reference/set_init_values.md) sets a variable
+  of an initial-conditions file per box and layer from a table.
+
 ## atlantio 0.2.2
 
 - [`generate_calibration_table()`](../reference/generate_calibration_table.md)

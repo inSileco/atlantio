@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,10 +110,11 @@ parameter set and returns a score;</li>
 <li>running the optimization, usually in parallel;</li>
 <li>inspecting the results, including the runs that crashed.</li>
 </ol>
-<p><code>atlantio</code> handles the Atlantis-specific parts: reading
-and writing the parameter files, expanding a calibration table,
-transforming parameter values, and reading the model output.
-<code>calibrar</code> handles the optimization. <span class="citation">@morell_ManualSemiautomated_2026</span> use
+<p><code>atlantio</code> handles the Atlantis-specific parts: checking
+the input files, reading and writing the parameter files, expanding a
+calibration table, transforming parameter values, reading the model
+output and scoring it. <code>calibrar</code> handles the optimization.
+<span class="citation">@morell_ManualSemiautomated_2026</span> use
 <code>atlantis2ls</code> (<a href="https://github.com/alaiam/atlantis2ls" class="external-link uri">https://github.com/alaiam/atlantis2ls</a>) for the same role
 as <code>atlantio</code>.</p>
 </div>
@@ -188,13 +189,59 @@ mount it read-only into the container, or symlink it into each run
 directory.</p>
 </div>
 <div class="section level3">
+<h3 id="checking-the-inputs">Checking the inputs<a class="anchor" aria-label="anchor" href="#checking-the-inputs"></a>
+</h3>
+<p>A calibration multiplies the cost of every input error by the number
+of runs, and many errors do not stop Atlantis: they silently change what
+it reads. Check the base inputs once before launching anything.
+<code><a href="../../reference/check_prm.html">check_prm()</a></code> scans the parameter files line by line and
+reports, among others, arrays whose declared length does not match their
+values (Atlantis pads or truncates them, <code><a href="../../reference/read_prm.html">read_prm()</a></code>
+aborts), duplicated keys, Windows line endings, and the stocking flag
+combinations known to give wrong results. <code><a href="../../reference/check_init.html">check_init()</a></code>
+checks the initial-conditions file in the cells Atlantis actually uses:
+NaN or negative values, cells left unset where Atlantis silently uses a
+non-zero <code>_FillValue</code>, groups switched on but missing or
+empty, and pools orders of magnitude away from the other groups of their
+type.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/check_prm.html">check_prm</a></span><span class="op">(</span>bio <span class="op">=</span> <span class="st">"biology.prm"</span>, run <span class="op">=</span> <span class="st">"run.prm"</span>, force <span class="op">=</span> <span class="st">"force.prm"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../../reference/check_init.html">check_init</a></span><span class="op">(</span><span class="st">"init.nc"</span>, <span class="st">"groups.csv"</span><span class="op">)</span></span></code></pre></div>
+<p>Both return an <code>atlantis_check</code> table with one row per
+finding (<code>file</code>, <code>check</code>, <code>severity</code>,
+<code>key</code>, <code>message</code>), sorted from errors to notes, so
+it can be filtered or used to stop a script:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">findings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../../reference/check_prm.html">check_prm</a></span><span class="op">(</span>bio <span class="op">=</span> <span class="st">"biology.prm"</span>, run <span class="op">=</span> <span class="st">"run.prm"</span>, force <span class="op">=</span> <span class="st">"force.prm"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../../reference/check_init.html">check_init</a></span><span class="op">(</span><span class="st">"init.nc"</span>, <span class="st">"groups.csv"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">findings</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">findings</span><span class="op">[</span><span class="va">findings</span><span class="op">$</span><span class="va">severity</span> <span class="op">==</span> <span class="st">"error"</span>, <span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"fix the input files before calibrating"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Values of the initial-conditions file reported by
+<code><a href="../../reference/check_init.html">check_init()</a></code> can be fixed with
+<code><a href="../../reference/set_init_values.html">set_init_values()</a></code>, which sets a variable per box (and
+layer) from a table, in place or in a copy of the file:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># fill the cells left unset of the refractory detritus in boxes 1 and 2</span></span>
+<span><span class="fu"><a href="../../reference/set_init_values.html">set_init_values</a></span><span class="op">(</span></span>
+<span>  <span class="st">"init.nc"</span>,</span>
+<span>  <span class="st">"Refractory_detritus_N"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>box <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, layer <span class="op">=</span> <span class="fl">1</span>, value <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
+<span>  file <span class="op">=</span> <span class="st">"init_fixed.nc"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../../reference/check_init.html">check_init</a></span><span class="op">(</span><span class="st">"init_fixed.nc"</span>, <span class="st">"groups.csv"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="running-the-model">Running the model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
 </h3>
 <p><code>atlantio</code> ships a template of the Atlantis command line
 in <code>inst/run_scripts/script.sh</code>, with
 <code>{{placeholders}}</code> for the input files. Render it once per
 run directory:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">write_run_script</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"run_scripts"</span>, <span class="st">"script.sh"</span>, package <span class="op">=</span> <span class="st">"atlantio"</span><span class="op">)</span></span>
@@ -223,7 +270,7 @@ directly (when <code>atlantisMerged</code> is installed in the same
 environment as R, as on most HPC clusters) or inside a Docker container
 with the run directory mounted as the working directory. Set a timeout:
 a full run can take hours.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">run_atlantis</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">processx</span><span class="fu">::</span><span class="fu"><a href="http://processx.r-lib.org/reference/run.html" class="external-link">run</a></span><span class="op">(</span></span>
 <span>    <span class="st">"bash"</span>, <span class="st">"run.sh"</span>,</span>
@@ -245,7 +292,7 @@ status 0 after printing to stderr. A crash therefore usually shows as a
 truncated <code>output.nc</code> rather than a non-zero exit status.
 Read the expected run length and output interval from the run file, and
 compare them with the last time step actually written:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">run_prm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/new_atlantis.html">new_atlantis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="st">"run.prm"</span><span class="op">)</span></span>
 <span><span class="va">tstop_days</span> <span class="op">&lt;-</span> <span class="va">run_prm</span><span class="op">@</span><span class="va">run</span><span class="op">$</span><span class="va">tstop</span></span>
 <span><span class="va">toutinc_days</span> <span class="op">&lt;-</span> <span class="va">run_prm</span><span class="op">@</span><span class="va">run</span><span class="op">$</span><span class="va">toutinc</span></span></code></pre></div>
@@ -263,25 +310,74 @@ to observed biomasses with a stability penalty on the trend of each
 group. When observations are scarce, a useful first target is
 persistence: every group should stay close to its initial state over the
 whole run rather than collapse or explode.</p>
-<p>One way to express this is, for every group and age class, to
-aggregate the tracers of interest (numbers, structural and reserve
-weight) over boxes and layers, compare them with their initial values on
-the log scale (<code>log(x(t) + tiny) - log(x(0) + tiny)</code>, as in
-<code>calibrar</code>’s <code>lnorm2</code>), and penalize only the
-excess beyond a tolerance band (e.g. 20%). Comparing annual snapshots
-taken at the same phase of the seasonal cycle avoids mistaking seasonal
-oscillations for drift.</p>
-<p><code>atlantio</code> provides the ingredients:
+<p><code>atlantio</code> implements this persistence score. For every
+group and age class, the tracers of interest (numbers, structural and
+reserve weight) are aggregated over boxes and layers, compared with
+their initial values on the log scale
+(<code>log(x(t) + tiny) - log(x(0) + tiny)</code>, as in
+<code>calibrar</code>’s <code>lnorm2</code>), and only the excess beyond
+a tolerance band (20% by default) is penalized, squared, which keeps the
+objective continuous at the edge of the band. Only the last years of the
+run are scored, so that the model is allowed a spin-up period.</p>
+<p>The model output is first read into a tracer table.
 <code><a href="../../reference/atlantis_load_files.html">atlantis_load_files()</a></code> reads the output NetCDF into the
 model object, and <code><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> returns a
-tidy table of the age-structured tracers, one row per group, age, box,
-layer and time.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">compute_score</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># ts: tidy tracer table from create_time_series_biomass()</span></span>
-<span>  <span class="co"># aggregate over space, compare with t = 0, sum the penalties</span></span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+tidy table of the age-structured tracers. With
+<code>aggregate = TRUE</code>, the series are reduced over boxes and
+layers while they are read, one cohort at a time, so the per-box table
+of a whole run (several GB for a long run) is never held in memory,
+which matters when many runs are scored in parallel on the same
+node:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"outputFolder/output.nc"</span><span class="op">)</span></span>
+<span><span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span><span class="va">out</span>, group <span class="op">=</span> <span class="va">groups</span>, aggregate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../../reference/aggregate_time_series.html">aggregate_time_series()</a></code> does the same reduction on a
+table already read per box and layer (numbers are summed,
+<code>StructN</code> and <code>ResN</code> are weighted by numbers). The
+biomass of every living group, including those without age structure
+(plankton, benthos), is in the biomass index Atlantis writes next to the
+output file, read with <code><a href="../../reference/read_biomass_index.html">read_biomass_index()</a></code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">biomass</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/read_biomass_index.html">read_biomass_index</a></span><span class="op">(</span><span class="st">"outputFolder/outputBiomIndx.txt"</span>, <span class="va">mod</span><span class="op">@</span><span class="va">group</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../../reference/score_table.html">score_table()</a></code> then returns the penalty of every series
+(group x age class x tracer, and group for the biomass), and
+<code><a href="../../reference/score_table.html">compute_score()</a></code> their sum, the single number
+<code>calibrar</code> minimizes:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/score_table.html">score_table</a></span><span class="op">(</span><span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span><span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span></span></code></pre></div>
+<p>The score is tuned with a few arguments:</p>
+<ul>
+<li>
+<code>tolerance</code>: the half-width of the no-penalty band, one
+value or one per tracer, e.g. a looser band on numbers than on
+weights;</li>
+<li>
+<code>window_years</code> and <code>summary</code>: the scoring
+window (counted back from the last output step) and the statistic each
+series is scored on over it. The default, <code>"snapshot"</code>,
+compares yearly snapshots taken at the same phase of the seasonal cycle,
+which avoids mistaking seasonal oscillations for drift;
+<code>"mean"</code>, <code>"median"</code>, <code>"min"</code>,
+<code>"max"</code> or a function are also accepted;</li>
+<li>
+<code>exclude</code>: groups left out of the score, e.g. those known
+to be poorly initialized and not targeted by this round.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span></span>
+<span>  <span class="va">ts</span>,</span>
+<span>  biomass <span class="op">=</span> <span class="va">biomass</span>,</span>
+<span>  tolerance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Nums <span class="op">=</span> <span class="fl">0.5</span>, StructN <span class="op">=</span> <span class="fl">0.2</span>, ResN <span class="op">=</span> <span class="fl">0.2</span>, Biomass <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>  summary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Biomass <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>,</span>
+<span>  window_years <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="st">"Detritus_feeders"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../../reference/window_values.html">window_values()</a></code>, used internally, shows which values of
+a series are scored for a given window and statistic:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">walleye</span> <span class="op">&lt;-</span> <span class="va">ts</span><span class="op">[</span><span class="va">ts</span><span class="op">$</span><span class="va">group</span> <span class="op">==</span> <span class="st">"Walleye"</span> <span class="op">&amp;</span> <span class="va">ts</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span></span>
+<span><span class="fu"><a href="../../reference/window_values.html">window_values</a></span><span class="op">(</span><span class="va">walleye</span><span class="op">$</span><span class="va">time</span>, <span class="va">walleye</span><span class="op">$</span><span class="va">Nums</span>, <span class="st">"snapshot"</span>, years <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Whatever the score, it must be robust to the failure cases: a crashed
 run, a truncated output or a scoring error must return a large penalty
 (e.g. <code>1e8</code>) rather than abort the whole generation of the
@@ -309,7 +405,7 @@ together with the run script;</li>
 <strong>save</strong> the time series and the parameter values with
 their score, and remove the bulky run files.</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">run_model</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">par</span>, <span class="va">atlantis</span>, <span class="va">calib_table</span>, <span class="va">base_dir</span>, <span class="va">results_dir</span>,</span>
 <span>                      <span class="va">groups</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># 1. transformation</span></span>
@@ -337,12 +433,17 @@ their score, and remove the bulky run files.</li>
 <span>  <span class="co"># 4. output and score; any error becomes the penalty score</span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="va">atlantis</span>, <span class="va">out_file</span><span class="op">)</span></span>
-<span>    <span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span><span class="va">out</span>, <span class="va">groups</span><span class="op">)</span></span>
+<span>    <span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span><span class="va">out</span>, group <span class="op">=</span> <span class="va">groups</span>, aggregate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">ts</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op">/</span> <span class="fl">86400</span> <span class="op">&lt;</span> <span class="va">tstop_days</span> <span class="op">-</span> <span class="va">toutinc_days</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"output.nc is truncated: the model crashed mid-run"</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">ts</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span></span>
+<span>    <span class="va">biomass</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/read_biomass_index.html">read_biomass_index</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"outputFolder"</span>, <span class="st">"outputBiomIndx.txt"</span><span class="op">)</span>,</span>
+<span>      <span class="va">atlantis</span><span class="op">@</span><span class="va">group</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span><span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span></span>
 <span>  <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">conditionMessage</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># 5. results</span></span>
@@ -369,7 +470,7 @@ biology file, mapped back to the calibration scale with
 bounds. Evaluate the objective function once at this point before
 launching the calibration: this checks the whole chain and gives the
 reference score to beat.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">calib_table</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value</a></span><span class="op">(</span></span>
 <span>    <span class="va">mod</span><span class="op">@</span><span class="va">biology</span><span class="op">[[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">name</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">calib_table</span><span class="op">$</span><span class="va">position</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>,</span>
@@ -391,7 +492,7 @@ essential. <code>calibrar</code> uses <code>foreach</code>’s
 a cluster from the base <code>parallel</code> package registered with
 <code>doParallel</code>. The workers must share the master’s filesystem
 and be able to run the model.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
 <span></span>
@@ -400,14 +501,14 @@ and be able to run the model.</p>
 <span></span>
 <span><span class="co"># %dopar% ships the objective function to the workers, but not the global</span></span>
 <span><span class="co"># objects it relies on: export them and load the packages explicitly</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"write_run_script"</span>, <span class="st">"run_atlantis"</span>, <span class="st">"compute_score"</span>,</span>
-<span>  <span class="st">"failed_run"</span>, <span class="st">"tstop_days"</span>, <span class="st">"toutinc_days"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"write_run_script"</span>, <span class="st">"run_atlantis"</span>, <span class="st">"failed_run"</span>,</span>
+<span>  <span class="st">"tstop_days"</span>, <span class="st">"toutinc_days"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterEvalQ</a></span><span class="op">(</span><span class="va">cl</span>, <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/inSileco/atlantio" class="external-link">atlantio</a></span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Sensible controls for a first round: a population of one run per
 worker (<code>calibrar</code> raises it to its internal minimum if too
 small), a handful of generations, and a restart file saved every
 generation. The restart file must be a relative path.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  maxit <span class="op">=</span> <span class="fl">5</span>,             <span class="co"># generations</span></span>
 <span>  popsize <span class="op">=</span> <span class="va">n_workers</span>,   <span class="co"># parameter sets per generation</span></span>
@@ -452,17 +553,22 @@ in one folder of the results directory, which allows two kinds of
 inspection:</p>
 <ul>
 <li>
-<strong>the trajectory of the best parameter sets</strong>, to see
-which groups drive the score and whether the tolerance band or the
-scoring window need adjusting;</li>
-<li>
-<strong>the parameter sets that crashed the model</strong>.
+<p><strong>the trajectory of the best parameter sets</strong>, to
+see which groups drive the score and whether the tolerance band or the
+scoring window need adjusting. <code><a href="../../reference/score_table.html">score_table()</a></code> on the saved
+time series breaks the score down per series:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">run</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">best_run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">st</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/score_table.html">score_table</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">biomass</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">st</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">st</span><span class="op">$</span><span class="va">penalty</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li><p><strong>the parameter sets that crashed the model</strong>.
 Gathering the <code>parameters.rds</code> of all runs into one table,
 with the crashed runs first and the range of each parameter in crashed
 versus completed runs, points at the bound (or bound combination)
 responsible. Tightening these bounds in the YAML file before the next
 round is the “nudging” that keeps the optimizer in the region where the
-model makes sense.</li>
+model makes sense.</p></li>
 </ul>
 <p>The next round then starts from the calibrated values, possibly with
 a new set of parameters, which is how <span class="citation">@morell_ManualSemiautomated_2026</span> describe

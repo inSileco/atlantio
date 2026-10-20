@@ -38,6 +38,7 @@ create_time_series <- function(x, variable, box = NULL, layer = NULL) {
   require_atlantis(x)
   require_main_output(x)
   nc <- x@main_output
+  layer_given <- !is.null(layer)
 
   chk <- variable[!variable %in% names(x@main_output$var)]
   if (length(chk)) {
@@ -52,6 +53,9 @@ create_time_series <- function(x, variable, box = NULL, layer = NULL) {
   if (is.null(box)) {
     box <- nc$dim$b$vals
   } else {
+    if (!length(box)) {
+      cli::cli_abort("{.arg box} is empty.")
+    }
     box <- box + 1
     chk <- box[!box %in% nc$dim$b$vals]
     if (length(chk)) {
@@ -77,7 +81,9 @@ create_time_series <- function(x, variable, box = NULL, layer = NULL) {
     sz <- nc$var[[v]]$varsize
     if (length(sz) == 2) {
       if (sz[1L] == nc$dim$b$len && sz[2L] == nc$dim$t$len) {
-        atlantio_inform("2D variable, 'layer' ignored.")
+        if (layer_given) {
+          atlantio_inform("2D variable, 'layer' ignored.")
+        }
         tmp <- ncdf4::ncvar_get(nc, v)
         data.frame(
           time = sq_2d_time,
@@ -199,6 +205,9 @@ create_time_series_biomass <- function(
     require_geometry_file(x)
     inside <- which(!x@geometry$boundary) - 1
     box <- if (is.null(box)) inside else intersect(box, inside)
+    if (!length(box)) {
+      cli::cli_abort("No box left: {.arg box} holds only boundary boxes.")
+    }
   }
 
   var_names <- x@main_output$var |>
@@ -269,7 +278,9 @@ create_time_series_biomass <- function(
         out[[i]] <- age_ts(v_age)
       }
     } else {
-      atlantio_inform("{i} has no age structure, `age` ignored.")
+      if (!is.null(age)) {
+        atlantio_inform("{i} has no age structure, `age` ignored.")
+      }
       v_pool <- paste0(i, "_N")
       out[[i]] <- x |>
         create_time_series(

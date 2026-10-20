@@ -45,7 +45,9 @@ S7::method(print, Atlantis) <- function(x, ...) {
     bbx <- x@geometry$boundary
     vec_to_ul(
       "{nrow(x@geometry)} {?box/boxes} (including {sum(bbx)} boundary {?box/boxes})",
-      "mean depth: {format(mean(x@geometry$botz), digits = 4)} m"
+      if (is.numeric(x@geometry$botz)) {
+        "mean depth: {format(mean(x@geometry$botz), digits = 4)} m"
+      }
     )
   }
 
@@ -120,12 +122,9 @@ create_diet_table <- function(x) {
   row.names(out) <- nms_slc
 
   if (!is.null(x@group)) {
-    # needs to confirm whether these groups are always present
-    # DL: labile detritus
-    # DR: refractory detritus
-    # DC: carrion
-    # sed = sediment
-    names(out) <- c(x@group$Code, "DLsed", "DRsed", "DCsed")
+    # one value per group, then one per detritus group in the sediment
+    det <- x@group$GroupType %in% c("LAB_DET", "REF_DET", "CARRION")
+    names(out) <- c(x@group$Code, paste0(x@group$Code[det], "sed"))
   } else {
     cli::cli_alert_info(
       "Group file missing, cannot assign the correct column names."
@@ -151,23 +150,25 @@ create_diet_table <- function(x) {
 #' @export
 create_foodweb <- function(x) {
   require_atlantis(x)
-  diet_table <- create_diet_table(x)
-
+  require_biology_file(x)
   require_group_file(x)
+  diet_table <- create_diet_table(x)
 
   if (nrow(diet_table) == 0) {
     cli::cli_abort("Diet table is empty; cannot create food web.")
   }
 
-  vc_pred <- rownames(diet_table) |>
-    stringr::str_extract("pPREY[1-2]?([A-Z]+)[1-2]?", group = 1)
+  # the predator: a group code, the longest that matches (codes can hold
+  # digits, as the stages)
+  codes <- x@group$Code[order(-nchar(x@group$Code))]
+  pattern <- paste0(
+    "^pPREY[12]?(",
+    paste(stringr::str_escape(codes), collapse = "|"),
+    ")[12]?$"
+  )
+  vc_pred <- stringr::str_match(rownames(diet_table), pattern)[, 2]
 
-  diet_adj_mat <- (diet_table > 0) |>
-    apply(2, \(x) {
-      split(x, vc_pred) |>
-        lapply(any) |>
-        unlist()
-    })
+  diet_adj_mat <- rowsum(+(diet_table > 0), vc_pred) > 0
 
   idx <- which(diet_adj_mat > 0, arr.ind = TRUE)
   if (!length(idx)) {

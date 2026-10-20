@@ -264,6 +264,9 @@ check_run <- function(output, run) {
   utils::capture.output(
     nc <- tryCatch(ncdf4::nc_open(output), error = \(e) NULL)
   )
+  if (!is.null(nc)) {
+    on.exit(ncdf4::nc_close(nc))
+  }
   if (is.null(nc) || is.null(nc$dim$t)) {
     finding <- check_finding(
       file,
@@ -274,7 +277,6 @@ check_run <- function(output, run) {
     )
     return(new_atlantis_check(list(finding)))
   }
-  on.exit(ncdf4::nc_close(nc))
   time <- nc$dim$t$vals
   end <- if (length(time)) max(time) else 0
   if (grepl("^day", nc$dim$t$units)) {
@@ -337,13 +339,15 @@ set_init_values <- function(path, variable, values, file = path) {
   if (anyNA(values$value) || any(values$value < 0)) {
     cli::cli_abort("{.arg values} has missing or negative values.")
   }
-  if (normalizePath(file, mustWork = FALSE) != normalizePath(path)) {
-    if (!file.copy(path, file, overwrite = TRUE)) {
-      cli::cli_abort("Cannot write {.path {file}}.")
-    }
+  copy <- normalizePath(file, mustWork = FALSE) != normalizePath(path)
+  if (copy && !file.copy(path, file, overwrite = TRUE)) {
+    cli::cli_abort("Cannot write {.path {file}}.")
   }
   nc <- ncdf4::nc_open(file, write = TRUE)
   on.exit(ncdf4::nc_close(nc))
+  # an error leaves no copy behind
+  done <- FALSE
+  on.exit(if (copy && !done) unlink(file), add = TRUE)
   if (!variable %in% names(nc$var)) {
     cli::cli_abort("Unknown variable {.field {variable}}.")
   }
@@ -377,6 +381,7 @@ set_init_values <- function(path, variable, values, file = path) {
     )
   }
   ncdf4::ncvar_put(nc, variable, x)
+  done <- TRUE
   invisible(file)
 }
 
@@ -386,6 +391,11 @@ set_init_values <- function(path, variable, values, file = path) {
 # go to that copy, which print() never dispatches through
 #' @exportS3Method base::print
 print.atlantis_check <- function(x, ...) {
+  # a subset of the columns prints as a data frame
+  if (!all(c("file", "check", "severity", "key", "message") %in% names(x))) {
+    print(structure(x, class = "data.frame"), ...)
+    return(invisible(x))
+  }
   if (!nrow(x)) {
     cli::cli_alert_success("No problem found.")
     return(invisible(x))

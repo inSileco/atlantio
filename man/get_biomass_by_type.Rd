@@ -14,11 +14,13 @@ get_biomass_by_type(atlantis, bm_type)
 \item \code{"biomass_all"} - Total biomass indices aggregated across all spatial boxes
 \item \code{"biomass_box"} - Biomass by spatial box (polygon-level resolution)
 \item \code{"biomass_age"} - Age-structured biomass for vertebrate functional groups
+\item \code{"biomass_age_annual"} - Annual age-structured biomass
 }}
 }
 \value{
-The requested biomass data object (typically a data.frame or array),
-or \code{NULL} if the specified type is not available in the Atlantis object.
+The requested biomass table (a data frame), or \code{NULL} if that
+output is not loaded in the Atlantis object. Any other \code{bm_type} is an
+error.
 }
 \description{
 Extract biomass data from an Atlantis object based on the specified

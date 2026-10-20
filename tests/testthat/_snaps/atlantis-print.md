@@ -40,11 +40,6 @@
       
       -- Geometry details: 
       * 5 boxes (including 0 boundary boxes)
-    Condition
-      Warning in `mean.default()`:
-      argument is not numeric or logical: returning NA
-    Message
-      * mean depth: NA m
 
 # print method shows geometry details when available
 
@@ -68,11 +63,6 @@
       
       -- Geometry details: 
       * 10 boxes (including 0 boundary boxes)
-    Condition
-      Warning in `mean.default()`:
-      argument is not numeric or logical: returning NA
-    Message
-      * mean depth: NA m
 
 # print method shows main output details when available
 
@@ -125,9 +115,4 @@
       
       -- Geometry details: 
       * 15 boxes (including 0 boundary boxes)
-    Condition
-      Warning in `mean.default()`:
-      argument is not numeric or logical: returning NA
-    Message
-      * mean depth: NA m
 

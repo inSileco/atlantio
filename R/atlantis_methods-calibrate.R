@@ -98,11 +98,12 @@
 #' @export
 generate_calibration_table <- function(x, path, version = "3-6722") {
   require_atlantis(x)
+  dictionary <- list_atlantis_parameters(version)$parameters
   yaml::read_yaml(path) |>
     lapply(
       format_calibration_entry,
       x = x,
-      version = version
+      dictionary = dictionary
     ) |>
     do.call(what = rbind)
 }
@@ -117,24 +118,24 @@ generate_calibration_table <- function(x, path, version = "3-6722") {
 #' @param x An `Atlantis` object.
 #' @param prm A list describing one parameter (fields `name`, and optionally
 #' `min`, `max`, `position`, `transf`).
-#' @param version Atlantis version identifier. Default is `"3-6722"`.
+#' @param dictionary The parameters of the Atlantis version, as listed by
+#'   [list_atlantis_parameters()].
 #'
 #' @return A data frame with columns `name`, `min`, `max`, `position`,
 #' `transf` and `source_file`.
 #'
 #' @noRd
-format_calibration_entry <- function(x, prm, version = "3-6722") {
+format_calibration_entry <- function(x, prm, dictionary) {
   if (length(prm$name) != 1) {
     cli::cli_abort("Parameter name should have a length of 1.")
   }
   transf <- validate_transf(prm$transf %||% "identity")
-  ls_prm_all <- list_atlantis_parameters()$parameters
-  prm_idx <- ls_prm_all |>
+  prm_idx <- dictionary |>
     Position(f = \(y) y$name == prm$name)
   if (is.na(prm_idx)) {
-    cli::cli_abort("Unknown parameter.")
+    cli::cli_abort("Unknown parameter {.val {prm$name}}.")
   }
-  prm_info <- ls_prm_all[[prm_idx]]
+  prm_info <- dictionary[[prm_idx]]
 
   if (stringr::str_detect(prm$name, "<[A-Za-z]+>")) {
     abbrev <- prm$name |>
@@ -144,7 +145,7 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
       stringr::str_replace_all("[<>]", "")
     mis_abb_prm <- setdiff(abb_prm_name, names(prm))
     if (length(mis_abb_prm)) {
-      cli::cli_abort("{mis_abb_prm} missing from calibrarion file.")
+      cli::cli_abort("{mis_abb_prm} missing from calibration file.")
     }
     # each expanded key is its own entry: a key of non-array type (e.g.
     # mum_<GRP>_T15, one double per group) holds a single value, whatever
@@ -201,7 +202,8 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
     keep <- !ls_prm_val %in% ignored_values
     if (!any(keep)) {
       cli::cli_warn(
-        "All values of {.code {prm$name}} are in `ignored_values`."
+        "All values of {.code {prm$name}} are in `ignored_values`: no row for
+        it."
       )
     }
     ls_prm_nam <- ls_prm_nam[keep]
@@ -227,14 +229,16 @@ format_calibration_entry <- function(x, prm, version = "3-6722") {
     out_max <- clamp_file_scale(out_max, transf, 0, 1)
   }
 
+  # rep_len(): no row when ignored_values leaves out every value
+  n <- length(ls_prm_nam)
   data.frame(
     name = ls_prm_nam,
     cur_value = ls_prm_val,
-    min = out_min,
-    max = out_max,
+    min = rep_len(out_min, n),
+    max = rep_len(out_max, n),
     position = ls_prm_pos,
-    transf = transf,
-    source_file = prm_info$source_file,
+    transf = rep_len(transf, n),
+    source_file = rep_len(prm_info$source_file, n),
     row.names = NULL
   )
 }
@@ -424,16 +428,16 @@ get_prop_name <- function(bname) {
 }
 
 
-get_values <- function(atl, prm_nam, prm_pos, src_file, is_factor = FALSE) {
+get_values <- function(atl, prm_nam, prm_pos, src_file, required = FALSE) {
   mapply(
     \(nam, pos) {
       out <- S7::prop(atl, get_prop_name(src_file))[[nam]][pos]
       if (is.null(out)) {
-        if (is_factor) {
-          cli::cli_abort(
+        if (required) {
+          cli::cli_abort(c(
             "Cannot find value for `{nam}[{pos}]` in '{src_file}'.",
-            "i" = "Values are required to use `min` and `max` as factors."
-          )
+            "i" = "Values are required for `is_factor` and `ignored_values`."
+          ))
         } else {
           cli::cli_warn(
             "Cannot find value for `{nam}[{pos}]` in '{src_file}'."

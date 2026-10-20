@@ -244,9 +244,11 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
 #'   * `"biomass_all"` - Total biomass indices aggregated across all spatial boxes
 #'   * `"biomass_box"` - Biomass by spatial box (polygon-level resolution)
 #'   * `"biomass_age"` - Age-structured biomass for vertebrate functional groups
+#'   * `"biomass_age_annual"` - Annual age-structured biomass
 #'
-#' @return The requested biomass data object (typically a data.frame or array),
-#'   or `NULL` if the specified type is not available in the Atlantis object.
+#' @return The requested biomass table (a data frame), or `NULL` if that
+#'   output is not loaded in the Atlantis object. Any other `bm_type` is an
+#'   error.
 #'
 #' @examples
 #' \dontrun{
@@ -262,17 +264,9 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
 #'
 #' @export
 get_biomass_by_type <- function(atlantis, bm_type) {
-  if (!bm_type %in% c("biomass_all", "biomass_box", "biomass_age")) {
-    cli::cli_alert_warning(
-      "Invalid bm_type: must be one of 'biomass_all', 'biomass_box', or 'biomass_age'"
-    )
-    return(NULL)
-  }
-
-  switch(
+  bm_type <- rlang::arg_match(
     bm_type,
-    "biomass_all" = atlantis@biomass_all,
-    "biomass_box" = atlantis@biomass_box,
-    "biomass_age" = atlantis@biomass_age
+    c("biomass_all", "biomass_box", "biomass_age", "biomass_age_annual")
   )
+  S7::prop(atlantis, bm_type)
 }

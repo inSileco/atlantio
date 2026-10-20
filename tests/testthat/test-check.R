@@ -312,6 +312,19 @@ test_that("check_run() tells a completed run from a crashed one", {
   bad <- withr::local_tempfile(fileext = ".nc")
   writeLines("not a netCDF file", bad)
   expect_identical(check_run(bad, run)$check, "unreadable")
+  # a netCDF file without time dimension is closed
+  no_t <- withr::local_tempfile(fileext = ".nc")
+  nc <- ncdf4::nc_create(
+    no_t,
+    list(ncdf4::ncvar_def("v", "", ncdf4::ncdim_def("x", "", 1:2)))
+  )
+  ncdf4::nc_close(nc)
+  fds <- \() length(list.files("/proc/self/fd"))
+  before <- fds()
+  expect_identical(check_run(no_t, run)$check, "unreadable")
+  if (dir.exists("/proc/self/fd")) {
+    expect_identical(fds(), before)
+  }
 
   writeLines("tstop ten day", run)
   expect_error(check_run(trunc, run), "as a time")
@@ -326,4 +339,25 @@ test_that("atlantis_check results print", {
   run <- file.path(dirname(path), "run.prm")
   writeBin(charToRaw("dt 1\n"), run)
   expect_snapshot(print(check_prm(bio = run)))
+})
+
+test_that("set_init_values() leaves no copy behind when it fails", {
+  copy <- file.path(withr::local_tempdir(), "init_copy.nc")
+  expect_error(
+    set_init_values(
+      atlantis_examples("inputs", "tiny_init.nc"),
+      "Nope",
+      data.frame(box = 0, value = 1),
+      file = copy
+    ),
+    "Unknown"
+  )
+  expect_false(file.exists(copy))
+})
+
+test_that("a subset of the columns of a check prints as a data frame", {
+  run <- withr::local_tempfile(fileext = ".prm")
+  writeLines(c("a 1", "a 2"), run)
+  x <- check_prm(run = run)
+  expect_snapshot(print(x[, c("key", "message")]))
 })

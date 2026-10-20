@@ -48,6 +48,8 @@ completed runs, calibration scale; \code{NA} without failed runs);
 \item \code{scores}: per generation, the number of \code{runs}, of \code{failed} runs, and
 the \code{best} and \code{median} scores of the completed runs.
 }
+
+The runs without generation make the generation \code{NA}.
 }
 \description{
 Summarises, for every parameter value of a calibration table, the values

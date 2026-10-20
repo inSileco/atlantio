@@ -143,6 +143,12 @@ score_table <- function(
          {.arg biomass}."
       )
     }
+    no_start <- setdiff(biomass$group, biomass$group[biomass$time == 0])
+    if (length(no_start)) {
+      cli::cli_abort(
+        "{.arg biomass} has no value at t = 0 for {.val {no_start}}."
+      )
+    }
     agg <- biomass |>
       dplyr::filter(
         .data$Biomass[.data$time == 0] > 0,
@@ -162,6 +168,13 @@ score_table <- function(
   init <- agg |>
     dplyr::filter(.data$time == 0) |>
     dplyr::select("group", "age", "tracer", init = "value")
+  key <- c("group", "age", "tracer")
+  no_start <- dplyr::anti_join(unique(agg[key]), init, by = key)
+  if (nrow(no_start)) {
+    cli::cli_abort(
+      "{.arg ts} has no value at t = 0 for {.val {unique(no_start$group)}}."
+    )
+  }
   scored <- agg |>
     dplyr::reframe(
       value = window_values(

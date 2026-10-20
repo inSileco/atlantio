@@ -13,7 +13,10 @@ test_that("generate_file() creates run parameter file with default settings", {
   expect_match(content[1], msg_generated_by())
   expect_match(content[4], "^track_contaminants 0")
   expect_match(content[4], "# Flag to turn on tracking of contaminants")
-  expect_match(content[57], "^init_scalar <<TO_EDIT>>")
+  expect_match(
+    grep("^init_scalar", content, value = TRUE),
+    "^init_scalar <<TO_EDIT>> "
+  )
   # a unit Atlantis knows as written
   expect_match(grep("^dt ", content, value = TRUE), "^dt 12 hour ")
 
@@ -41,7 +44,23 @@ test_that("generate_file() creates run parameter file with default + input value
   ))
 
   # ignore if not exact match
-  result <- generate_file(x = "run", file = temp_file, track_contamina = 1)
+  expect_warning(
+    result <- generate_file(x = "run", file = temp_file, track_contamina = 1),
+    "track_contamina"
+  )
   content <- readLines(temp_file)
   expect_match(content[4], "^track_contaminants 0")
+})
+
+test_that("generate_file() writes arrays and warns about unknown values", {
+  f <- withr::local_tempfile(fileext = ".prm")
+  expect_warning(
+    generate_file(file = f, init_scalar = c(1, 2, 3), notakey = 1),
+    "notakey"
+  )
+  content <- readLines(f)
+  i <- grep("^init_scalar", content)
+  expect_match(content[i], "^init_scalar 3 ")
+  expect_identical(content[i + 1], "1 2 3")
+  expect_error(generate_file("run"), "file")
 })

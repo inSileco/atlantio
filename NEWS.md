@@ -44,6 +44,12 @@
   It ignored `version` and read the parameter list for every entry.
 * `generate_file()` writes the time step as `dt 12 hour`. It wrote
   `dt 12 Hours`, which Atlantis reads as 12 seconds.
+* `generate_file()` needs `file`: it wrote `run.prm` into the working
+  directory by default. It writes an array given in `...` (`init_scalar`) as
+  its length, with the values on the next line, as Atlantis reads it; it
+  wrote R code (`init_scalar c(1, 2, 3)`). It writes the placeholder
+  `<<TO_EDIT>>` as documented (not `<<TO_EDIT>>>`), and warns about names in
+  `...` that are not run parameters, which it ignores.
 * `get_biomass_by_type()` returns the annual biomass at age
   (`"biomass_age_annual"`), as the Get Started article says, and aborts on an
   unknown type. It returned `NULL` for both, after an alert.

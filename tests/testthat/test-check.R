@@ -220,6 +220,18 @@ test_that("prm_seconds() reads times as Atlantis does", {
   expect_identical(prm_seconds(run, "tsumout"), 2 * 86400)
 })
 
+test_that("check_prm() and check_run() read a parameter file without keys", {
+  empty <- withr::local_tempfile(fileext = ".prm")
+  writeBin(raw(0), empty)
+  comments <- withr::local_tempfile(fileext = ".prm")
+  writeBin(charToRaw("# only a comment\n"), comments)
+  expect_identical(nrow(check_prm(run = empty, bio = comments)), 0L)
+  expect_identical(prm_seconds(comments, "toutinc", 0), 0)
+  expect_error(prm_seconds(empty, "tstop"), "not found")
+  out <- system.file("examples", "outputs", "output.nc", package = "atlantio")
+  expect_error(check_run(out, comments), "not found")
+})
+
 test_that("check_prm() flags stocking traps", {
   dir <- withr::local_tempdir()
   ts <- c(

@@ -7,6 +7,9 @@
   initial ratio. `highlight` takes a table of links (`prey`, `predator`,
   `colour`, optionally `pathway`) to highlight; links absent from the food
   web are drawn dashed.
+* `check_prm()` and `check_run()` read a parameter file without keys (empty,
+  or comments only). They failed with "arguments imply differing number of
+  rows"; `check_run()` now says that `tstop` is not found.
 
 
 # atlantio 0.5.0

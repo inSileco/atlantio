@@ -652,7 +652,7 @@ scan_prm <- function(path) {
       },
       character(1)
     ),
-    n_given = NA_integer_
+    n_given = rep(NA_integer_, length(keys))
   )
   # an array: the next non-empty line holds numbers
   for (k in seq_along(keys)) {

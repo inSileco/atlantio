@@ -4,7 +4,7 @@
 \alias{generate_file}
 \title{Generate parameter files}
 \usage{
-generate_file(x = "run", version = "latest", description = TRUE, file = x, ...)
+generate_file(x = "run", version = "latest", description = TRUE, file, ...)
 }
 \arguments{
 \item{x}{File type to generate. Currently supports "run" for run parameter files.}
@@ -13,10 +13,11 @@ generate_file(x = "run", version = "latest", description = TRUE, file = x, ...)
 
 \item{description}{Logical. Should parameter descriptions be added as comments in the output file?}
 
-\item{file}{A character string naming the output file. The file extension will
-be ignored and replaced with the expected one (.prm for run files).}
+\item{file}{Path of the file written; its extension is set to \code{.prm}.}
 
-\item{...}{Additional values to change (currently not implemented).}
+\item{...}{Values to set, named after the parameters of the run file (e.g.
+\code{dt = 6}). An array is written as its length, with the values on the
+next line. Unknown names are ignored, with a warning.}
 }
 \value{
 Invisibly returns the path to the generated file.
@@ -40,10 +41,11 @@ The function reads parameter specifications from the package's internal YAML
 files and organizes them by category in the output file.
 }
 \examples{
-# Generate a run parameter file with default settings
-# generate_file(file = "run.prm")
+# a run parameter file with the recommended values
+run <- generate_file(file = tempfile(fileext = ".prm"))
+readLines(run, n = 8)
 
-# Generate without descriptions
-# generate_file(x = "run", file = "my_run.prm", description = FALSE)
+# without descriptions, with a time step of 6 hours
+generate_file(file = tempfile(fileext = ".prm"), description = FALSE, dt = 6)
 
 }

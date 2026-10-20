@@ -1,4 +1,4 @@
-# atlantio (development version)
+# atlantio 0.6.0
 
 * New `write_run_script()` and `run_atlantis()` to run a model.
   `write_run_script()` renders the Atlantis command line of a run directory

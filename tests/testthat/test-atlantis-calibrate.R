@@ -284,3 +284,8 @@ test_that("generate_calibration_table() reads the parameters of its version", {
     "Unknown version"
   )
 })
+
+test_that("transform_parameter_value() computes powers exactly", {
+  expect_identical(transform_parameter_value(2, "pow10"), 100)
+  expect_identical(transform_parameter_value(3, "pow2"), 8)
+})

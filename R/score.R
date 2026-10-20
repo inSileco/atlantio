@@ -161,7 +161,7 @@ score_table <- function(
         tracer = "Biomass",
         value = .data$Biomass
       ) |>
-      dplyr::bind_rows(x = agg)
+      dplyr::bind_rows(agg)
   }
   agg <- dplyr::filter(agg, !.data$group %in% exclude)
 

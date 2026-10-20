@@ -181,25 +181,24 @@ read_txt_files <- function(path, filename) {
     show_col_types = FALSE,
     progress = FALSE
   )
-  bnm <- filename
   nm <- names(out)
-  if (grepl("BoxBiomass", bnm) && nm[2] == "Box") {
+  if (grepl("BoxBiomass", filename) && identical(nm[2L], "Box")) {
     return(list(type = "biomass_box", object = out))
-  } else if (grepl("BiomInd", bnm) && "DivCount" %in% nm) {
+  } else if (grepl("BiomInd", filename) && "DivCount" %in% nm) {
     return(list(type = "biomass_all", object = out))
-  } else if (grepl("AgeBiomIndx", bnm)) {
-    if (grepl("AnnualAgeBiomIndx", bnm)) {
+  } else if (grepl("AgeBiomIndx", filename)) {
+    if (grepl("AnnualAgeBiomIndx", filename)) {
       return(list(type = "biomass_age_annual", object = out))
     } else {
       return(list(type = "biomass_age", object = out))
     }
-  } else if (grepl("DietCheck", bnm)) {
-    if (grepl("DetailedDietCheck", bnm) && identical(nm[4L], "Box")) {
+  } else if (grepl("DietCheck", filename)) {
+    if (grepl("DetailedDietCheck", filename) && identical(nm[4L], "Box")) {
       return(list(type = "diet_detailed", object = out))
     } else if (identical(nm[2L], "Predator") && identical(nm[4L], "Stock")) {
       return(list(type = "diet", object = out))
     }
-  } else if (grepl("YOY", bnm)) {
+  } else if (grepl("YOY", filename)) {
     return(list(type = "yoy", object = out))
   }
   list(type = "unknown", object = NULL)

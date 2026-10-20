@@ -179,3 +179,12 @@ test_that("read_prm_files() works", {
     "run"
   )
 })
+
+test_that("read_prm() reads an empty file and a file without final newline", {
+  fl <- withr::local_tempfile(fileext = ".prm")
+  file.create(fl)
+  expect_identical(read_prm(fl), list())
+  writeBin(charToRaw("flag 1"), fl)
+  expect_no_warning(res <- read_prm(fl))
+  expect_identical(res, list(flag = 1))
+})

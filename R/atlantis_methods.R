@@ -114,12 +114,9 @@ create_diet_table <- function(x) {
   require_atlantis(x)
   require_biology_file(x)
 
-  nms <- x@biology |> names()
-  nms_slc <- nms[grepl("^pPREY", nms)]
-  out <- x@biology[grepl("^pPREY", nms)] |>
+  out <- x@biology[startsWith(names(x@biology), "pPREY")] |>
     do.call(what = rbind) |>
     as.data.frame()
-  row.names(out) <- nms_slc
 
   if (!is.null(x@group)) {
     # one value per group, then one per detritus group in the sediment

@@ -369,12 +369,11 @@ set_init_values <- function(path, variable, values, file = path) {
     }
     idx <- cbind(values$layer, box, 1)
     unused <- !cells$valid[cbind(values$layer, box)]
-    x[idx] <- values$value
   } else {
     idx <- cbind(box, 1)
     unused <- cells$numlayers[box] == 0
-    x[idx] <- values$value
   }
+  x[idx] <- values$value
   if (any(unused)) {
     cli::cli_warn(
       "{sum(unused)} value{?s} written in cells Atlantis does not use."
@@ -526,8 +525,9 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
   pools <- list()
   for (i in seq_len(nrow(on))) {
     g <- on$Name[i]
-    nums <- grep(paste0("^", g, "[0-9]+_Nums$"), names(values), value = TRUE)
-    pool <- grep(paste0("^", g, "_N[0-9]*$"), names(values), value = TRUE)
+    g_re <- stringr::str_escape(g)
+    nums <- grep(paste0("^", g_re, "[0-9]+_Nums$"), names(values), value = TRUE)
+    pool <- grep(paste0("^", g_re, "_N[0-9]*$"), names(values), value = TRUE)
     if (length(nums)) {
       total <- vapply(nums, \(v) sum(values[[v]]), numeric(1))
       if (sum(total) == 0) {
@@ -980,7 +980,7 @@ check_stocking <- function(bio, bio_file, force, force_path) {
 
 # an Atlantis .ts file: the columns named in the header, time in seconds
 read_ts_file <- function(path) {
-  lines <- sub("\r$", "", readLines(path, warn = FALSE))
+  lines <- readLines(path, warn = FALSE)
   hdr <- stringr::str_match(lines, "^##\\s*COLUMN([0-9]+)\\.name\\s+(\\S+)")
   hdr <- hdr[!is.na(hdr[, 1]), , drop = FALSE]
   nms <- hdr[order(as.integer(hdr[, 2])), 3]

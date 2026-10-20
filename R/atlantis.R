@@ -194,10 +194,9 @@ atlantis_load_files <- function(atlantis, files, filenames = basename(files)) {
   }
 
   if (!inherits(files, "atlantis_file")) {
-    cli::cli_alert_warning(
-      "Invalid file input: expected 'atlantis_file' object or character vector of file paths"
+    cli::cli_abort(
+      "{.arg files} must be file paths or an {.cls atlantis_file} object."
     )
-    return(atlantis)
   }
 
   v_types <- vapply(files, \(x) x$type, character(1))

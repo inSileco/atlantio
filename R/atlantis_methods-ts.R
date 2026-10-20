@@ -40,7 +40,7 @@ create_time_series <- function(x, variable, box = NULL, layer = NULL) {
   nc <- x@main_output
   layer_given <- !is.null(layer)
 
-  chk <- variable[!variable %in% names(x@main_output$var)]
+  chk <- variable[!variable %in% names(nc$var)]
   if (length(chk)) {
     cli::cli_abort(
       "{length(chk)} unknown variable{?s}: {cli::col_yellow(chk)}.
@@ -119,7 +119,7 @@ create_time_series <- function(x, variable, box = NULL, layer = NULL) {
       cli::cli_abort("Unknown variable dimension")
     }
   }) |>
-    do.call(what = dplyr::bind_rows)
+    dplyr::bind_rows()
   out |>
     dplyr::mutate(box = .data$box - 1)
 }
@@ -215,6 +215,7 @@ create_time_series_biomass <- function(
   x_cn <- x@biology$X_CN
   k_wetdry <- x@biology$k_wetdry
   out <- list()
+  volume <- NULL
   for (i in group) {
     # this could be done using x@group$NumCohorts but it mean that group file
     # is always required even though all the info is in the mainoutput
@@ -234,7 +235,7 @@ create_time_series_biomass <- function(
       # but it wasn't clear to me what we expect in term of variables for such
       # groups
       if (!is.null(age)) {
-        age_missing <- age[age %notin% v_age]
+        age_missing <- age[!age %in% v_age]
         if (length(age_missing)) {
           cli::cli_abort(
             "{length(age_missing)} age value{?s} missing: {age_missing}"
@@ -248,7 +249,7 @@ create_time_series_biomass <- function(
       age_ts <- \(ages) {
         x |>
           create_time_series(
-            variable = paste0(i, do.call(paste0, expand.grid(ages, v_field))),
+            variable = paste0(i, outer(ages, v_field, paste0)),
             box = box,
             layer = layer
           ) |>
@@ -299,18 +300,13 @@ create_time_series_biomass <- function(
         require_geometry_file(x)
         out[[i]]$size <- x@geometry$area[out[[i]]$box + 1]
       } else {
+        # the cell volumes, read once for all the pools
+        volume <- volume %||%
+          (create_time_series(x, "volume", box = box, layer = layer) |>
+            dplyr::select(!c("variable", "units")) |>
+            dplyr::rename(size = "value"))
         out[[i]] <- out[[i]] |>
-          dplyr::inner_join(
-            create_time_series(
-              x,
-              variable = "volume",
-              box = box,
-              layer = layer
-            ) |>
-              dplyr::select(!c("variable", "units")) |>
-              dplyr::rename(size = "value"),
-            by = c("time", "box", "layer")
-          )
+          dplyr::inner_join(volume, by = c("time", "box", "layer"))
       }
       out[[i]] <- out[[i]] |>
         dplyr::mutate(

@@ -1,4 +1,4 @@
-# atlantio (development version)
+# atlantio 0.4.0
 
 * `atlantis_load_files()` says why a file cannot be read. It said that the
   file did not exist, and reported only the first of several such files.

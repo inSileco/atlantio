@@ -175,14 +175,15 @@ test_that("check_prm() reports the time units Atlantis ignores", {
 
 test_that("check_prm() says which occurrence of a duplicated key Atlantis reads", {
   run <- withr::local_tempfile(fileext = ".prm")
-  writeLines(
-    c(
-      "tstop 100 day",
-      "dt 12 hour",
-      "tstop 200 day",
-      "contaminant_units 1",
-      "contaminant_units 2"
-    ),
+  # writeBin() keeps LF line endings on Windows
+  writeBin(
+    charToRaw(paste0(
+      "tstop 100 day\n",
+      "dt 12 hour\n",
+      "tstop 200 day\n",
+      "contaminant_units 1\n",
+      "contaminant_units 2\n"
+    )),
     run
   )
   res <- check_prm(run = run)
@@ -290,21 +291,22 @@ test_that("check_run() tells a completed run from a crashed one", {
     package = "atlantio"
   )
   run <- withr::local_tempfile(fileext = ".prm")
-  writeLines(c("tstop 100 day # end", "toutinc 5 day"), run)
+  # writeBin() keeps LF line endings on Windows
+  writeBin(charToRaw("tstop 100 day # end\ntoutinc 5 day\n"), run)
   res <- check_run(trunc, run)
   expect_identical(res$check, "incomplete")
   expect_identical(res$severity, "error")
   expect_match(res$message, "ends at day 50 of 100")
   # within one output interval of tstop
-  writeLines(c("tstop 54 day", "toutinc 5 day"), run)
+  writeBin(charToRaw("tstop 54 day\ntoutinc 5 day\n"), run)
   expect_identical(nrow(check_run(trunc, run)), 0L)
-  writeLines(c("tstop 4320000", "toutinc 432000"), run)
+  writeBin(charToRaw("tstop 4320000\ntoutinc 432000\n"), run)
   expect_identical(nrow(check_run(trunc, run)), 0L)
-  writeLines("tstop 10 week", run)
+  writeBin(charToRaw("tstop 10 week\n"), run)
   expect_identical(check_run(trunc, run)$check, "incomplete")
   # Atlantis ignores these units and stops after 100 s
   for (unit in c("days", "Day", "fortnight")) {
-    writeLines(c(paste("tstop 100", unit), "toutinc 5 day"), run)
+    writeBin(charToRaw(paste0("tstop 100 ", unit, "\ntoutinc 5 day\n")), run)
     expect_identical(nrow(check_run(trunc, run)), 0L)
   }
 
@@ -326,9 +328,9 @@ test_that("check_run() tells a completed run from a crashed one", {
     expect_identical(fds(), before)
   }
 
-  writeLines("tstop ten day", run)
+  writeBin(charToRaw("tstop ten day\n"), run)
   expect_error(check_run(trunc, run), "as a time")
-  writeLines("dt 1", run)
+  writeBin(charToRaw("dt 1\n"), run)
   expect_error(check_run(trunc, run), "not found")
 })
 
@@ -357,7 +359,7 @@ test_that("set_init_values() leaves no copy behind when it fails", {
 
 test_that("a subset of the columns of a check prints as a data frame", {
   run <- withr::local_tempfile(fileext = ".prm")
-  writeLines(c("a 1", "a 2"), run)
+  writeBin(charToRaw("a 1\na 2\n"), run)
   x <- check_prm(run = run)
   expect_snapshot(print(x[, c("key", "message")]))
 })

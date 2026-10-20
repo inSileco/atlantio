@@ -56,6 +56,9 @@
   wrote R code (`init_scalar c(1, 2, 3)`). It writes the placeholder
   `<<TO_EDIT>>` as documented (not `<<TO_EDIT>>>`), and warns about names in
   `...` that are not run parameters, which it ignores.
+* `generate_file()` and `write_prm()` write LF line endings on every
+  platform. On Windows they wrote CRLF, and Atlantis reads the carriage
+  return as part of a unit that ends a line: `tstop 365 day` was 365 seconds.
 * `get_biomass_by_type()` returns the annual biomass at age
   (`"biomass_age_annual"`), as the Get Started article says, and aborts on an
   unknown type. It returned `NULL` for both, after an alert.

@@ -1,6 +1,6 @@
 # Changelog
 
-## atlantio (development version)
+## atlantio 0.4.0
 
 - [`atlantis_load_files()`](../reference/atlantis_load_files.md) says
   why a file cannot be read. It said that the file did not exist, and

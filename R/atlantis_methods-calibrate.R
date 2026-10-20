@@ -269,8 +269,8 @@ transform_parameter_value <- function(x, fun) {
   switch(
     fun,
     "identity" = x,
-    "pow10" = pow10(x),
-    "pow2" = pow2(x),
+    "pow10" = 10^x,
+    "pow2" = 2^x,
     "exp" = exp(x),
     cli::cli_abort("Unknown transformation function.")
   )
@@ -310,14 +310,6 @@ inverse_transform_parameter_value <- function(x, fun) {
   )
 }
 
-
-pow10 <- function(x) {
-  exp(log(10) * x)
-}
-
-pow2 <- function(x) {
-  exp(log(2) * x)
-}
 
 # clamp bounds expressed on the calibration scale to [lower, upper] on the
 # file scale
@@ -363,12 +355,6 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
       require_valid_group(group, x)
       x@group |> nrow()
     },
-    "timeseries" = {
-      warn_no_dimension_check()
-    },
-    "other" = {
-      warn_no_dimension_check()
-    },
     "per_prey" = {
       # one value per group, followed by one per detritus group (sediment
       # availability), see atBioltoXML.c
@@ -387,12 +373,10 @@ compute_parameter_dimension <- function(x, dimension, group = NULL) {
       require_valid_group(group, x)
       x@group$NumStages[x@group$Code == group]
     },
-    "per_layer" = {
-      warn_no_dimension_check()
-    },
-    "per_fishery" = {
-      warn_no_dimension_check()
-    },
+    "timeseries" = ,
+    "other" = ,
+    "per_layer" = ,
+    "per_fishery" = warn_no_dimension_check(),
     cli::cli_abort("Unknown dimension")
   )
 }
@@ -429,9 +413,10 @@ get_prop_name <- function(bname) {
 
 
 get_values <- function(atl, prm_nam, prm_pos, src_file, required = FALSE) {
+  prm <- S7::prop(atl, get_prop_name(src_file))
   mapply(
     \(nam, pos) {
-      out <- S7::prop(atl, get_prop_name(src_file))[[nam]][pos]
+      out <- prm[[nam]][pos]
       if (is.null(out)) {
         if (required) {
           cli::cli_abort(c(

@@ -176,3 +176,7 @@ test_that("text outputs are read silently", {
   fl <- atlantis_examples("outputs", "outputBiomIndx.txt")
   expect_no_message(read_atlantis_files(fl))
 })
+
+test_that("atlantis_load_files() aborts on an invalid input", {
+  expect_snapshot(atlantis_load_files(new_atlantis(), 1), error = TRUE)
+})

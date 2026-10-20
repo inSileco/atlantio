@@ -9,10 +9,7 @@ validate_file <- function(x, template) {
   ) |>
     yaml::read_yaml()
 
-  nm_x <- names(x)
-  nm_ref <- ref |> lapply(\(x) x$Name)
-
-  missing_params <- nm_ref[!is.element(nm_ref, nm_x)]
+  missing_params <- setdiff(vapply(ref, \(r) r$Name, character(1)), names(x))
 
   if (length(missing_params)) {
     cli::cli_abort(
@@ -40,55 +37,47 @@ valid_values <- function(type, value, name) {
 
 check_boolean <- function(value, name) {
   # everything that is not 0 will be 1
-  out <- (value != 0) * 1
+  out <- as.integer(value != 0)
   if (!length(out) || is.na(out)) {
     cli::cli_abort("{name} must be a boolean.")
-  } else {
-    as.integer(out)
   }
+  out
 }
 
 check_integer <- function(value, name) {
   suppressWarnings(out <- as.integer(value))
   if (!length(out) || is.na(out)) {
     cli::cli_abort("{name} must be an integer.")
-  } else {
-    out
   }
+  out
 }
 
 check_float <- function(value, name) {
   suppressWarnings(out <- as.double(value))
   if (!length(out) || is.na(out)) {
     cli::cli_abort("{name} must be a double.")
-  } else {
-    out
   }
+  out
 }
 
 check_float_array <- function(value, name) {
-  out <- value
-  if (!length(out) || any(is.na(out))) {
+  if (!length(value) || anyNA(value)) {
     cli::cli_abort("{name} must be a float array.")
-  } else {
-    out
   }
+  value
 }
 
 check_string <- function(value, name) {
   suppressWarnings(out <- as.character(value))
   if (!length(out) || is.na(out)) {
     cli::cli_abort("{name} must be a character string.")
-  } else {
-    out
   }
+  out
 }
 
 check_lookup <- function(value, name) {
-  out <- value
-  if (!length(out) || is.na(out)) {
+  if (!length(value) || is.na(value)) {
     cli::cli_abort("{name} must be an enum.")
-  } else {
-    out
   }
+  value
 }

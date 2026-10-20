@@ -38,17 +38,13 @@
 #' @export
 
 read_prm <- function(file) {
-  # read line by line and split using ending white space or tab
-  prm_lines <- readLines(file) |>
-    lapply(stringr::str_squish) |>
-    Filter(f = \(x) x != "") |>
-    unlist() |>
-    strsplit(split = "[ \t]+")
+  # the words of the non-empty lines
+  lines <- stringr::str_squish(readLines(file, warn = FALSE))
+  prm_lines <- strsplit(lines[nzchar(lines)], " ", fixed = TRUE)
 
   out <- list()
   comments <- list()
   nm <- ""
-  k <- 0
   for (i in seq_along(prm_lines)) {
     prm_line <- prm_lines[[i]]
 
@@ -112,7 +108,7 @@ read_prm <- function(file) {
         cli::cli_abort("Array ({prm_line}) without key.")
       }
       val <- suppressWarnings(prm_line |> as.numeric())
-      if (any(is.na(val))) {
+      if (anyNA(val)) {
         cli::cli_abort(
           "Array ({prm_line}) includes elements that cannot be coerced to numeric."
         )

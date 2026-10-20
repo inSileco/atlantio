@@ -43,9 +43,7 @@ apply_parameters <- function(
   scale = c("calibration", "model")
 ) {
   scale <- match.arg(scale)
-  if (!S7::S7_inherits(x, Atlantis)) {
-    cli::cli_abort("{.arg x} must be an {.cls Atlantis} object.")
-  }
+  require_atlantis(x)
   needed <- c("name", "position", "transf", "source_file")
   missing <- setdiff(needed, names(calib_table))
   if (length(missing)) {
@@ -133,9 +131,7 @@ apply_parameters <- function(
 #'
 #' @export
 write_parameter_folder <- function(x, dir, from = NULL, overwrite = FALSE) {
-  if (!S7::S7_inherits(x, Atlantis)) {
-    cli::cli_abort("{.arg x} must be an {.cls Atlantis} object.")
-  }
+  require_atlantis(x)
   if (!overwrite && length(list.files(dir, all.files = TRUE, no.. = TRUE))) {
     cli::cli_abort(
       "{.path {dir}} is not empty; set {.code overwrite = TRUE} to write into
@@ -271,7 +267,7 @@ prm_number <- function(v) {
 patch_prm <- function(file, prm, out) {
   raw <- readBin(file, "raw", file.size(file))
   eol <- if (any(raw == as.raw(13))) "\r\n" else "\n"
-  lines <- sub("\r$", "", readLines(file, warn = FALSE))
+  lines <- readLines(file, warn = FALSE)
   # the tokens before any comment, positions shared with the full line
   code <- sub("#.*$", "", lines)
   tok <- gregexpr("[^[:blank:]]+", code)

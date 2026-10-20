@@ -16,6 +16,9 @@
   depth no longer warns.
 * An `atlantis_check` table subset by columns prints as a data frame. It
   printed "0 errors, 0 warnings, 0 notes." above the rows.
+* `atlantis_load_files()` aborts when `files` is neither file paths nor an
+  `atlantis_file` object. It printed an alert and returned the object
+  unchanged.
 * `check_prm()` and `check_run()` read the time units of the run file as
   Atlantis does. Atlantis converts a time with its unit only if the unit is
   spelled exactly as one of its units (`s`, `min`, `hour`, `day`, `week`,
@@ -72,10 +75,14 @@
 * `read_prm()` also keeps the units `us`, `usec`, `ms` and `msec` after a
   value. It read them as comments, so `write_prm()` wrote the value without
   its unit.
+* `read_prm()` reads an empty file as an empty list, and no longer warns
+  about a missing final newline.
 * `score_table()` and `compute_score()` abort when a series has no value
   at t = 0, with the groups concerned. They failed with "`..1` must be of
   size ..." or "subscript out of bounds".
 * `set_init_values()` removes the copy it made when it fails.
+* `transform_parameter_value()` computes `pow10` and `pow2` exactly
+  (`10^2` is 100; it gave 100.00000000000004).
 * `write_parameter_folder()` aborts rather than change a key given several
   times in its file, as Atlantis may read another occurrence than the one
   changed. It changed the last one.

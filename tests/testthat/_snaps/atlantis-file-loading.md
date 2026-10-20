@@ -28,3 +28,11 @@
       Warning:
       nope.prm does not exist.
 
+# atlantis_load_files() aborts on an invalid input
+
+    Code
+      atlantis_load_files(new_atlantis(), 1)
+    Condition
+      Error in `atlantis_load_files()`:
+      ! `files` must be file paths or an <atlantis_file> object.
+

@@ -1,5 +1,15 @@
 # atlantio (development version)
 
+* New `write_run_script()` and `run_atlantis()` to run a model.
+  `write_run_script()` renders the Atlantis command line of a run directory
+  from the template `inst/run_scripts/script.sh` (with the path to the
+  binary if it is not on the PATH) and creates its output folder.
+  `run_atlantis()` runs it, directly or in a Docker container (as the
+  current user, with other folders mounted read-only), with a time limit,
+  and checks with `check_run()` that it completed: Atlantis exits with
+  status 0 after a fatal error. Its result adds `check` and `complete` to
+  that of `processx::run()`. The calibration article uses them instead of
+  its own copies.
 * New `plot_foodweb()` draws the food web of a model with ggplot2: groups
   placed by trophic level and habitat (pelagic, benthic), edges from prey to
   predator with a width given by `pPREY`, and, when the biomass index is

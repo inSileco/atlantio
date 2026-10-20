@@ -174,55 +174,42 @@ check_init("init_fixed.nc", "groups.csv")
 
 ## Running the model
 
-`atlantio` ships a template of the Atlantis command line in
-`inst/run_scripts/script.sh`, with `{{placeholders}}` for the input files.
-Render it once per run directory:
+`write_run_script()` writes the Atlantis command line (`run.sh`, from the
+template `inst/run_scripts/script.sh`) for the input files of a run
+directory, and creates its output folder. `run_atlantis()` runs it with the
+run directory as working directory, either directly (when `atlantisMerged`
+is installed in the same environment as R, as on most HPC clusters) or in a
+Docker container. Set a timeout: a full run can take hours.
 
 ```R
-write_run_script <- function(run_dir) {
-  script <- readLines(
-    system.file("run_scripts", "script.sh", package = "atlantio")
-  )
-  values <- c(
-    "init_file" = "init.nc",
-    "output_main" = "output.nc",
-    "run.prm" = "run.prm",
-    "force.prm" = "force.prm",
-    "physics.prm" = "physics.prm",
-    "biol.prm" = "biology.prm",
-    "groups.csv" = "groups.csv",
-    "fisheries.csv" = "fisheries.csv",
-    "output_dir" = "outputFolder"
-  )
-  for (key in names(values)) {
-    script <- gsub(paste0("{{", key, "}}"), values[[key]], script, fixed = TRUE)
-  }
-  path <- file.path(run_dir, "run.sh")
-  writeLines(script, path)
-  Sys.chmod(path, "0755")
-  invisible(path)
-}
+write_run_script(
+  run_dir,
+  init = "init.nc",
+  run = "run.prm",
+  force = "force.prm",
+  physics = "physics.prm",
+  biology = "biology.prm",
+  groups = "groups.csv",
+  fisheries = "fisheries.csv"
+)
+res <- run_atlantis(run_dir, timeout = 86400)
 ```
 
-The script is then executed with `processx::run()`, either directly (when
-`atlantisMerged` is installed in the same environment as R, as on most HPC
-clusters) or inside a Docker container with the run directory mounted as
-the working directory. Set a timeout: a full run can take hours.
+`binary` gives the path to `atlantisMerged` when it is not on the PATH.
+With Docker, give the image: the run directory is mounted as the working
+directory `/model`, other folders (e.g. forcing data shared by all runs,
+rather than copied into each) can be mounted read-only with `mounts`, and
+the container runs as the current user so that the files it writes remain
+owned by the R session.
 
 ```R
-run_atlantis <- function(run_dir) {
-  processx::run(
-    "bash", "run.sh",
-    wd = run_dir,
-    error_on_status = FALSE,
-    timeout = 86400
-  )
-}
+res <- run_atlantis(
+  run_dir,
+  docker = "atlantis",
+  mounts = c("/data/inputs" = "/model/inputs"),
+  timeout = 86400
+)
 ```
-
-With Docker, replace the command with `docker run --rm -v <run_dir>:/model
--w /model <image> bash run.sh`, running the container as the current user so
-that the files it writes remain owned by the R session.
 
 ## Detecting crashed runs
 
@@ -243,7 +230,10 @@ check_run("outputFolder/output.nc", "run.prm")
 Like the other checks, it returns an `atlantis_check` table: empty when the
 run completed, otherwise one error, `"missing"` (no output),
 `"unreadable"` or `"incomplete"`, whose message gives the day the run
-stopped at.
+stopped at. `run_atlantis()` runs it on the output and run file named in
+the script: its result holds the table as `check`, and `complete` is `TRUE`
+only if the run exited with status 0, within the time limit, and `check` is
+empty.
 
 
 # Step 3: design the objective function
@@ -421,15 +411,16 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
   run_dir <- tempfile("run_", tmpdir = results_dir)
   dir.create(run_dir)
   write_parameter_folder(atlantis, run_dir, from = base_dir, overwrite = TRUE)
-  write_run_script(run_dir)
-  dir.create(file.path(run_dir, "outputFolder"))
+  write_run_script(run_dir, init = "init.nc", run = "run.prm",
+    force = "force.prm", physics = "physics.prm", biology = "biology.prm",
+    groups = "groups.csv", fisheries = "fisheries.csv")
 
   # 3. model run; a zero exit status does not mean the run completed
-  res <- run_atlantis(run_dir)
+  res <- run_atlantis(run_dir, timeout = 86400)
   out_file <- file.path(run_dir, "outputFolder", "output.nc")
-  crash <- check_run(out_file, file.path(run_dir, "run.prm"))
-  if (res$status != 0 || nrow(crash)) {
-    reason <- if (nrow(crash)) crash$message[1] else
+  if (!res$complete) {
+    reason <- if (nrow(res$check)) res$check$message[1] else
+      if (res$timeout) "time limit reached" else
       sprintf("exit status %s", res$status)
     return(failed_run(run_dir, par, par_model, res, reason))
   }
@@ -533,7 +524,7 @@ registerDoParallel(cl)
 
 # %dopar% ships the objective function to the workers, but not the global
 # objects it relies on: export them and load the packages explicitly
-clusterExport(cl, c("write_run_script", "run_atlantis", "failed_run"))
+clusterExport(cl, "failed_run")
 clusterEvalQ(cl, library(atlantio))
 ```
 

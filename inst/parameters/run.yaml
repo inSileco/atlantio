@@ -49,7 +49,7 @@
   Version_stop: ''
 - Name: dt
   Description: Model Time Step in hours
-  Units: Hours
+  Units: hour
   Type: Integer
   RecommendedValue: '12'
   Category: ScenarioOptions

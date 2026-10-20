@@ -31,10 +31,22 @@ number of values on the next line; Atlantis pads with the last value or
 ignores the extra values, \code{\link[=read_prm]{read_prm()}} aborts;
 \item \code{"duplicate"} (warning): a key given twice;
 \item \code{"line_endings"} (warning): Windows (CRLF) line endings;
-\item \code{"tabs"} (note): tabs as separators;
-\item \code{"units"} (note): time units after values (e.g. \verb{dt 12 hour}), which
-Atlantis converts to seconds;
-\item \code{"unknown"} (note): keys of the run file missing from the run template.
+\item \code{"tabs"} (note): tabs as separators.
+}
+
+The checks on the run file are:
+\itemize{
+\item \code{"units"}: the units after the times, which Atlantis reads in seconds
+(\code{dt}, \code{tstop}, \code{toutstart}, \code{toutinc}, \code{toutfinc}, \code{tburnday},
+\code{tsumout}, \code{checkstart} and \code{checkstop}). Atlantis converts a value with
+its unit only if the unit is spelled exactly as one of \code{us}, \code{usec},
+\code{ms}, \code{msec}, \code{s}, \code{sec}, \code{second}, \code{min}, \code{minute}, \code{h}, \code{hr}, \code{hour},
+\code{d}, \code{day} or \code{week}; otherwise it ignores the unit and reads the value
+in seconds. Error for a unit Atlantis ignores, e.g. \code{days}, \code{Day} or
+\code{year}, or a unit that ends a line with Windows line endings (Atlantis
+reads the carriage return as part of it); note listing the units it
+converts;
+\item \code{"unknown"} (note): keys missing from the run template.
 }
 
 And the checks across files, which need \code{bio} (and \code{force} for the last

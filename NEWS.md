@@ -1,3 +1,21 @@
+# atlantio (development version)
+
+* `check_prm()` and `check_run()` read the time units of the run file as
+  Atlantis does. Atlantis converts a time with its unit only if the unit is
+  spelled exactly as one of its units (`s`, `min`, `hour`, `day`, `week`,
+  ...); otherwise it ignores the unit and reads the value in seconds, e.g.
+  for `tstop 100 days`, `tstop 100 Day`, `tstop 2 year`, or a unit that ends
+  a line with Windows (CRLF) line endings. `check_prm()` reports these units
+  as errors (it noted them as converted), and `check_run()` checks the run
+  against the seconds Atlantis reads (it converted these units). The
+  `"units"` check now covers only the times of the run file, the only values
+  Atlantis converts.
+* `generate_file()` writes the time step as `dt 12 hour`. It wrote
+  `dt 12 Hours`, which Atlantis reads as 12 seconds.
+* `read_prm()` also keeps the units `us`, `usec`, `ms` and `msec` after a
+  value. It read them as comments, so `write_prm()` wrote the value without
+  its unit.
+
 # atlantio 0.4.0
 
 * `atlantis_load_files()` says why a file cannot be read. It said that the

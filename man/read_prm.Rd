@@ -43,11 +43,12 @@ The key differences between \code{read_prm()} and the Atlantis parser are:
 \itemize{
 \item Comments: lines starting with # are not skipped, they are collected and stored as
 an attributes to the list elements
-\item Units: Atlantis converts a time unit after a value (e.g. \verb{tstop 365 day})
-to seconds; \code{read_prm()} keeps the number and the unit, as the attribute
-\code{unit}, which \code{\link[=write_prm]{write_prm()}} writes back. A number without unit is read in
-seconds, so change values element-wise (\code{x$tstop[1] <- 730}): replacing
-the element (\code{x$tstop <- 730}) drops its attributes.
+\item Units: Atlantis converts a time of the run file to seconds with the unit
+after it (e.g. \verb{tstop 365 day}), if it knows the unit as written (see
+\code{\link[=check_prm]{check_prm()}}); \code{read_prm()} keeps the number and the unit, as the
+attribute \code{unit}, which \code{\link[=write_prm]{write_prm()}} writes back. A number without unit
+is read in seconds, so change values element-wise (\code{x$tstop[1] <- 730}):
+replacing the element (\code{x$tstop <- 730}) drops its attributes.
 \item Array padding: in the original parser, if fewer values than declared size,
 the last value is repeated to fill. \code{read_prm()} will throw an error instead.
 }

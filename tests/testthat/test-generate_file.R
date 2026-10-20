@@ -14,6 +14,8 @@ test_that("generate_file() creates run parameter file with default settings", {
   expect_match(content[4], "^track_contaminants 0")
   expect_match(content[4], "# Flag to turn on tracking of contaminants")
   expect_match(content[57], "^init_scalar <<TO_EDIT>>")
+  # a unit Atlantis knows as written
+  expect_match(grep("^dt ", content, value = TRUE), "^dt 12 hour ")
 
   result <- generate_file(x = "run", file = temp_file, description = FALSE)
   content <- readLines(temp_file)

@@ -21,6 +21,11 @@
   `toutinc`, as Atlantis does; it read the last.
 * `generate_file()` writes the time step as `dt 12 hour`. It wrote
   `dt 12 Hours`, which Atlantis reads as 12 seconds.
+* `input_files` matches the `Atlantis` class: the detailed diet output is
+  named `diet_detailed`, as the property (it was `detail_diet`, so
+  `atlantis_load_files()` never recorded its path), the age biomass outputs
+  have the names Atlantis writes (`AgeBiomIndx.txt`, `AnnualAgeBiomIndx.txt`),
+  and the physics and forcing files have a row.
 * `read_prm()` also keeps the units `us`, `usec`, `ms` and `msec` after a
   value. It read them as comments, so `write_prm()` wrote the value without
   its unit.

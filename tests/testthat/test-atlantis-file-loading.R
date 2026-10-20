@@ -137,3 +137,22 @@ test_that("atlantis_load_files() loads diet output", {
     diet_file
   )
 })
+
+test_that("atlantis_load_files() records the path of detailed diet output", {
+  fl <- file.path(withr::local_tempdir(), "outputDetailedDietCheck.txt")
+  writeLines(
+    c(
+      "Time Predator Cohort Box Layer Stock Updated WAE YPH",
+      "0 WAE 1 0 1 0 0 0.1 0.2"
+    ),
+    fl
+  )
+  atlantis_obj <- suppressMessages(new_atlantis() |> atlantis_load_files(fl))
+  expect_s3_class(atlantis_obj@diet_detailed, "data.frame")
+  expect_identical(
+    atlantis_obj@file_paths$path[
+      atlantis_obj@file_paths$name == "diet_detailed"
+    ],
+    fl
+  )
+})

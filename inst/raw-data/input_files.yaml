@@ -11,12 +11,12 @@
   fext: ".prm"
 
 - name: "biology"
-  desc: "Biological characteritics and biological interactions"
+  desc: "Biological characteristics and biological interactions"
   type: input
   fext: ".prm"
 
 - name: "group"
-  desc: "List of functional group and their key charcateristics"
+  desc: "List of functional groups and their key characteristics"
   type: input
   fext: ".csv"
 
@@ -32,6 +32,16 @@
 
 - name: "harvest"
   desc: "Parameter for the harvest submodule"
+  type: input
+  fext: ".prm"
+
+- name: "physics"
+  desc: "Physical parameters (mixing, transport, sediment)"
+  type: input
+  fext: ".prm"
+
+- name: "forcing"
+  desc: "Forcing files (hydrodynamics, temperature, salinity, ...)"
   type: input
   fext: ".prm"
 
@@ -61,12 +71,12 @@
 - name: "biomass_age"
   desc: "Snapshot of biomass at age"
   type: output
-  fext: "AgeBiomass.txt"
+  fext: "AgeBiomIndx.txt"
 
 - name: "biomass_age_annual"
   desc: "Snapshots of biomasses per age annual"
   type: output
-  fext: "AgeBiomassAnnual.txt"
+  fext: "AnnualAgeBiomIndx.txt"
 
 
 ## DIET OUTPUT
@@ -76,7 +86,7 @@
   type: output
   fext: "DietCheck.txt"
 
-- name: "detail_diet"
+- name: "diet_detailed"
   desc: "Detailed diet check"
   type: output
   fext: "DetailedDietCheck.txt"

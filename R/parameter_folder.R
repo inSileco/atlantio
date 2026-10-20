@@ -36,8 +36,12 @@
 #' mod@biology$mum_GZS
 #'
 #' @export
-apply_parameters <- function(x, calib_table, par,
-                             scale = c("calibration", "model")) {
+apply_parameters <- function(
+  x,
+  calib_table,
+  par,
+  scale = c("calibration", "model")
+) {
   scale <- match.arg(scale)
   if (!S7::S7_inherits(x, Atlantis)) {
     cli::cli_abort("{.arg x} must be an {.cls Atlantis} object.")
@@ -93,8 +97,11 @@ apply_parameters <- function(x, calib_table, par,
 #' The run and biology parameter files are written from their source file
 #' with only the values that differ from it changed, token by token: the
 #' comments, the units (e.g. `tstop 365 day`), the layout and the line
-#' endings are kept. The other input files loaded (geometry, groups, initial
-#' conditions, ...) are copied. Every file keeps the name of its source.
+#' endings are kept. A key given several times in its file is not changed:
+#' Atlantis may read another occurrence than the one changed (see
+#' [check_prm()]), so the function aborts. The other input files loaded
+#' (geometry, groups, initial conditions, ...) are copied. Every file keeps
+#' the name of its source.
 #'
 #' Files that are not loaded in `x`, such as the physics and forcing
 #' parameter files or the forcing time series, come from `from`: a folder
@@ -203,8 +210,12 @@ write_parameter_folder <- function(x, dir, from = NULL, overwrite = FALSE) {
 #'
 #' @export
 compare_prm <- function(x, y) {
-  if (is.character(x)) x <- read_prm(x)
-  if (is.character(y)) y <- read_prm(y)
+  if (is.character(x)) {
+    x <- read_prm(x)
+  }
+  if (is.character(y)) {
+    y <- read_prm(y)
+  }
   keys <- union(names(x), names(y))
   out <- lapply(keys, \(k) {
     a <- x[[k]]
@@ -268,19 +279,21 @@ patch_prm <- function(file, prm, out) {
   is_key <- grepl("^[A-Za-z]", first)
   changes <- list()
   for (nm in names(prm)) {
-    li <- which(is_key & first == nm)
-    if (!length(li)) {
+    occ <- which(is_key & first == nm)
+    if (!length(occ)) {
       cli::cli_abort("{.field {nm}} not found in {.path {file}}.")
     }
-    # the last occurrence, as read_prm() and Atlantis use
-    li <- li[length(li)]
+    # the last occurrence, as read_prm() reads it
+    li <- occ[length(occ)]
     v <- prm[[nm]]
     if (is.null(attr(v, "array_length"))) {
       at <- li
       idx <- 2L
     } else {
       at <- li + 1L
-      while (at <= length(code) && !nzchar(trimws(code[at]))) at <- at + 1L
+      while (at <= length(code) && !nzchar(trimws(code[at]))) {
+        at <- at + 1L
+      }
       idx <- seq_along(v)
     }
     old <- regmatches(code[at], tok[at])[[1]][idx]
@@ -297,7 +310,16 @@ patch_prm <- function(file, prm, out) {
       old != new,
       num_old != num_new
     ))
-    if (!length(diff)) next
+    if (!length(diff)) {
+      next
+    }
+    if (length(occ) > 1) {
+      cli::cli_abort(
+        "{.field {nm}} is given {length(occ)} times in {.path {file}} (lines
+        {occ}): Atlantis may not read the occurrence changed, remove the
+        duplicates first."
+      )
+    }
     lines[at] <- replace_tokens(lines[at], tok[[at]], idx[diff], new[diff])
     changes[[length(changes) + 1]] <- data.frame(
       file = basename(out),

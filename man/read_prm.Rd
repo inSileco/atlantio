@@ -54,8 +54,10 @@ the last value is repeated to fill. \code{read_prm()} will throw an error instea
 }
 
 To be consistent with the Atlantis parser, lines with more than 4000
-characters (a lot, even for vectors) throw an error. Also, key duplicates will
-trigger warnings and the
+characters (a lot, even for vectors) throw an error. A key given several
+times triggers a warning, and its last occurrence is kept; Atlantis may
+read another one, e.g. the first for the keys of the run file (see
+\code{\link[=check_prm]{check_prm()}}).
 }
 \section{Functions}{
 \itemize{

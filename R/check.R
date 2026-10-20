@@ -137,7 +137,10 @@ check_init <- function(path, groups = NULL, ratio = 100) {
 #' * `"count"` (error): an array whose declared length differs from the
 #'   number of values on the next line; Atlantis pads with the last value or
 #'   ignores the extra values, [read_prm()] aborts;
-#' * `"duplicate"` (warning): a key given twice;
+#' * `"duplicate"`: a key given twice. In the run file, an error: Atlantis
+#'   reads the first occurrence (the last for the contaminant names and
+#'   units), while [read_prm()] keeps the last. In the other files, a
+#'   warning: Atlantis may also read another occurrence than [read_prm()];
 #' * `"line_endings"` (warning): Windows (CRLF) line endings;
 #' * `"tabs"` (note): tabs as separators.
 #'
@@ -222,8 +225,9 @@ check_prm <- function(bio = NULL, run = NULL, force = NULL) {
 #' * `"unreadable"` (error): the main output cannot be opened;
 #' * `"incomplete"` (error): the main output stops before `tstop`.
 #'
-#' `tstop` and `toutinc` are read as Atlantis reads them: in their unit if
-#' Atlantis knows it as written, in seconds otherwise. `tstop 365 day` is 365
+#' `tstop` and `toutinc` are read as Atlantis reads them: their first
+#' occurrence, in their unit if Atlantis knows it as written, in seconds
+#' otherwise. `tstop 365 day` is 365
 #' days, but `tstop 365 days` and `tstop 365` are 365 seconds (see the
 #' `"units"` check of [check_prm()]).
 #'
@@ -721,7 +725,8 @@ prm_seconds <- function(path, key, default = NULL) {
     }
     cli::cli_abort("{.field {key}} not found in {.path {path}}.")
   }
-  k <- hit[length(hit)]
+  # Atlantis reads the first occurrence of a key of the run file
+  k <- hit[1]
   value <- suppressWarnings(as.numeric(scan$value[k]))
   if (is.na(value)) {
     cli::cli_abort(
@@ -775,13 +780,23 @@ check_prm_file <- function(file, scan, type) {
     )
   }
   for (key in unique(scan$key[duplicated(scan$key)])) {
+    # Atlantis reads the first occurrence of a key of the run file
+    # (Util_XML_Parse_Create_Node() in atUtilXML.c), but the last of the
+    # contaminant arrays (Parse_File() in atCreateXML.c)
+    first <- type == "run" && !grepl("^contaminant_(names|units)", key)
+    why <- if (first) {
+      "Atlantis reads the first, read_prm() the last"
+    } else {
+      "Atlantis may read another occurrence than read_prm(), which keeps the
+      last"
+    }
     findings[[length(findings) + 1]] <- check_finding(
       file,
       "duplicate",
-      "warning",
+      if (first) "error" else "warning",
       key,
       "given {sum(scan$key == key)} times (lines
-      {scan$line[scan$key == key]})."
+      {scan$line[scan$key == key]}): {why}."
     )
   }
   if (attr(scan, "crlf")) {

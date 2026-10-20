@@ -40,7 +40,7 @@ test_that("read_prm() warns when it must", {
   expect_warning(
     res <- system.file("mock", "prm", "partial_w2.prm", package = "atlantio") |>
       read_prm(),
-    "Duplicated key `flag_ok`, using the last occurrence."
+    "Duplicated key `flag_ok`, using the last occurrence; Atlantis may read"
   )
   expect_identical(res, list(flag_ok = 0))
 })

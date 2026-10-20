@@ -5,8 +5,9 @@
   from the template `inst/run_scripts/script.sh` (with the path to the
   binary if it is not on the PATH) and creates its output folder.
   `run_atlantis()` runs it, directly or in a Docker container (as the
-  current user, with other folders mounted read-only), with a time limit,
-  and checks with `check_run()` that it completed: Atlantis exits with
+  current user, with other folders mounted read-only), with a time limit
+  (a container that reaches it is removed, as killing the Docker client
+  leaves it running), and checks with `check_run()` that it completed: Atlantis exits with
   status 0 after a fatal error. Its result adds `check` and `complete` to
   that of `processx::run()`. The calibration article uses them instead of
   its own copies.

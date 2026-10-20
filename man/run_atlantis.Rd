@@ -44,7 +44,8 @@ output tells a completed run from a crashed one.
 \details{
 With Docker, the run directory is mounted as the working directory
 \verb{/model} of the container and the container runs as the current user, so
-that the files it writes can be removed by the R session.
+that the files it writes can be removed by the R session. A container
+still running at the time limit is removed.
 }
 \examples{
 \dontrun{

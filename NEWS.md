@@ -17,7 +17,8 @@
   loaded, node size and colour given by the initial biomass and the final /
   initial ratio. `highlight` takes a table of links (`prey`, `predator`,
   `colour`, optionally `pathway`) to highlight; links absent from the food
-  web are drawn dashed.
+  web are drawn dashed. `focus` restricts the plot to some groups, the groups
+  they interact with and the links involving them.
 * `check_prm()` and `check_run()` read a parameter file without keys (empty,
   or comments only). They failed with "arguments imply differing number of
   rows"; `check_run()` now says that `tstop` is not found.

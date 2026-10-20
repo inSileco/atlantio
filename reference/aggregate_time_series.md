@@ -2,13 +2,13 @@
 
 Reduces a tracer table with one row per group x age x box x layer x time
 (the table of
-[`create_time_series_biomass()`](create_time_series_biomass.md)) to one
-row per group x age x time: `Nums` summed, `StructN` and `ResN` as
-Nums-weighted means, i.e. the condition of the average individual. Empty
-cells do not count, and a cohort with no individual left gets 0, so a
-collapse also shows in its condition. A `weight` column is summed and a
-`units` column kept. A table without `box` or `layer` column is returned
-as is.
+[`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md))
+to one row per group x age x time: `Nums` summed, `StructN` and `ResN`
+as Nums-weighted means, i.e. the condition of the average individual.
+Empty cells do not count, and a cohort with no individual left gets 0,
+so a collapse also shows in its condition. A `weight` column is summed
+and a `units` column kept. A table without `box` or `layer` column is
+returned as is.
 
 ## Usage
 

@@ -2,7 +2,7 @@
 
 Returns the list of Atlantis parameters bundled with the package for a
 given Atlantis version. Supported versions are listed in
-[atlantis_supported_versions](atlantis_supported_versions.md).
+[atlantis_supported_versions](https://insileco.io/atlantio/reference/atlantis_supported_versions.md).
 
 ## Usage
 
@@ -16,16 +16,19 @@ list_atlantis_parameters(version = "3-6722")
 
   Atlantis version, formatted as `"<major_version>-<svn_revision>"`
   (e.g. `"3-6722"`). See
-  [atlantis_supported_versions](atlantis_supported_versions.md) for the
-  list of supported versions.
+  [atlantis_supported_versions](https://insileco.io/atlantio/reference/atlantis_supported_versions.md)
+  for the list of supported versions.
 
 ## Value
 
-A list of 2 elements:
+A list of 3 elements:
 
 - `meta`: metadata about the Atlantis code base the parameters were
   extracted from (`atlantis_source`, `atlantis_version`, `bm_struct`)
   and `files`, the list of parameter files declaring the parameters;
+
+- `abbreviations`: the placeholders of the parameter names (e.g. `GRP`
+  in `mum_<GRP>`) and what they stand for;
 
 - `parameters`: a list where every element describes one parameter with
   the following fields: `name`, `description`, `source_file`,

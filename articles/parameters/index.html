@@ -167,8 +167,8 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]$conditional_on</span></span>
 <span><span class="co">#&gt; [1] "bm-&gt;include_atmosphere"</span></span></code></pre></div>
-<p>The table below display the entire set of parameters, note that the
-followwing abbreviations are used: - <grp>: groups abbreviation - <f>:
+<p>The table below displays the entire set of parameters; note that the
+following abbreviations are used: - <grp>: groups abbreviation - <f>:
 fisheries - <coh>: cohort - <movegroupcode>: move group code -
 <tracername>: tracer name</tracername></movegroupcode></coh></f></grp></p>
 <div class="section level2">
@@ -10725,10 +10725,11 @@ Dimension
 <tbody>
 <tr>
 <td style="text-align:left;">
-ecotest
+flagecon_on
 </td>
 <td style="text-align:left;">
-Ecology test/diagnostic verbosity flag
+Flag showing whether want economics loaded and submodel run (1) or not
+(0)
 </td>
 <td style="text-align:left;">
 </td>
@@ -10736,7 +10737,7 @@ Ecology test/diagnostic verbosity flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10744,10 +10745,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-availflag
+flag_fisheries_on
 </td>
 <td style="text-align:left;">
-Switch controlling how prey availability is interpreted
+Flag showing whether want fisheries loaded and submodel run (1) or not
+(0)
 </td>
 <td style="text-align:left;">
 </td>
@@ -10755,7 +10757,7 @@ Switch controlling how prey availability is interpreted
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10763,10 +10765,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagrandom
+flag_migration_on
 </td>
 <td style="text-align:left;">
-Enable stochastic/random processes
+Flag indicating whether any migrations active
 </td>
 <td style="text-align:left;">
 </td>
@@ -10774,7 +10776,7 @@ Enable stochastic/random processes
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10782,10 +10784,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-readin_popratio
+flag_skip_biol
 </td>
 <td style="text-align:left;">
-Read population ratio (stock) data flag
+Flag showing whether want biological model run (1) or not (0 - only used
+when debugging fisheries)
 </td>
 <td style="text-align:left;">
 </td>
@@ -10793,7 +10796,7 @@ Read population ratio (stock) data flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10801,10 +10804,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagresp
+flag_skip_phys
 </td>
 <td style="text-align:left;">
-Respiration submodel flag
+Flag showing whether want physics model run (0) or not (1 - only used
+when debugging fisheries)
 </td>
 <td style="text-align:left;">
 </td>
@@ -10812,7 +10816,7 @@ Respiration submodel flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10820,10 +10824,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagavgmig
+check_dups
 </td>
 <td style="text-align:left;">
-Average migration flag
+1 to check for duplicates in your prm files (very slow; turn off once
+duplicates removed)
 </td>
 <td style="text-align:left;">
 </td>
@@ -10831,7 +10836,7 @@ Average migration flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -10839,227 +10844,18 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagbactstim
+title
 </td>
 <td style="text-align:left;">
-Bacterial stimulation flag
+Free-text title/description of the model run scenario
 </td>
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagtrackpops
-</td>
-<td style="text-align:left;">
-Track populations flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagseason
-</td>
-<td style="text-align:left;">
-Seasonal forcing flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flaglight
-</td>
-<td style="text-align:left;">
-Light limitation model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flaglightopt
-</td>
-<td style="text-align:left;">
-Light optimisation option
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lim_sun_hours
-</td>
-<td style="text-align:left;">
-Limit primary production to daylight hours flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagmodeltemp
-</td>
-<td style="text-align:left;">
-Temperature dependence model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagq10
-</td>
-<td style="text-align:left;">
-Global Q10 temperature scaling flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-O2case
-</td>
-<td style="text-align:left;">
-Oxygen limitation case selector
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagnut
-</td>
-<td style="text-align:left;">
-Nutrient limitation flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagmicro
-</td>
-<td style="text-align:left;">
-Microbial loop flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagtempchange
-</td>
-<td style="text-align:left;">
-Apply prescribed temperature change flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
+string
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11067,18 +10863,19 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagsaltchange
+dt
 </td>
 <td style="text-align:left;">
-Apply prescribed salinity change flag
+Model time step (carries a time unit token, e.g. hour)
 </td>
 <td style="text-align:left;">
+time (e.g. hour/day; stored in seconds)
 </td>
 <td style="text-align:left;">
-int
+double
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11086,18 +10883,19 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagpHchange
+tstop
 </td>
 <td style="text-align:left;">
-Apply prescribed pH change flag
+Stop time after the given period (time unit token, e.g. day)
 </td>
 <td style="text-align:left;">
+time (e.g. day; stored in seconds)
 </td>
 <td style="text-align:left;">
-int
+double
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11105,10 +10903,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagstarve
+flagIsEstuary
 </td>
 <td style="text-align:left;">
-Starvation mortality flag
+Flag to indicate if the model is estuary (requires a sediment tracer in
+initial conditions)
 </td>
 <td style="text-align:left;">
 </td>
@@ -11116,7 +10915,7 @@ Starvation mortality flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11124,10 +10923,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagdegrade
+flagIsPolar
 </td>
 <td style="text-align:left;">
-Detritus degradation flag
+Flag indicating polar - so there will be 24 hrs of daylight/night
+seasonally
 </td>
 <td style="text-align:left;">
 </td>
@@ -11135,7 +10935,7 @@ Detritus degradation flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11143,10 +10943,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagroc
+flagpassivetracer
 </td>
 <td style="text-align:left;">
-Rate-of-change effects flag
+Flag indicating whether passive tracers of advection need to be active
+in the model
 </td>
 <td style="text-align:left;">
 </td>
@@ -11154,7 +10955,7 @@ Rate-of-change effects flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11162,10 +10963,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flaghomog_sp
+flagAllowLand
 </td>
 <td style="text-align:left;">
-Homogeneous spatial distribution flag
+Flag allowing terrestrial/land processes
 </td>
 <td style="text-align:left;">
 </td>
@@ -11173,7 +10974,7 @@ Homogeneous spatial distribution flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11181,10 +10982,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagagestruct
+flag_pollutant_impacts
 </td>
 <td style="text-align:left;">
-Age structure global flag
+Flag enabling pollutant impacts
 </td>
 <td style="text-align:left;">
 </td>
@@ -11192,7 +10993,7 @@ Age structure global flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11200,10 +11001,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagsenesce
+fishmove
 </td>
 <td style="text-align:left;">
-Senescence mortality flag
+Set to 0 to turn vertebrate movement off for debugging purposes
 </td>
 <td style="text-align:left;">
 </td>
@@ -11211,7 +11012,7 @@ Senescence mortality flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11219,10 +11020,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flagtsforcerecruit
+flaghemisphere
 </td>
 <td style="text-align:left;">
-Time-series forced recruitment flag
+Flag for hemisphere model is in (0 = southern; 1 = northern)
 </td>
 <td style="text-align:left;">
 </td>
@@ -11230,7 +11031,7 @@ Time-series forced recruitment flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11238,10 +11039,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_modify_KWSR
+trackAtomicRatio
 </td>
 <td style="text-align:left;">
-Modify weight-at-spawn ratio flag
+Flag to track additional atomic-ratio tracers (N:C, N:P)
 </td>
 <td style="text-align:left;">
 </td>
@@ -11249,7 +11050,7 @@ Modify weight-at-spawn ratio flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11257,10 +11058,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_extpop_growth_option
+flagratio_warn
 </td>
 <td style="text-align:left;">
-External population growth option
+Flag to issue warnings related to atomic-ratio tracking
 </td>
 <td style="text-align:left;">
 </td>
@@ -11268,7 +11069,7 @@ External population growth option
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11276,10 +11077,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-juv_transition_thresh
+N_to_C
 </td>
 <td style="text-align:left;">
-Juvenile-to-adult size transition threshold
+Nitrogen-to-carbon atomic ratio used when tracking atomic ratios
 </td>
 <td style="text-align:left;">
 </td>
@@ -11287,7 +11088,7 @@ Juvenile-to-adult size transition threshold
 double
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11295,86 +11096,30 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-mat_transition_thresh
+N_to_P
 </td>
 <td style="text-align:left;">
-Maturity transition threshold
+Nitrogen-to-phosphorus atomic ratio used when tracking atomic ratios
 </td>
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
 double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-norm_larval_distrib
-</td>
-<td style="text-align:left;">
-Normalise larval distribution flag
 </td>
 <td style="text-align:left;">
+run_prm
 </td>
 <td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-larvae_connect_only
-</td>
-<td style="text-align:left;">
-Larvae connectivity-only flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-enviro_independ_larvae
-</td>
-<td style="text-align:left;">
-Environment-independent larvae flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
 scalar
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_recruit_effect
+external_populations
 </td>
 <td style="text-align:left;">
-Recruitment environmental effect flag
+Flag for running a full population model when groups are outside the
+model domain (0 = no, 1 = yes)
 </td>
 <td style="text-align:left;">
 </td>
@@ -11382,7 +11127,7 @@ Recruitment environmental effect flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11390,10 +11135,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_macro_model
+flag_multiyr_migs
 </td>
 <td style="text-align:left;">
-Macrophyte/seagrass model flag
+Flag indicating whether multi-year (&gt; 1 yr long) migrations need to
+be included
 </td>
 <td style="text-align:left;">
 </td>
@@ -11401,7 +11147,7 @@ Macrophyte/seagrass model flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11409,10 +11155,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_benthos_sediment_link
+track_rugosity_arag
 </td>
 <td style="text-align:left;">
-Benthos-sediment coupling flag
+Flag indicating that rugosity and aragonite saturation to be tracked -
+needed for coral
 </td>
 <td style="text-align:left;">
 </td>
@@ -11420,7 +11167,7 @@ Benthos-sediment coupling flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11428,48 +11175,29 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_competing_epiff
+track_pH
 </td>
 <td style="text-align:left;">
-Competing epibenthic filter feeders flag
+Flag indicating that want to track pH
 </td>
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
 int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-max_available_habitat
-</td>
-<td style="text-align:left;">
-Maximum available habitat fraction
 </td>
 <td style="text-align:left;">
+run_prm
 </td>
 <td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
 scalar
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_invert_biohab
+flag_use_deltaH
 </td>
 <td style="text-align:left;">
-Invertebrate biogenic habitat flag
+Flag controlling use of delta-H (enthalpy) term
 </td>
 <td style="text-align:left;">
 </td>
@@ -11477,7 +11205,7 @@ Invertebrate biogenic habitat flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11485,10 +11213,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_olddiet
+mirror_invalid
 </td>
 <td style="text-align:left;">
-Use legacy diet handling flag
+Flag controlling mirroring/handling of invalid box values
 </td>
 <td style="text-align:left;">
 </td>
@@ -11496,7 +11224,7 @@ Use legacy diet handling flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11504,10 +11232,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_fine_ontogenetic_diets
+flag_replicated_old
 </td>
 <td style="text-align:left;">
-Fine-grained per-age diet matrices flag
+Legacy flag to replicate old code behaviour
 </td>
 <td style="text-align:left;">
 </td>
@@ -11515,7 +11243,7 @@ Fine-grained per-age diet matrices flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11523,10 +11251,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-UseHardFeedingWindow
+flag_replicated_old_PPmort
 </td>
 <td style="text-align:left;">
-Use hard (step) feeding window flag
+Legacy flag to replicate old primary-producer mortality behaviour
 </td>
 <td style="text-align:left;">
 </td>
@@ -11534,7 +11262,7 @@ Use hard (step) feeding window flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11542,10 +11270,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-UseBiLogisticFeedingWindow
+flag_old_embryo_init
 </td>
 <td style="text-align:left;">
-Use bi-logistic feeding window flag
+Allows legacy models to have the same starting conditions under the new
+code as in older versions
 </td>
 <td style="text-align:left;">
 </td>
@@ -11553,7 +11282,7 @@ Use bi-logistic feeding window flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11561,10 +11290,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_satiation
+flag_replicate_old_calendar
 </td>
 <td style="text-align:left;">
-Predator satiation flag
+Allows legacy models to replicate environmental influence on recruit
+distribution in newer code
 </td>
 <td style="text-align:left;">
 </td>
@@ -11572,7 +11302,7 @@ Predator satiation flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11580,10 +11310,11 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_shrinkfat
+flag_sanity_check
 </td>
 <td style="text-align:left;">
-Allow shrinking/fat loss flag
+Whether the code making sure overlapping of recruits cannot add
+inappropriately is enabled
 </td>
 <td style="text-align:left;">
 </td>
@@ -11591,7 +11322,7 @@ Allow shrinking/fat loss flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11599,10 +11330,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_predratiodepend
+store_aggregate_yoy
 </td>
 <td style="text-align:left;">
-Ratio-dependent predation flag
+Flag to store aggregate young-of-year (YOY) values
 </td>
 <td style="text-align:left;">
 </td>
@@ -11610,7 +11341,7 @@ Ratio-dependent predation flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11618,10 +11349,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_dynamicXRS
+store_mig_array
 </td>
 <td style="text-align:left;">
-Dynamic reserve/structural ratio flag
+Flag to store the migration array
 </td>
 <td style="text-align:left;">
 </td>
@@ -11629,7 +11360,7 @@ Dynamic reserve/structural ratio flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11637,10 +11368,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_repcostSpawn
+flag_contam_sanity_check
 </td>
 <td style="text-align:left;">
-Reproduction cost at spawning flag
+Flag enabling contaminant sanity checking
 </td>
 <td style="text-align:left;">
 </td>
@@ -11648,7 +11379,7 @@ Reproduction cost at spawning flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
@@ -11656,10 +11387,10 @@ scalar
 </tr>
 <tr>
 <td style="text-align:left;">
-flag_lengthSN
+num_contaminants
 </td>
 <td style="text-align:left;">
-Length from structural N flag
+Number of contaminants tracked in the model
 </td>
 <td style="text-align:left;">
 </td>
@@ -11667,3300 +11398,26 @@ Length from structural N flag
 int
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-XRS_cap
-</td>
-<td style="text-align:left;">
-Cap on reserve-to-structural ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_rel_cover
-</td>
-<td style="text-align:left;">
-Relative cover model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_report_water_detritus
-</td>
-<td style="text-align:left;">
-Report water-column detritus flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_refuge_model
-</td>
-<td style="text-align:left;">
-Prey refuge model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_rugosity_model
-</td>
-<td style="text-align:left;">
-Rugosity model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_georugosity
-</td>
-<td style="text-align:left;">
-Geological (background) rugosity flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RugCover_Coefft
-</td>
-<td style="text-align:left;">
-Rugosity-cover relationship coefficient
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RugCover_Const
-</td>
-<td style="text-align:left;">
-Rugosity-cover relationship constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RugCover_Cap
-</td>
-<td style="text-align:left;">
-Rugosity-cover relationship cap
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-min_rugosity
-</td>
-<td style="text-align:left;">
-Minimum rugosity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-max_rugosity
-</td>
-<td style="text-align:left;">
-Maximum rugosity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rugosity_const
-</td>
-<td style="text-align:left;">
-Rugosity baseline constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rugosity_bozec_a
-</td>
-<td style="text-align:left;">
-Bozec rugosity model coefficient a
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rugosity_bozec_b
-</td>
-<td style="text-align:left;">
-Bozec rugosity model coefficient b
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rugosity_bozec_c
-</td>
-<td style="text-align:left;">
-Bozec rugosity model coefficient c
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rugosity_bozec_d
-</td>
-<td style="text-align:left;">
-Bozec rugosity model coefficient d
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagmodelpH
-</td>
-<td style="text-align:left;">
-pH dynamics model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_sensitivity_model
-</td>
-<td style="text-align:left;">
-pH sensitivity model selector
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagPHmortcase
-</td>
-<td style="text-align:left;">
-pH mortality case selector
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_surface_depth
-</td>
-<td style="text-align:left;">
-Surface pH layer depth boundary
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_mid_depth
-</td>
-<td style="text-align:left;">
-Mid pH layer depth boundary
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_surface_coefft_T
-</td>
-<td style="text-align:left;">
-Surface pH regression coefficient on temperature
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_surface_coefft_S
-</td>
-<td style="text-align:left;">
-Surface pH regression coefficient on salinity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_surface_coefft_O
-</td>
-<td style="text-align:left;">
-Surface pH regression coefficient on oxygen
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_surface_const
-</td>
-<td style="text-align:left;">
-Surface pH regression constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_mid_coefft_T
-</td>
-<td style="text-align:left;">
-Mid-layer pH regression coefficient on temperature
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_mid_coefft_S
-</td>
-<td style="text-align:left;">
-Mid-layer pH regression coefficient on salinity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_mid_coefft_O
-</td>
-<td style="text-align:left;">
-Mid-layer pH regression coefficient on oxygen
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_mid_const
-</td>
-<td style="text-align:left;">
-Mid-layer pH regression constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_deep_coefft_T
-</td>
-<td style="text-align:left;">
-Deep-layer pH regression coefficient on temperature
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_deep_coefft_S
-</td>
-<td style="text-align:left;">
-Deep-layer pH regression coefficient on salinity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_deep_coefft_O
-</td>
-<td style="text-align:left;">
-Deep-layer pH regression coefficient on oxygen
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pH_deep_const
-</td>
-<td style="text-align:left;">
-Deep-layer pH regression constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagmodelArag
-</td>
-<td style="text-align:left;">
-Aragonite saturation model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_max_num_DHW
-</td>
-<td style="text-align:left;">
-Max number of degree heating weeks records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Karag_A
-</td>
-<td style="text-align:left;">
-Aragonite regression coefficient A
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Karag_B
-</td>
-<td style="text-align:left;">
-Aragonite regression coefficient B
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Karag_C
-</td>
-<td style="text-align:left;">
-Aragonite regression coefficient C
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Karag_pH
-</td>
-<td style="text-align:left;">
-Aragonite regression coefficient on pH
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Kca_const
-</td>
-<td style="text-align:left;">
-Calcium constant for calcification
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_Ks
-</td>
-<td style="text-align:left;">
-Calcification saturation half-constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ksmother_coefft
-</td>
-<td style="text-align:left;">
-Smothering coefficient
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ksmother_const
-</td>
-<td style="text-align:left;">
-Smothering constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pads_r_t0
-</td>
-<td style="text-align:left;">
-Phosphate adsorption rate at reference temp
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pads_K
-</td>
-<td style="text-align:left;">
-Phosphate adsorption half-saturation
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pads_KO
-</td>
-<td style="text-align:left;">
-Phosphate adsorption oxygen dependence
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_immob_PIP_t0
-</td>
-<td style="text-align:left;">
-Particulate inorganic P immobilisation rate at reference temp
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Enviro_turb
-</td>
-<td style="text-align:left;">
-Environmental turbidity switch
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_TUR
-</td>
-<td style="text-align:left;">
-Turbidity half-saturation
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_TUR_DEP
-</td>
-<td style="text-align:left;">
-Turbidity depth dependence
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_MAX_TUR
-</td>
-<td style="text-align:left;">
-Maximum turbidity
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_IRR
-</td>
-<td style="text-align:left;">
-Irradiance half-saturation
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_MAX_IRR
-</td>
-<td style="text-align:left;">
-Maximum irradiance
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_MIN_IRR
-</td>
-<td style="text-align:left;">
-Minimum irradiance
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_DC_T15
-</td>
-<td style="text-align:left;">
-Labile detritus carbon breakdown rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_DL_T15
-</td>
-<td style="text-align:left;">
-Labile detritus breakdown rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_DR_T15
-</td>
-<td style="text-align:left;">
-Refractory detritus breakdown rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_DON_T15
-</td>
-<td style="text-align:left;">
-Dissolved organic N breakdown rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-r_DSi_T15
-</td>
-<td style="text-align:left;">
-Dissolved silica regeneration rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDR_DC
-</td>
-<td style="text-align:left;">
-Fraction of refractory detritus to DC
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDR_DL
-</td>
-<td style="text-align:left;">
-Fraction of refractory detritus to DL
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDON_D
-</td>
-<td style="text-align:left;">
-Fraction of detritus to DON
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-R_0_T15
-</td>
-<td style="text-align:left;">
-Base remineralisation rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-R_D_T15
-</td>
-<td style="text-align:left;">
-Detritus remineralisation rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Dmax
-</td>
-<td style="text-align:left;">
-Maximum depth for remineralisation
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_nit_T15
-</td>
-<td style="text-align:left;">
-Nitrification rate at 15C
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_conc
-</td>
-<td style="text-align:left;">
-Nitrification concentration half-saturation
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_NH_anad
-</td>
-<td style="text-align:left;">
-Proportion NH from anaerobic decomposition
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_ON
-</td>
-<td style="text-align:left;">
-Oxygen-to-nitrogen Redfield ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_CN
-</td>
-<td style="text-align:left;">
-Carbon-to-nitrogen Redfield ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_CHLN
-</td>
-<td style="text-align:left;">
-Chlorophyll-to-nitrogen ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_SiN
-</td>
-<td style="text-align:left;">
-Silica-to-nitrogen ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_FeN
-</td>
-<td style="text-align:left;">
-Iron-to-nitrogen ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_wetdry
-</td>
-<td style="text-align:left;">
-Wet/dry weight conversion factor
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_w_cdepth
-</td>
-<td style="text-align:left;">
-Light attenuation coefficient at critical depth
-</td>
-<td style="text-align:left;">
-m-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_w_depth
-</td>
-<td style="text-align:left;">
-Light attenuation coefficient with depth
-</td>
-<td style="text-align:left;">
-m-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_w_deep
-</td>
-<td style="text-align:left;">
-Deep-water light attenuation coefficient
-</td>
-<td style="text-align:left;">
-m-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_w_shallow
-</td>
-<td style="text-align:left;">
-Shallow-water light attenuation coefficient
-</td>
-<td style="text-align:left;">
-m-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_PN
-</td>
-<td style="text-align:left;">
-Light attenuation per unit particulate N
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_DON
-</td>
-<td style="text-align:left;">
-Light attenuation per unit DON
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_DL
-</td>
-<td style="text-align:left;">
-Light attenuation per unit labile detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_IS
-</td>
-<td style="text-align:left;">
-Light attenuation per unit inorganic suspended matter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_SED
-</td>
-<td style="text-align:left;">
-Light attenuation per unit sediment
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KIOP_min
-</td>
-<td style="text-align:left;">
-Minimum I-optimal half-saturation
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KIOP_shift
-</td>
-<td style="text-align:left;">
-I-optimal shift parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KI_avail
-</td>
-<td style="text-align:left;">
-Irradiance availability scalar
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_addepth
-</td>
-<td style="text-align:left;">
-Additional depth offset for light calc
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-swr_scalar
-</td>
-<td style="text-align:left;">
-Shortwave radiation scaling factor
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-swr_const
-</td>
-<td style="text-align:left;">
-Shortwave radiation constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-swr_cos_coefft
-</td>
-<td style="text-align:left;">
-Shortwave radiation seasonal cosine coefficient
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-swr_cos_offset
-</td>
-<td style="text-align:left;">
-Shortwave radiation seasonal cosine offset
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-albedo_ice
-</td>
-<td style="text-align:left;">
-Ice albedo
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_bs
-</td>
-<td style="text-align:left;">
-Light attenuation under bare snow
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_bi
-</td>
-<td style="text-align:left;">
-Light attenuation under bare ice
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_rs
-</td>
-<td style="text-align:left;">
-Light attenuation under refrozen snow
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_ri
-</td>
-<td style="text-align:left;">
-Light attenuation under refrozen ice
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-R_bi
-</td>
-<td style="text-align:left;">
-Reflectance of bare ice
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_ice
-</td>
-<td style="text-align:left;">
-Light attenuation coefficient for ice
-</td>
-<td style="text-align:left;">
-m-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ka_star
-</td>
-<td style="text-align:left;">
-Specific light absorption coefficient
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tchange_max_num
-</td>
-<td style="text-align:left;">
-Number of prescribed temperature-change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Tchange
-</td>
-<td style="text-align:left;">
-Prescribed temperature-change time-series (value/time pairs)
-</td>
-<td style="text-align:left;">
-degC
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Schange_max_num
-</td>
-<td style="text-align:left;">
-Number of prescribed salinity-change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Schange
-</td>
-<td style="text-align:left;">
-Prescribed salinity-change time-series
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pHchange_max_num
-</td>
-<td style="text-align:left;">
-Number of prescribed pH-change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PHchange
-</td>
-<td style="text-align:left;">
-Prescribed pH-change time-series
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RTOP
-</td>
-<td style="text-align:left;">
-Top of refuge tolerance
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-K_Lc
-</td>
-<td style="text-align:left;">
-Critical light constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RelTol
-</td>
-<td style="text-align:left;">
-Relative numerical tolerance
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Flux_tol
-</td>
-<td style="text-align:left;">
-Flux tolerance threshold
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-min_pool
-</td>
-<td style="text-align:left;">
-Minimum tracer pool concentration
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-min_dens
-</td>
-<td style="text-align:left;">
-Minimum density threshold
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-min_channel_depth
-</td>
-<td style="text-align:left;">
-Minimum channel depth
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_do_var_express
-</td>
-<td style="text-align:left;">
-Variable expression flag (evolution)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_do_evolution
-</td>
-<td style="text-align:left;">
-Enable evolution module
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_bound_change
-</td>
-<td style="text-align:left;">
-Allow trait bound change flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_inheritance
-</td>
-<td style="text-align:left;">
-Trait inheritance flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_evolvar_capped
-</td>
-<td style="text-align:left;">
-Cap evolved variance flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-evol_stdev_range
-</td>
-<td style="text-align:left;">
-Evolutionary standard deviation range
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-max_rate_evol
-</td>
-<td style="text-align:left;">
-Maximum rate of evolutionary change
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_mult_grow_curves
-</td>
-<td style="text-align:left;">
-Multiple growth morph curves flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ActiveTrait/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group active evolutionary trait flags (one row of trait toggles per
-group)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-MB_wc
-</td>
-<td style="text-align:left;">
-Microbial biomass water-column reference
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eddy_scale
-</td>
-<td style="text-align:left;">
-Eddy diffusivity scaling for PP
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-XPB_DL
-</td>
-<td style="text-align:left;">
-Fraction of PB flux to labile detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-XBB_DL
-</td>
-<td style="text-align:left;">
-Fraction of BB flux to labile detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-XPB_DR
-</td>
-<td style="text-align:left;">
-Fraction of PB flux to refractory detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-XBB_DR
-</td>
-<td style="text-align:left;">
-Fraction of BB flux to refractory detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_PB
-</td>
-<td style="text-align:left;">
-Pelagic bacteria rate constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_BB
-</td>
-<td style="text-align:left;">
-Benthic bacteria rate constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flaghabdepend
-</td>
-<td style="text-align:left;">
-Habitat-dependent processes flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_move_habdepend
-</td>
-<td style="text-align:left;">
-Habitat-dependent movement flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagenviro_displace
-</td>
-<td style="text-align:left;">
-Environmental displacement flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagenviro_kill
-</td>
-<td style="text-align:left;">
-Environmental kill flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-REEFchange_max_num
-</td>
-<td style="text-align:left;">
-Number of reef-cover change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FLATchange_max_num
-</td>
-<td style="text-align:left;">
-Number of flat-cover change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOFTchange_max_num
-</td>
-<td style="text-align:left;">
-Number of soft-cover change records
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-REEFchange
-</td>
-<td style="text-align:left;">
-Reef-substrate cover change time-series
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FLATchange
-</td>
-<td style="text-align:left;">
-Flat-substrate cover change time-series
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SOFTchange
-</td>
-<td style="text-align:left;">
-Soft-substrate cover change time-series
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-timeseries
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Group_Habitat_Preference/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group habitat preference array over habitat types
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Group_Ice_Preference/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group ice habitat preference array
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Group_IceReprod_Preference/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group ice reproduction preference array
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-roc_wgt
-</td>
-<td style="text-align:left;">
-Rate-of-change weighting
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_roc_food
-</td>
-<td style="text-align:left;">
-Rate-of-change food scaling constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagtempdepend_move
-</td>
-<td style="text-align:left;">
-Temperature-dependent movement flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagtempdepend_reprod
-</td>
-<td style="text-align:left;">
-Temperature-dependent reproduction flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagsaltdepend
-</td>
-<td style="text-align:left;">
-Salinity-dependent processes flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagO2depend
-</td>
-<td style="text-align:left;">
-Oxygen-dependent processes flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagconstrain_epiwander
-</td>
-<td style="text-align:left;">
-Constrain epibenthic wandering flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-X_RS
-</td>
-<td style="text-align:left;">
-Reserve-to-structural target ratio
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Kthresh1
-</td>
-<td style="text-align:left;">
-Movement/feeding threshold constant 1 (read twice; two threshold slots)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KHTD
-</td>
-<td style="text-align:left;">
-Habitat threshold constant (deep)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KHTI
-</td>
-<td style="text-align:left;">
-Habitat threshold constant (intertidal)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SeasonalDistribution/&lt;GRP&gt;/&lt;STAGE&gt;
-</td>
-<td style="text-align:left;">
-Per-group/per-stage seasonal horizontal distribution (juvenile/adult,
-per box)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BBfish
-</td>
-<td style="text-align:left;">
-Proportion bacteria cleaned from fish-ingested detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_BBben
-</td>
-<td style="text-align:left;">
-Proportion bacteria cleaned from benthic-ingested detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_PBwc
-</td>
-<td style="text-align:left;">
-Proportion of pelagic bacteria available in water column
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_PBben
-</td>
-<td style="text-align:left;">
-Proportion of pelagic bacteria available in benthos
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_refDL
-</td>
-<td style="text-align:left;">
-Reference labile-detritus level for omnivore supplement feeding
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_refDR
-</td>
-<td style="text-align:left;">
-Reference refractory-detritus level for supplement feeding
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_refsDL
-</td>
-<td style="text-align:left;">
-Reference sediment labile-detritus level
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagfishrates
-</td>
-<td style="text-align:left;">
-Use fish-specific clearance/growth rates flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-li_a_invert
-</td>
-<td style="text-align:left;">
-Length-weight allometry coefficient a for invertebrates
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-li_b_invert
-</td>
-<td style="text-align:left;">
-Length-weight allometry exponent b for invertebrates
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pPREY&lt;PREYCOHORT&gt;&lt;PRED&gt;&lt;PREDCOHORT&gt;
-</td>
-<td style="text-align:left;">
-Vertebrate predator-prey availability matrix (pSPVERTeat), availability
-of each prey group to a predator age class
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pPREY&lt;PRED&gt;
-</td>
-<td style="text-align:left;">
-Invertebrate/biomass-pool predator-prey availability row (single cohort)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DetritusSedimentFoodAvail/&lt;GRP&gt;[/&lt;COHORT&gt;]
-</td>
-<td style="text-align:left;">
-Availability of detritus/sediment groups to a predator (per detritus
-group, per cohort for age-structured)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-AgeDietAvail/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Fine ontogenetic (per-age) prey availability matrix
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SeagrassFoodAvail/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Availability of seagrass/macrophyte parts to grazers
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Supplemental_Diets/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Imported/supplemental feed distribution per box for
-cultured/supplemented groups
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Catch_Opportunity/Catch_Availability/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Availability of fishery catch to opportunistic catch-eaters (per prey
-group)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_prey
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Catch_Opportunity/Proportion_Exploitable/&lt;GRP&gt;
+contaminant_names
 </td>
 <td style="text-align:left;">
-Proportion of each fishery’s catch exploitable by catch-eaters
+Names of the tracked contaminants
 </td>
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-double_array
+string_array
 </td>
 <td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 other
@@ -14968,967 +11425,18 @@ other
 </tr>
 <tr>
 <td style="text-align:left;">
-C_&lt;GRP&gt;
+contaminant_units
 </td>
 <td style="text-align:left;">
-Per-cohort vertebrate clearance (search-volume) rate; prm key
-C_&lt;GRP&gt; array over age classes
+Units of the tracked contaminants
 </td>
 <td style="text-align:left;">
-m3 (mg N)-1 d-1
 </td>
 <td style="text-align:left;">
-double_array
+string_array
 </td>
 <td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-C_&lt;GRP&gt;_T15
-</td>
-<td style="text-align:left;">
-Invertebrate grazer clearance rate at 15C; scalar per group
-</td>
-<td style="text-align:left;">
-m3 (mg N)-1 d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-BHalpha_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar
-per age-structured group
-</td>
-<td style="text-align:left;">
-individuals
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-BHbeta_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Beverton-Holt recruitment parameter beta (half-saturation stock
-biomass); scalar per age-structured group
-</td>
-<td style="text-align:left;">
-mg N
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-&lt;GRP&gt;_mL
-</td>
-<td style="text-align:left;">
-Linear mortality rate at 15C; one value per stage (2 values for
-stage-structured groups, a scalar otherwise)
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_stage
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-&lt;GRP&gt;_mQ
-</td>
-<td style="text-align:left;">
-Quadratic (density-dependent) mortality rate at 15C; one value per stage
-(2 values for stage-structured groups, a scalar otherwise)
-</td>
-<td style="text-align:left;">
-d-1 (mg N m-3)-1
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_stage
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mum_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-cohort vertebrate maximum growth (consumption) rate; prm key
-mum_&lt;GRP&gt; array over age classes
-</td>
-<td style="text-align:left;">
-mg N d-1 (per individual)
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mum_&lt;GRP&gt;_T15
-</td>
-<td style="text-align:left;">
-Invertebrate/PP/bacteria maximum growth rate at 15C; scalar per group
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvertebrateSN/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Invertebrate structural-N (size) reference per group
-</td>
-<td style="text-align:left;">
-mg N
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Q10
-</td>
-<td style="text-align:left;">
-Global Q10 temperature scaling factor
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-temp_coefftB
-</td>
-<td style="text-align:left;">
-Temperature response coefficient B
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-temp_coefftC
-</td>
-<td style="text-align:left;">
-Temperature response coefficient C
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-temp_exp
-</td>
-<td style="text-align:left;">
-Temperature response exponent
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KST_fish
-</td>
-<td style="text-align:left;">
-Standard metabolic temperature scalar - fish
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KST_shark
-</td>
-<td style="text-align:left;">
-Standard metabolic temperature scalar - shark
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KST_bird
-</td>
-<td style="text-align:left;">
-Standard metabolic temperature scalar - bird
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KST_mammal
-</td>
-<td style="text-align:left;">
-Standard metabolic temperature scalar - mammal
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ktmp_fish
-</td>
-<td style="text-align:left;">
-Temperature respiration coefficient - fish
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ktmp_shark
-</td>
-<td style="text-align:left;">
-Temperature respiration coefficient - shark
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ktmp_bird
-</td>
-<td style="text-align:left;">
-Temperature respiration coefficient - bird
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ktmp_mammal
-</td>
-<td style="text-align:left;">
-Temperature respiration coefficient - mammal
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Kthreshm
-</td>
-<td style="text-align:left;">
-Mortality threshold constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FFDDR
-</td>
-<td style="text-align:left;">
-Fraction of feeding-derived detritus going to refractory pool
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_fish
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from fish mortality
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_benth
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from benthic invert mortality
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_top
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from top predator mortality
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_wc
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from water-column group mortality
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_SG_roots
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from seagrass roots
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FDL_SG_leaves
-</td>
-<td style="text-align:left;">
-Fraction labile detritus from seagrass leaves
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FPB_DR
-</td>
-<td style="text-align:left;">
-Fraction pelagic-bacteria flux to refractory detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FBB_DR
-</td>
-<td style="text-align:left;">
-Fraction benthic-bacteria flux to refractory detritus
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FPB_DON
-</td>
-<td style="text-align:left;">
-Fraction pelagic-bacteria flux to DON
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FBB_DON
-</td>
-<td style="text-align:left;">
-Fraction benthic-bacteria flux to DON
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fben_den
-</td>
-<td style="text-align:left;">
-Fraction benthic denitrification
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ImplicitSeabirdMortalityRate/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Implicit (external) seabird mortality rate per group
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ImplicitFishMortalityRate/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Implicit (external) fish mortality rate per group
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagtrecruitdistrib
-</td>
-<td style="text-align:left;">
-Time-varying recruit distribution flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recover_trigger
-</td>
-<td style="text-align:left;">
-Population recovery trigger level
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recover_span
-</td>
-<td style="text-align:left;">
-Recovery span duration
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recover_subseq
-</td>
-<td style="text-align:left;">
-Subsequent recovery parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lognorm_mu
-</td>
-<td style="text-align:left;">
-Lognormal recruitment mean parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lognorm_sigma
-</td>
-<td style="text-align:left;">
-Lognormal recruitment standard deviation parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rec_m
-</td>
-<td style="text-align:left;">
-Recruitment mean (stochastic) parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-rec_sigma
-</td>
-<td style="text-align:left;">
-Recruitment standard deviation parameter
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recruitRange
-</td>
-<td style="text-align:left;">
-Recruitment search range
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recruitRangeFlat
-</td>
-<td style="text-align:left;">
-Flat recruitment range
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ref_chl
-</td>
-<td style="text-align:left;">
-Reference chlorophyll for recruitment effect
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FSPB_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-cohort proportion of spawning biomass; prm key FSPB_&lt;GRP&gt;
-array over age classes
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-KDENR_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-cohort density-dependent recruitment parameter (Reproduction/KDENR)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-recSTOCK_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-stock recruitment allocation (Reproduction/recSTOCK)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 other
@@ -15936,11 +11444,810 @@ other
 </tr>
 <tr>
 <td style="text-align:left;">
-popratioStock_&lt;GRP&gt;
+toutstart
 </td>
 <td style="text-align:left;">
-Per-stock population ratio at initialisation
-(Reproduction/popratioStock)
+Output start time (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; stored in seconds)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+toutinc
+</td>
+<td style="text-align:left;">
+Write output with this periodicity (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; stored in seconds)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+toutfinc
+</td>
+<td style="text-align:left;">
+Write fisheries output with this periodicity (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; stored in seconds)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tburnday
+</td>
+<td style="text-align:left;">
+Burn-in period before output begins (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; stored in seconds)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tsumout
+</td>
+<td style="text-align:left;">
+Write stock state summary with this periodicity (time unit token,
+e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; stored in seconds)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flag_age_output
+</td>
+<td style="text-align:left;">
+Age-output mode (0/1 text-based; set to 2 for netcdf output)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fishout
+</td>
+<td style="text-align:left;">
+Switch to turn fisheries output on = 1, off = 0
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagreusefile
+</td>
+<td style="text-align:left;">
+Switch for appending output file (no = 0, yes = 1, replace = 2)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagannual_Mest
+</td>
+<td style="text-align:left;">
+Whether to write out estimates of mortality per predator annually (1) or
+not (0)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+verbose
+</td>
+<td style="text-align:left;">
+Detailed logged output level
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkbox
+</td>
+<td style="text-align:left;">
+Give detailed logged output for this box
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkstart
+</td>
+<td style="text-align:left;">
+Start detailed logged output after this date (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; read in seconds then converted to days)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkstop
+</td>
+<td style="text-align:left;">
+Stop detailed logged output after this date (time unit token, e.g. day)
+</td>
+<td style="text-align:left;">
+time (e.g. day; read in seconds then converted to days)
+</td>
+<td style="text-align:left;">
+double
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fishtest
+</td>
+<td style="text-align:left;">
+Count up total population for each vertebrate after each main subroutine
+(0=no, 1=yes)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flaggape
+</td>
+<td style="text-align:left;">
+Periodically list prey vs gape statistics (tuning diagnostic)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagchecksize
+</td>
+<td style="text-align:left;">
+Periodically list relative size (tuning diagnostic)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagagecheck
+</td>
+<td style="text-align:left;">
+Periodically list age structure per cohort (tuning diagnostic)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagdietcheck
+</td>
+<td style="text-align:left;">
+Periodically list realised diet matchups (tuning diagnostic)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagenviro_warn
+</td>
+<td style="text-align:left;">
+Flag for warning messages about spawn and movement being environmentally
+constrained
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flag_mig_in_bioindx
+</td>
+<td style="text-align:left;">
+Whether migrating biomass is included in the biomass index output
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkNH
+</td>
+<td style="text-align:left;">
+Give detailed logged output for NH in checkbox
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkDL
+</td>
+<td style="text-align:left;">
+Give detailed logged output for DL (labile detritus) in checkbox
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkDR
+</td>
+<td style="text-align:left;">
+Give detailed logged output for DR (refractory detritus) in checkbox
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+checkbiom
+</td>
+<td style="text-align:left;">
+Give detailed logged output for biomasses in checkbox
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+which_fleet
+</td>
+<td style="text-align:left;">
+ID number of fleet to track (find number in fisheries input file)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+which_check
+</td>
+<td style="text-align:left;">
+ID number of group to track (find number from functional group input
+file)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+move_check
+</td>
+<td style="text-align:left;">
+ID number of group where tracking movements
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+debug
+</td>
+<td style="text-align:left;">
+Debug mode (0=off, 1=debug fishing, 2=debug discards, 3=debug
+histfishing, …)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+debug_it
+</td>
+<td style="text-align:left;">
+Iteration-level debug flag
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_tot_sp
+</td>
+<td style="text-align:left;">
+Total number of biological groups in the model (must match functional
+group definition file)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_stocks_per_sp
+</td>
+<td style="text-align:left;">
+Maximum number of stocks per group in the model
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_detritus
+</td>
+<td style="text-align:left;">
+Total number of detritus groups in the model (labile, refractory and
+carrion)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_bed_types
+</td>
+<td style="text-align:left;">
+Maximum number of seabed types (currently only reef, soft and flat; must
+be 3)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_cover_types
+</td>
+<td style="text-align:left;">
+Maximum number of habitat types (= K_num_bed_types + cover groups + 1
+for canyons)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_catchqueue
+</td>
+<td style="text-align:left;">
+Length (in days) of catch list used in running average to give recent
+CPUE for effort model
+</td>
+<td style="text-align:left;">
+day (scaled by dt_scale to time-steps after read)
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_fisheries
+</td>
+<td style="text-align:left;">
+Maximum number of fisheries (must match fisheries definition input file)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_ports
+</td>
+<td style="text-align:left;">
+Maximum number of ports in the model area
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_reg
+</td>
+<td style="text-align:left;">
+Maximum number of management zonings used in the model
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_markets
+</td>
+<td style="text-align:left;">
+Maximum number of markets in the model area
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K_num_basket
+</td>
+<td style="text-align:left;">
+Maximum number of species in basket quota
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flagscaleinit
+</td>
+<td style="text-align:left;">
+Flag to indicate whether scaling initial vertebrate densities (1=yes,
+0=no)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+int
+</td>
+<td style="text-align:left;">
+run_prm
+</td>
+<td style="text-align:left;">
+scalar
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+init_scalar
+</td>
+<td style="text-align:left;">
+Per-group vertebrate density scalar to bring values in cdf up to actual
+intended values
 </td>
 <td style="text-align:left;">
 </td>
@@ -15948,1333 +12255,7 @@ Per-stock population ratio at initialisation
 double_array
 </td>
 <td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-other
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pStock_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-stock diet/spatial proportion (Diet/pStock)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-other
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-VerticalRecruitLocation/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group vertical layer distribution for recruits
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RecruitDistribution/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group horizontal recruit distribution over boxes
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-AquacultDistribution/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group horizontal aquaculture stocking distribution over boxes
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-&lt;GRP&gt;_Time_Spawn
-</td>
-<td style="text-align:left;">
-Per-spawn-event spawning time-of-year per group (prm key *_Time_Spawn)
-</td>
-<td style="text-align:left;">
-day-of-year
-</td>
-<td style="text-align:left;">
-int_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Time_Age_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-event time-to-age cohort entry per group (prm key
-Time_Age_&lt;GRP&gt;)
-</td>
-<td style="text-align:left;">
-day
-</td>
-<td style="text-align:left;">
-int_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-StockStructure/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group per-box stock membership (integer stock id per box)
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-VerticalStockStructure/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Per-group per-layer vertical stock membership
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-invading_sp_model
-</td>
-<td style="text-align:left;">
-Invading-species model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderIndex
-</td>
-<td style="text-align:left;">
-Functional-group index of the invader
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-minInvaderAge
-</td>
-<td style="text-align:left;">
-Minimum age of invading individuals
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maxInvaderAge
-</td>
-<td style="text-align:left;">
-Maximum age of invading individuals
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderEntryBox
-</td>
-<td style="text-align:left;">
-Box index where invader enters
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvadersEntering
-</td>
-<td style="text-align:left;">
-Number of invaders entering
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderMinDepth
-</td>
-<td style="text-align:left;">
-Minimum entry depth for invader
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderMaxDepth
-</td>
-<td style="text-align:left;">
-Maximum entry depth for invader
-</td>
-<td style="text-align:left;">
-m
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderStartDay
-</td>
-<td style="text-align:left;">
-Day-of-year invasion starts
-</td>
-<td style="text-align:left;">
-day-of-year
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderEndDay
-</td>
-<td style="text-align:left;">
-Day-of-year invasion ends
-</td>
-<td style="text-align:left;">
-day-of-year
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderScalar
-</td>
-<td style="text-align:left;">
-Scaling of invader numbers
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderSpeed
-</td>
-<td style="text-align:left;">
-Invader movement speed
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-InvaderEntryLayer
-</td>
-<td style="text-align:left;">
-Vertical layer of invader entry
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-p_IBice
-</td>
-<td style="text-align:left;">
-Proportion of biota associated with ice
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_dissolved_pollutants
-</td>
-<td style="text-align:left;">
-Track dissolved pollutants flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamMortModel
-</td>
-<td style="text-align:left;">
-Contaminant mortality model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamInteractModel
-</td>
-<td style="text-align:left;">
-Contaminant interaction model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamGrowthModel
-</td>
-<td style="text-align:left;">
-Contaminant growth-effect model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamReprodModel
-</td>
-<td style="text-align:left;">
-Contaminant reproduction-effect model flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamOnlyAmplify
-</td>
-<td style="text-align:left;">
-Contaminant amplify-only flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamMove
-</td>
-<td style="text-align:left;">
-Contaminant movement flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamMinTemp
-</td>
-<td style="text-align:left;">
-Contaminant minimum-temperature flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contam_halflife_spbased
-</td>
-<td style="text-align:left;">
-Species-based contaminant half-life flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contamMaternalTransfer
-</td>
-<td style="text-align:left;">
-Maternal contaminant transfer flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_contam_distrib
-</td>
-<td style="text-align:left;">
-Contaminant distribution flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-biopools_dodge_contam
-</td>
-<td style="text-align:left;">
-Biological pools bypass contaminant flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-min_pool_cont
-</td>
-<td style="text-align:left;">
-Minimum contaminant pool concentration
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-contam_tau
-</td>
-<td style="text-align:left;">
-Contaminant decay time constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-contam_sig_uptake_const
-</td>
-<td style="text-align:left;">
-Contaminant sigmoidal uptake constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag_detritus_contam
-</td>
-<td style="text-align:left;">
-Detritus contaminant tracking flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-k_migslow
-</td>
-<td style="text-align:left;">
-Migration slowdown constant
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-scalar
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Migration/MigrateIOBox/&lt;GRP&gt;[/&lt;COHORT&gt;]/Migrate&lt;N&gt;
-</td>
-<td style="text-align:left;">
-Per-migration destination box proportions for migrating groups
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_box
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Migration/KMIG_DEN/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Initial density of pre-existing out-of-model migrators
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Migration/KMIG_RN/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Initial reserve N of pre-existing out-of-model migrators
-</td>
-<td style="text-align:left;">
-mg N
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Migration/KMIG_SN/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Initial structural N of pre-existing out-of-model migrators
-</td>
-<td style="text-align:left;">
-mg N
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Migration/KMIG_INVERT&lt;N&gt;/&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Initial density of out-of-model invertebrate migrators per migration
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double_array
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flag&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Group functioning (on/off) flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagdem&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Preferred-location (demersal) trend flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-flagplankfish&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Planktivore flag
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-int
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-&lt;GRP&gt;thresh
-</td>
-<td style="text-align:left;">
-Flux threshold for sediment/bacteria flux
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-&lt;GRP&gt;damp
-</td>
-<td style="text-align:left;">
-Flux damping coefficient
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Reproduction_flags
-</td>
-<td style="text-align:left;">
-Per-group reproduction flags and parameters. One entry each, prm key =
-base_GRP: flagbearlive (live-bearing), feed_while_spawn, flagmother
-(parental care), flagrecruit (recruitment function id), flagrecpeak,
-flagstocking, flagkeep_plusgroup, Recruit_Period, <em>Recruit_Time,
-<em>cohort_recruit_entry, <em>spawn_period, KSPA</em> (spawn area),
-FSP</em> (spawn fraction),
-Kcov_juv</em>/Bcov_juv_/Acov_juv_/Kcov_ad_/Bcov_ad_/Acov_ad_ (cover
-coeffts), RugCover_scalar, <em>age_mat (age at maturity), recover_start,
-KWSR</em>, KWRR_, recover_mult_, BHbeta_/BHalpha_ (Beverton-Holt),
-Rbeta_/Ralpha_ (Ricker), PP_ (constant recruits), <em>log_mult,
-<em>norm_sigma, <em>flag_recruit_stochastic, prod_alpha</em>,
-den_depend_beta1</em>/beta2</em>, temp_coefft_, rate_coefft_,
-wind_coefft_, rec_var_, <em>min/max_spawn_temp, <em>min/max_spawn_salt,
-prop_spawn_lost</em>, jack_a</em>/jack_b_, rec_HabDepend,
-intersp_depend_recruit_/sp_/scale_, aquacult_fry, KA_/KB_
-(weight-length).
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-overwinterStartTofY_&lt;GRP&gt;
-</td>
-<td style="text-align:left;">
-Overwinter start time-of-year (encystment block)
-</td>
-<td style="text-align:left;">
-day-of-year
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Overwinter_Encystment
-</td>
-<td style="text-align:left;">
-Per-group overwintering/encystment params: overwinterStartTofY_,
-overwinterEndTofY_, overwinterStartTemp_, overwinterEndTemp_, crit_mum_,
-crit_nut_, crit_temp_, encyst_rate_, hatch_rate_, encyst_period_,
-flagencyst_.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Evolution
-</td>
-<td style="text-align:left;">
-Per-group evolution params: max_prop_shift_, inheritance_,
-trait_variance_, min_trait_variance_.
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY FeedingDetritusFractions
-</td>
-<td style="text-align:left;">
-Per-group fractions of feeding-derived material to detritus:
-FDM_&lt;GRP&gt; (mortality detritus), FDG_&lt;GRP&gt; (egesta), FDGDL_,
-FDGDR_.
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY FeedingDynamics
-</td>
-<td style="text-align:left;">
-Per-group/predator feeding parameters: <em>catcheater, flagactiveDAY
-(diel activity), vla</em>&lt;GRP&gt;<em>T15 (assimilation),
-KL</em>&lt;GRP&gt;/KU_&lt;GRP&gt;/KUP_&lt;GRP&gt;/KLP_&lt;GRP&gt;
-(feeding window lower/upper), Kmax_coefft_&lt;GRP&gt;, KDEP_&lt;GRP&gt;
-(sediment penetration depth), vlb_, hta_, htb_ (handling time), pR_
-(reserve proportion fed), li_a_/li_b_/linf_/Kbert_/tzero_
-(length-at-age, VB), min_li_mat_, predcase (functional response type),
-age_structured_prey_, p_split_, <em>extra_feed, vl</em>&lt;GRP&gt;
-(invert search volume), ht_ (invert handling time), hvm_,
-turbid_refuge_, RSmax_/RSmid_/RSslope_/RSprop_/SNcost_/RNcost_/RSstarve_
-(reserve dynamics),
-E_&lt;GRP&gt;/EPlant_&lt;GRP&gt;/EDL_&lt;GRP&gt;/EDR_&lt;GRP&gt;
-(assimilation efficiencies on prey/plant/labile/refractory).
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Q10_Temperature
-</td>
-<td style="text-align:left;">
-Per-group temperature response: flagq10eff, flagq10receff,
-q10_&lt;GRP&gt;, q10_method_, q10_optimal_temp_, q10_correction_,
-temp_coefftA_, flagtempsensitive, flagfecundsensitive.
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Salinity_pH_sensitivity
-</td>
-<td style="text-align:left;">
-Per-group salinity/pH sensitivity: flagSaltSensitive, salt_correction_,
-flagpHsensitive, pHsensitive_model_, pH_constA_/B_/C_, min_pH_/max_pH_,
-KN_pH_, optimal_pH_, pH_correction_, contract_tol_, flagcontract_tol_,
-flagpredavaileffect, flagnutvaleffect, pHmortstart_, pHmortA_/B_,
-pHmortmid_.
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Pollution_impact
-</td>
-<td style="text-align:left;">
-Per-group pollution light/noise sensitivity coefficients: light_coefft_,
-noise_coefft_.
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY PrimaryProducer_uptake
-</td>
-<td style="text-align:left;">
-Per-PP/seagrass parameters: KTUR_ (bioturbation), KIRR_ (infauna
-irradiance), KN_ (DIN half-sat), KS_ (Si half-sat), KF_ (Fe half-sat),
-flag*lim, KI_&lt;GRP&gt;<em>T15 (light half-sat),
-L_KI</em>&lt;GRP&gt;<em>T15 (seagrass leaf light),
-Kext</em>/Ksub_/KN_epi_/KsubEpi_/Ktrans_ (seagrass), Beta_D_, PBmax_D_,
-P_uptake_/P_scale_uptake_/P_concp_/P_min_internal_/P_max_internal_,
-C_uptake_/C_scale_uptake_/C_concp_, PSA_min_/C_min_, Phyto_Resp_Rate_,
-KP_ (P half-sat), KLYS_ (lysis rate), FSBDR_.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Mortality
-</td>
-<td style="text-align:left;">
-Per-group/per-cohort mortality rates at 15C: <em>mQ (quadratic), <em>mL
-(linear), <em>mLext (external linear), <em>mPext (external
-proportional); plus mS</em>&lt;GRP&gt;<em>T15 (macrophyte senescence),
-mStarve</em> (starvation), mT</em> (temperature mortality), mD</em>
-(depth-oxygen), mO</em> (oxygen), KO2_ (lethal O2), KO2LIM_ (limiting
-O2), turbidity mortality _turbid_L/_turbid_a/_turbid_b. The
-_mQ/_mL/_mLext/_mPext and turbidity entries are read per-cohort via
-Read_Cohort_Species_Param_Values; others via
-Util_XML_Read_Species_Param.
-</td>
-<td style="text-align:left;">
-d-1
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_cohort
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Physical_limits_movement
-</td>
-<td style="text-align:left;">
-Per-group physical limitation and movement: low_/max_/sat_/thresh
-(basal/sed-FF feeding limits), _ddepend_move (movement model),
-_max/min_move_temp, _max/min_move_salt, _K_temp_const, <em>K_salt_const,
-Speed</em>, _mindepth/_maxdepth/_maxtotdepth, _min_O2, _K_o2_const,
-_homerangerad, _overlap, k_trans, _remin_contrib.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Coral_Sponge
-</td>
-<td style="text-align:left;">
-Per-group coral/sponge params (bleaching, calcification, rugosity,
-smothering): _bleach_periodA/B, _mBleach, _bleaching_rate,
-_bleach_recovery_rate, _bleach_tempshift, _bleach_growshift,
-_bleach_temp, _min_bleach_temp, _prop_zooxanth, _DHW_thresh,
-_threshdepth, _depmum_scalar, _min/max_bleach_salt, _HostRemin,
-_calcifRefBaseline, _calcifTconst/Tcoefft/Topt/Lambda, _FeedLightThresh,
-_PropLightFeed, _coral_max_accel_trans/A/B, _CrecruitA/B/C,
-_coral_overgrow, _coral_compete, _sponge_overgrow, _sponge_compete,
-_Ksmother_A/B, _Vmax_deltaSi, _Km_deltaSi, _rug_erode, _rug_bleacherode,
-_rugFeedScalar, _rug_factor, _colony_ha, _rug_erode_sponge,
-_rugosity_inc/_rugosity_dec, _colony_diam.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY Fishing_targetting
-</td>
-<td style="text-align:left;">
-Per-group fishing/management flags read from bio prm: flagfish
-(targeting), flag_access_thru_wc_, <em>age_harvest (aquaculture), tier
-(HCR tier), regionalSP, basketSP, basket_size, max_co_sp</em>, coType_,
-tac_resetperiod, cpue_cdf_poor_r_/p_, cpue_cdf_top_r_/p_, samplesize,
-allometic li_a/li_b/li_bin/li_start/li_max, R_max, avg_inv_size,
-flag_assess, assess_bootstrap, assess_nat_mort, flag_prod_model,
-top_pcnt, bot_pcnt, assess_datastream, whichRAssess_, ICE_KDEP_.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
-</td>
-<td style="text-align:left;">
-per_group
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPECIES_FAMILY RBC_assessment
-</td>
-<td style="text-align:left;">
-Per-group reference-biomass-control / stock-assessment parameters
-(RBCSpeciesParamStructArray, atUtilXML.c:511-636): DiscType_, MaxH_,
-Growthage_L1_/L2_, MinCatch_, AssessStart_, NumRegions_, Nsexes_,
-Tier1/2/3Sig_, isTriggerSpecies_, trigger_threshold_, UseRBCAveraging_,
-Maturity_Inflect_/Slope_, T1_steep_phase_, tiertype_, Tier3_*
-(Fcalc/time/maxage/M/S25/S50/F/h/matlen/maxF), CCsel_years_, Tier4_*
-(avtime/CPUEyrmin/max/m/alpha/Cmaxmult/Bo_correct), Tier5_*
-(length/S50/cv/flt/reg/p/sel/q), PostRule_, CPUEmult_, MaxChange_,
-TriggerResponseScen_, MG_offset_, Regime_shift_assess_, RecDevBack_,
-Hsteep_, Agesel_Pattern_, AssessFreq_, BallParkF_/Yr_, NumChangeLambda_,
-num_enviro_obs_, num_growth_morphs_, Nsex_samp_, MaxAge_, Nyfuture_,
-NumFisheries_, Nlen_, Lbin_, thresh_mat_, femsexratio_,
-flagLAdirect_/SLAdirect_/WAdirect_, SigmaR1_/R2_/R_future_, PSigmaR1_,
-Regime_year_, RecDevMinYr_/MaxYr_, RecDevFlag_, AutoCorRecDev_,
-LFSSlim_, AFSSlim_, NumSurvey_, Regime_year_assess_, NblockPattern_,
-SRBlock_, assRecDevMinYear_, MultispAssessType_, mgt_indicator_,
-init_mgt_category_/sp_, PGMSYBHalpha_/beta_.
-</td>
-<td style="text-align:left;">
-varies
-</td>
-<td style="text-align:left;">
-double
-</td>
-<td style="text-align:left;">
-biology_prm
+run_prm
 </td>
 <td style="text-align:left;">
 per_group
@@ -17288,7 +12269,7 @@ per_group
 <h2 id="abbreviations">Abbreviations<a class="anchor" aria-label="anchor" href="#abbreviations"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">atl</span><span class="op">$</span><span class="va">abbreviation</span></span>
+<code class="sourceCode R"><span><span class="va">atl</span><span class="op">$</span><span class="va">abbreviations</span></span>
 <span><span class="co">#&gt; $GRP</span></span>
 <span><span class="co">#&gt; [1] "species (functional) group code, e.g. FPS; range 0..K_num_tot_sp-1"</span></span>
 <span><span class="co">#&gt; </span></span>

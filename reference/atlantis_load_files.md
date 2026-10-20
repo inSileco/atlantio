@@ -25,17 +25,19 @@ atlantis_load_files(atlantis, files, filenames = basename(files))
   - Character vector of file paths to Atlantis files
 
   - An `atlantis_file` object (created by
-    [`read_atlantis_files()`](read_atlantis_files.md))
+    [`read_atlantis_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md))
 
   Supported file types include:
 
-  - `.geometry` - Box Geometry Model files
+  - `.bgm` - Box Geometry Model files
 
   - `.prm` - Parameter files (bio and run)
 
   - `.nc` - NetCDF output files
 
-  - `.txt`, `.csv` - Diet and biomass snapshot files
+  - `.csv` - Groups file
+
+  - `.txt` - Diet and biomass outputs
 
 - filenames:
 
@@ -48,8 +50,8 @@ properties.
 
 ## See also
 
-[`read_atlantis_files()`](read_atlantis_files.md),
-[`new_atlantis()`](new_atlantis.md)
+[`read_atlantis_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md),
+[`new_atlantis()`](https://insileco.io/atlantio/reference/new_atlantis.md)
 
 ## Examples
 

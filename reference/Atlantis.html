@@ -5,7 +5,7 @@ simulation outputs. This class provides a structured way to organize and access
 the various data types produced by Atlantis model runs."><meta property="og:description" content="An S7 class that serves as a comprehensive container for all components of an
 Atlantis ecosystem model, including input parameters, spatial geometry, and
 simulation outputs. This class provides a structured way to organize and access
-the various data types produced by Atlantis model runs."><meta property="og:image" content="/logo.png"></head><body>
+the various data types produced by Atlantis model runs."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -99,9 +99,9 @@ timesteps, and output specifications.</p></dd>
 
 
 <dt id="arg-initial">initial<a class="anchor" aria-label="anchor" href="#arg-initial"></a></dt>
-<dd><p><code>[list]</code><br>
-Initial conditions from .nc file specifying starting biomass, numbers, and
-other state variables for each functional group.</p></dd>
+<dd><p><code>[ncdf4]</code><br>
+Initial conditions: the open netCDF file (see <code><a href="read_atlantis_files.html">read_nc()</a></code>), to close with
+<code><a href="https://rdrr.io/pkg/ncdf4/man/nc_close.html" class="external-link">ncdf4::nc_close()</a></code>.</p></dd>
 
 
 <dt id="arg-biology">biology<a class="anchor" aria-label="anchor" href="#arg-biology"></a></dt>
@@ -129,7 +129,7 @@ physical drivers that vary through time.</p></dd>
 
 
 <dt id="arg-fisheries">fisheries<a class="anchor" aria-label="anchor" href="#arg-fisheries"></a></dt>
-<dd><p><code>[list]</code><br>
+<dd><p><code>[data.frame]</code><br>
 Fisheries configuration and catch time series data for commercial and
 recreational fishing activities.</p></dd>
 
@@ -141,54 +141,51 @@ and selectivity patterns.</p></dd>
 
 
 <dt id="arg-main-output">main_output<a class="anchor" aria-label="anchor" href="#arg-main-output"></a></dt>
-<dd><p><code>[data.frame]</code><br>
-Primary model outputs including biomass and abundance time series for all
-functional groups aggregated across space.</p></dd>
+<dd><p><code>[ncdf4]</code><br>
+Main output: the open netCDF file of the run (see <code><a href="read_atlantis_files.html">read_nc()</a></code>), read by
+<code><a href="create_time_series.html">create_time_series()</a></code> and <code><a href="create_time_series_biomass.html">create_time_series_biomass()</a></code>; close it with
+<code><a href="https://rdrr.io/pkg/ncdf4/man/nc_close.html" class="external-link">ncdf4::nc_close()</a></code>.</p></dd>
 
 
 <dt id="arg-biomass-all">biomass_all<a class="anchor" aria-label="anchor" href="#arg-biomass-all"></a></dt>
-<dd><p><code>[array]</code><br>
-Complete biomass snapshots at specific time points showing spatial
-distribution across all boxes and depth layers.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Biomass of every group over the whole model domain (<code>BiomIndx.txt</code>).</p></dd>
 
 
 <dt id="arg-biomass-box">biomass_box<a class="anchor" aria-label="anchor" href="#arg-biomass-box"></a></dt>
-<dd><p><code>[array]</code><br>
-Biomass snapshots aggregated by box (spatial polygon) for each functional
-group and time point.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Biomass of every group per box (<code>BoxBiomass.txt</code>).</p></dd>
 
 
 <dt id="arg-biomass-age">biomass_age<a class="anchor" aria-label="anchor" href="#arg-biomass-age"></a></dt>
-<dd><p><code>[array]</code><br>
-Age-structured biomass snapshots showing cohort dynamics for vertebrate
-functional groups.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Biomass per age class of the age-structured groups (<code>AgeBiomIndx.txt</code>).</p></dd>
 
 
 <dt id="arg-biomass-age-annual">biomass_age_annual<a class="anchor" aria-label="anchor" href="#arg-biomass-age-annual"></a></dt>
-<dd><p><code>[array]</code><br>
-Annual summaries of age-structured biomass data for long-term trend analysis.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+The same, yearly (<code>AnnualAgeBiomIndx.txt</code>).</p></dd>
 
 
 <dt id="arg-diet">diet<a class="anchor" aria-label="anchor" href="#arg-diet"></a></dt>
-<dd><p><code>[matrix]</code><br>
-Diet composition matrix showing predator-prey relationships and consumption
-rates between functional groups.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Diet composition of the predators (<code>DietCheck.txt</code>).</p></dd>
 
 
 <dt id="arg-diet-detailed">diet_detailed<a class="anchor" aria-label="anchor" href="#arg-diet-detailed"></a></dt>
-<dd><p><code>[array]</code><br>
-Detailed diet matrices with temporal, spatial, and size-based resolution of
-predation interactions.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Diet composition per box and layer (<code>DetailedDietCheck.txt</code>).</p></dd>
 
 
 <dt id="arg-yoy">yoy<a class="anchor" aria-label="anchor" href="#arg-yoy"></a></dt>
-<dd><p><code>[array]</code><br>
-Snapshot of biomass of recruits per year.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+Biomass of recruits per year (<code>YOY.txt</code>).</p></dd>
 
 
 <dt id="arg-file-paths">file_paths<a class="anchor" aria-label="anchor" href="#arg-file-paths"></a></dt>
-<dd><p><code>[dataframe]</code><br>
-Data frame listing path to input and output files.</p></dd>
+<dd><p><code>[data.frame]</code><br>
+The files: the rows of <a href="input_files.html">input_files</a> with the path of each file loaded
+(<code>NA</code> otherwise).</p></dd>
 
 
 <dt id="arg-version">version<a class="anchor" aria-label="anchor" href="#arg-version"></a></dt>
@@ -196,6 +193,12 @@ Data frame listing path to input and output files.</p></dd>
 Atlantis version used.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code><a href="atlantis_load_files.html">atlantis_load_files()</a></code> fills every property but <code>physics</code>, <code>forcing</code>,
+<code>fisheries</code> and <code>harvest</code>, which can be set by hand, e.g.
+<code>x@harvest &lt;- read_prm("harvest.prm")</code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="model-components">Model Components<a class="anchor" aria-label="anchor" href="#model-components"></a></h2>
 
@@ -210,7 +213,8 @@ Atlantis version used.</p></dd>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Output list avaialbe here <a href="https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/markdown_output/AtlantisUserGuide_PartI_CLEAN.html#simulation-outputs" class="external-link">https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/markdown_output/AtlantisUserGuide_PartI_CLEAN.html#simulation-outputs</a></p>
+    <p>The outputs are described in the Atlantis User's Guide Part I
+<a href="https://research.csiro.au/atlantis/wp-content/uploads/sites/52/2025/05/AtlantisUserGuide_PartI.pdf" class="external-link">https://research.csiro.au/atlantis/wp-content/uploads/sites/52/2025/05/AtlantisUserGuide_PartI.pdf</a></p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

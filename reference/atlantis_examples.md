@@ -12,7 +12,8 @@ atlantis_examples(...)
 
 - ...:
 
-  further arguments passed to `[system.file()]`
+  further arguments passed to
+  [`system.file()`](https://rdrr.io/r/base/system.file.html)
 
 ## Examples
 

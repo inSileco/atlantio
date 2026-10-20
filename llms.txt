@@ -60,75 +60,92 @@ MIT
 
 ## All functions
 
-- [`Atlantis()`](Atlantis.md) : Atlantis Ecosystem Model Container
-- [`aggregate_time_series()`](aggregate_time_series.md) : Aggregate
-  age-structured tracers over boxes and layers
-- [`apply_parameters()`](apply_parameters.md) : Apply a set of
-  calibrated values to an Atlantis object
-- [`atlantis_examples()`](atlantis_examples.md) : Helper function to
-  quickly access example files.
-- [`atlantis_load_files()`](atlantis_load_files.md) : Load Atlantis
-  files into model object
-- [`atlantis_supported_versions`](atlantis_supported_versions.md) :
-  Atlantis versions supported by atlantio
-- [`check_init()`](check_init.md) : Check an Atlantis initial-conditions
-  file
-- [`check_prm()`](check_prm.md) : Check Atlantis parameter files
-- [`check_run()`](check_run.md) : Check that an Atlantis run completed
-- [`compare_prm()`](compare_prm.md) : Compare two Atlantis parameter
-  files
-- [`create_diet_table()`](create_diet_table.md) : Create a diet table
-- [`create_foodweb()`](create_foodweb.md) : Create a food web
-- [`create_time_series()`](create_time_series.md) : Create time series
-  from the main output
-- [`create_time_series_biomass()`](create_time_series_biomass.md) :
-  Create biomass time series
-- [`generate_calibration_table()`](generate_calibration_table.md) :
-  Generate a calibration table
-- [`generate_file()`](generate_file.md) : Generate parameter files
-- [`get_biomass_by_type()`](get_biomass_by_type.md) : Extract biomass
-  data by aggregation type
-- [`input_files`](input_files.md) : Input files
-- [`inverse_transform_parameter_value()`](inverse_transform_parameter_value.md)
+- [`Atlantis()`](https://insileco.io/atlantio/reference/Atlantis.md) :
+  Atlantis Ecosystem Model Container
+- [`aggregate_time_series()`](https://insileco.io/atlantio/reference/aggregate_time_series.md)
+  : Aggregate age-structured tracers over boxes and layers
+- [`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md)
+  : Apply a set of calibrated values to an Atlantis object
+- [`atlantio`](https://insileco.io/atlantio/reference/atlantio-package.md)
+  [`atlantio-package`](https://insileco.io/atlantio/reference/atlantio-package.md)
+  : atlantio: Read, Write and Manipulate Atlantis Model Inputs and
+  Outputs
+- [`atlantis_examples()`](https://insileco.io/atlantio/reference/atlantis_examples.md)
+  : Helper function to quickly access example files.
+- [`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+  : Load Atlantis files into model object
+- [`atlantis_supported_versions`](https://insileco.io/atlantio/reference/atlantis_supported_versions.md)
+  : Atlantis versions supported by atlantio
+- [`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
+  : Check an Atlantis initial-conditions file
+- [`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md) :
+  Check Atlantis parameter files
+- [`check_run()`](https://insileco.io/atlantio/reference/check_run.md) :
+  Check that an Atlantis run completed
+- [`compare_prm()`](https://insileco.io/atlantio/reference/compare_prm.md)
+  : Compare two Atlantis parameter files
+- [`create_diet_table()`](https://insileco.io/atlantio/reference/create_diet_table.md)
+  : Create a diet table
+- [`create_foodweb()`](https://insileco.io/atlantio/reference/create_foodweb.md)
+  : Create a food web
+- [`create_time_series()`](https://insileco.io/atlantio/reference/create_time_series.md)
+  : Create time series from the main output
+- [`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md)
+  : Create biomass time series
+- [`generate_calibration_table()`](https://insileco.io/atlantio/reference/generate_calibration_table.md)
+  : Generate a calibration table
+- [`generate_file()`](https://insileco.io/atlantio/reference/generate_file.md)
+  : Generate parameter files
+- [`get_biomass_by_type()`](https://insileco.io/atlantio/reference/get_biomass_by_type.md)
+  : Extract biomass data by aggregation type
+- [`input_files`](https://insileco.io/atlantio/reference/input_files.md)
+  : Input files
+- [`inverse_transform_parameter_value()`](https://insileco.io/atlantio/reference/inverse_transform_parameter_value.md)
   : Map a parameter value from the file scale back to the calibration
   scale
-- [`list_atlantis_parameters()`](list_atlantis_parameters.md) : List
-  Atlantis parameters for a given Atlantis version
-- [`new_atlantis()`](new_atlantis.md) : Create new Atlantis model object
-- [`parameters_hints`](parameters_hints.md) : Parameter Hints for
-  Atlantis Model Configuration
-- [`read_atlantis_files()`](read_atlantis_files.md)
-  [`read_bgm()`](read_atlantis_files.md)
-  [`read_nc()`](read_atlantis_files.md)
-  [`read_group_file()`](read_atlantis_files.md)
-  [`read_prm_files()`](read_atlantis_files.md)
-  [`read_txt_files()`](read_atlantis_files.md)
-  [`read_xml()`](read_atlantis_files.md) : Read Atlantis inputs and
-  outputs files
-- [`read_biomass_index()`](read_biomass_index.md) : Read the biomass of
-  the living groups from the Atlantis biomass index
-- [`read_calibration_runs()`](read_calibration_runs.md) : Read the
-  parameter values of calibration runs
-- [`read_prm()`](read_prm.md) [`write_prm()`](read_prm.md) : Parse .prm
-  file contents into structured list
-- [`score_table()`](score_table.md) [`compute_score()`](score_table.md)
+- [`list_atlantis_parameters()`](https://insileco.io/atlantio/reference/list_atlantis_parameters.md)
+  : List Atlantis parameters for a given Atlantis version
+- [`new_atlantis()`](https://insileco.io/atlantio/reference/new_atlantis.md)
+  : Create new Atlantis model object
+- [`parameters_hints`](https://insileco.io/atlantio/reference/parameters_hints.md)
+  : Parameter Hints for Atlantis Model Configuration
+- [`read_atlantis_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_bgm()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_nc()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_group_file()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_prm_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_txt_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  [`read_xml()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
+  : Read Atlantis inputs and outputs files
+- [`read_biomass_index()`](https://insileco.io/atlantio/reference/read_biomass_index.md)
+  : Read the biomass of the living groups from the Atlantis biomass
+  index
+- [`read_calibration_runs()`](https://insileco.io/atlantio/reference/read_calibration_runs.md)
+  : Read the parameter values of calibration runs
+- [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+  [`write_prm()`](https://insileco.io/atlantio/reference/read_prm.md) :
+  Parse .prm file contents into structured list
+- [`score_table()`](https://insileco.io/atlantio/reference/score_table.md)
+  [`compute_score()`](https://insileco.io/atlantio/reference/score_table.md)
   : Calibration objective: deviation from the initial state
-- [`set_init_values()`](set_init_values.md) : Set the values of a
-  variable of an Atlantis initial-conditions file
-- [`summarise_calibration()`](summarise_calibration.md) : Summarise the
-  parameter values of a calibration
-- [`transform_parameter_value()`](transform_parameter_value.md) :
-  Transform a parameter value
-- [`window_values()`](window_values.md) : Values of a series scored over
-  the last years of a run
-- [`write_parameter_folder()`](write_parameter_folder.md) : Write a
-  complete Atlantis parameter folder
+- [`set_init_values()`](https://insileco.io/atlantio/reference/set_init_values.md)
+  : Set the values of a variable of an Atlantis initial-conditions file
+- [`summarise_calibration()`](https://insileco.io/atlantio/reference/summarise_calibration.md)
+  : Summarise the parameter values of a calibration
+- [`transform_parameter_value()`](https://insileco.io/atlantio/reference/transform_parameter_value.md)
+  : Transform a parameter value
+- [`window_values()`](https://insileco.io/atlantio/reference/window_values.md)
+  : Values of a series scored over the last years of a run
+- [`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md)
+  : Write a complete Atlantis parameter folder
 
 # Articles
 
 ### All vignettes
 
-- [Get Started with atlantio](atlantio.md):
+- [Get Started with
+  atlantio](https://insileco.io/atlantio/articles/atlantio.md):
 - [Calibrating Atlantis model with atlantio and
-  calibrar](calibration/index.md):
-- [Atlantis parameter set](parameters/index.md):
+  calibrar](https://insileco.io/atlantio/articles/calibration/index.md):
+- [Atlantis parameter
+  set](https://insileco.io/atlantio/articles/parameters/index.md):

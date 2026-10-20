@@ -40,12 +40,16 @@ The checks (column `check` of the result) are:
 
 - `"incomplete"` (error): the main output stops before `tstop`.
 
-`tstop` and `toutinc` are read with their units as Atlantis reads them
-(e.g. `tstop 365 day`; a bare number is in seconds).
+`tstop` and `toutinc` are read as Atlantis reads them: their first
+occurrence, in their unit if Atlantis knows it as written, in seconds
+otherwise. `tstop 365 day` is 365 days, but `tstop 365 days` and
+`tstop 365` are 365 seconds (see the `"units"` check of
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md)).
 
 ## See also
 
-[`check_prm()`](check_prm.md) for the parameter files.
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md) for
+the parameter files.
 
 ## Examples
 

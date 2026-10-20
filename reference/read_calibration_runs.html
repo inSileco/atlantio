@@ -7,7 +7,7 @@ are &amp;lt;name&amp;gt;.&amp;lt;position&amp;gt;, as in the rows of the calibra
 their folders: one list per run with the values tried on the calibration
 scale (par) and on the model scale (par_model), the score, whether
 the run failed and, for failed runs, the reason. The names of par
-are &amp;lt;name&amp;gt;.&amp;lt;position&amp;gt;, as in the rows of the calibration table."><meta property="og:image" content="/logo.png"></head><body>
+are &amp;lt;name&amp;gt;.&amp;lt;position&amp;gt;, as in the rows of the calibration table."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -74,13 +74,13 @@ are <code>&lt;name&gt;.&lt;position&gt;</code>, as in the rows of the calibratio
 
 
 <dt id="arg-pattern">pattern<a class="anchor" aria-label="anchor" href="#arg-pattern"></a></dt>
-<dd><p>Name of the files to read.</p></dd>
+<dd><p>Name of the files to read, matched exactly.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data frame with one row per run and parameter value: <code>run</code> (the
-folder name), <code>generation</code>, <code>score</code>, <code>failed</code>, <code>reason</code>, <code>name</code>,
+folder, relative to <code>dir</code>), <code>generation</code>, <code>score</code>, <code>failed</code>, <code>reason</code>, <code>name</code>,
 <code>position</code>, <code>value</code> (calibration scale) and <code>value_model</code>.</p>
     </div>
     <div class="section level2">

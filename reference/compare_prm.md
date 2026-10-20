@@ -17,8 +17,8 @@ compare_prm(x, y)
 - x, y:
 
   Two parameter files: paths, or lists as returned by
-  [`read_prm()`](read_prm.md) (e.g. the `biology` property of an
-  Atlantis object).
+  [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+  (e.g. the `biology` property of an Atlantis object).
 
 ## Value
 
@@ -27,7 +27,7 @@ in one file), `x` and `y` (the values as text, `NA` where missing).
 
 ## See also
 
-[`write_parameter_folder()`](write_parameter_folder.md)
+[`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md)
 
 ## Examples
 

@@ -7,7 +7,7 @@ read_prm())."><meta property="og:description" content="Lists the problems of Atl
 silently (or reads differently from read_prm()), and combinations of
 flags known to give wrong results. The files are scanned line by line, so
 a malformed array does not stop the other checks (it does stop
-read_prm())."><meta property="og:image" content="/logo.png"></head><body>
+read_prm())."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -86,12 +86,23 @@ relative to its folder.</p></dd>
     <p>The checks on every file (column <code>check</code> of the result) are:</p><ul><li><p><code>"count"</code> (error): an array whose declared length differs from the
 number of values on the next line; Atlantis pads with the last value or
 ignores the extra values, <code><a href="read_prm.html">read_prm()</a></code> aborts;</p></li>
-<li><p><code>"duplicate"</code> (warning): a key given twice;</p></li>
+<li><p><code>"duplicate"</code>: a key given twice. In the run file, an error: Atlantis
+reads the first occurrence (the last for the contaminant names and
+units), while <code><a href="read_prm.html">read_prm()</a></code> keeps the last. In the other files, a
+warning: Atlantis may also read another occurrence than <code><a href="read_prm.html">read_prm()</a></code>;</p></li>
 <li><p><code>"line_endings"</code> (warning): Windows (CRLF) line endings;</p></li>
-<li><p><code>"tabs"</code> (note): tabs as separators;</p></li>
-<li><p><code>"units"</code> (note): time units after values (e.g. <code>dt 12 hour</code>), which
-Atlantis converts to seconds;</p></li>
-<li><p><code>"unknown"</code> (note): keys of the run file missing from the run template.</p></li>
+<li><p><code>"tabs"</code> (note): tabs as separators.</p></li>
+</ul><p>The checks on the run file are:</p><ul><li><p><code>"units"</code>: the units after the times, which Atlantis reads in seconds
+(<code>dt</code>, <code>tstop</code>, <code>toutstart</code>, <code>toutinc</code>, <code>toutfinc</code>, <code>tburnday</code>,
+<code>tsumout</code>, <code>checkstart</code> and <code>checkstop</code>). Atlantis converts a value with
+its unit only if the unit is spelled exactly as one of <code>us</code>, <code>usec</code>,
+<code>ms</code>, <code>msec</code>, <code>s</code>, <code>sec</code>, <code>second</code>, <code>min</code>, <code>minute</code>, <code>h</code>, <code>hr</code>, <code>hour</code>,
+<code>d</code>, <code>day</code> or <code>week</code>; otherwise it ignores the unit and reads the value
+in seconds. Error for a unit Atlantis ignores, e.g. <code>days</code>, <code>Day</code> or
+<code>year</code>, or a unit that ends a line with Windows line endings (Atlantis
+reads the carriage return as part of it); note listing the units it
+converts;</p></li>
+<li><p><code>"unknown"</code> (note): keys missing from the run template.</p></li>
 </ul><p>And the checks across files, which need <code>bio</code> (and <code>force</code> for the last
 one), for every group stocked (<code>flagstocking&lt;GRP&gt; 1</code> or
 <code>flagrecruit&lt;GRP&gt; 18</code>, both read from the <code>MultRects</code> time series):</p><ul><li><p><code>"stocked_twice"</code> (error): <code>flagstocking&lt;GRP&gt; 1</code> with

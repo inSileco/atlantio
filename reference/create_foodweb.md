@@ -1,8 +1,9 @@
 # Create a food web
 
 Builds the binary food web of a model from its diet table (see
-[`create_diet_table()`](create_diet_table.md)): a predator eats a prey
-when any of their `pPREY` values, whatever the stages, is positive.
+[`create_diet_table()`](https://insileco.io/atlantio/reference/create_diet_table.md)):
+a predator eats a prey when any of their `pPREY` values, whatever the
+stages, is positive.
 
 ## Usage
 

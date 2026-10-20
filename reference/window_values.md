@@ -2,10 +2,10 @@
 
 Reduces one model series (one group x age class x tracer, or the biomass
 of one group) to the values the objective of
-[`score_table()`](score_table.md) compares with the initial value, over
-a window covering the last `years` years of the run (365-day model
-years, ending at the last output step). The initial step (t = 0) is
-never part of the window's statistics.
+[`score_table()`](https://insileco.io/atlantio/reference/score_table.md)
+compares with the initial value, over a window covering the last `years`
+years of the run (365-day model years, ending at the last output step).
+The initial step (t = 0) is never part of the window's statistics.
 
 ## Usage
 

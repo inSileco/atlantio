@@ -20,13 +20,13 @@ read_calibration_runs(dir, pattern = "parameters.rds")
 
 - pattern:
 
-  Name of the files to read.
+  Name of the files to read, matched exactly.
 
 ## Value
 
-A data frame with one row per run and parameter value: `run` (the folder
-name), `generation`, `score`, `failed`, `reason`, `name`, `position`,
-`value` (calibration scale) and `value_model`.
+A data frame with one row per run and parameter value: `run` (the
+folder, relative to `dir`), `generation`, `score`, `failed`, `reason`,
+`name`, `position`, `value` (calibration scale) and `value_model`.
 
 ## Details
 
@@ -35,4 +35,4 @@ The generation of a run is read from its folder name when it starts with
 
 ## See also
 
-[`summarise_calibration()`](summarise_calibration.md)
+[`summarise_calibration()`](https://insileco.io/atlantio/reference/summarise_calibration.md)

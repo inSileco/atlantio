@@ -52,8 +52,8 @@ create_time_series_biomass(
 
   Should the series be aggregated over boxes and layers while they are
   read, one cohort at a time (see
-  [`aggregate_time_series()`](aggregate_time_series.md))? Biomass pools
-  get their weight summed.
+  [`aggregate_time_series()`](https://insileco.io/atlantio/reference/aggregate_time_series.md))?
+  Biomass pools get their weight summed.
 
 - boundary:
 
@@ -79,10 +79,10 @@ geometry file. Atlantis' own biomass index uses a wet-to-dry ratio of
 
 With `aggregate = TRUE`, the series are reduced over boxes and layers as
 they are read (see
-[`aggregate_time_series()`](aggregate_time_series.md)): one cohort of
-one group at a time, so the full per-box table is never held in memory.
-For a whole run that table can weigh more than 1 GB and building it
-peaks at several GB.
+[`aggregate_time_series()`](https://insileco.io/atlantio/reference/aggregate_time_series.md)):
+one cohort of one group at a time, so the full per-box table is never
+held in memory. For a whole run that table can weigh more than 1 GB and
+building it peaks at several GB.
 
 ## References
 

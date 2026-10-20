@@ -81,14 +81,14 @@
     
     
 <p>Semi-automatic calibration of an Atlantis model using
-<code>calibrar</code>, following the approach described in <span class="citation">@morell_ManualSemiautomated_2026</span>.</p>
+<code>calibrar</code>, following the approach described in <span class="citation">Morell et al. (<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/inSileco/atlantio" class="external-link">atlantio</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="overall-approach">Overall approach<a class="anchor" aria-label="anchor" href="#overall-approach"></a>
 </h2>
-<p>As described in <span class="citation">@morell_ManualSemiautomated_2026</span>, the goal of
-using <code>calibrar</code> is to automate the running of batches of
+<p>As described in <span class="citation">Morell et al. (<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span>, the goal
+of using <code>calibrar</code> is to automate the running of batches of
 simulations to improve model fit, while letting modellers nudge the
 model in the right direction. The model is run many times, and the set
 of parameters to shuffle is optionally revisited as calibration
@@ -114,7 +114,7 @@ parameter set and returns a score;</li>
 the input files, reading and writing the parameter files, expanding a
 calibration table, transforming parameter values, reading the model
 output and scoring it. <code>calibrar</code> handles the optimization.
-<span class="citation">@morell_ManualSemiautomated_2026</span> use
+<span class="citation">Morell et al. (<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span> use
 <code>atlantis2ls</code> (<a href="https://github.com/alaiam/atlantis2ls" class="external-link uri">https://github.com/alaiam/atlantis2ls</a>) for the same role
 as <code>atlantio</code>.</p>
 </div>
@@ -197,7 +197,8 @@ it reads. Check the base inputs once before launching anything.
 <code><a href="../../reference/check_prm.html">check_prm()</a></code> scans the parameter files line by line and
 reports, among others, arrays whose declared length does not match their
 values (Atlantis pads or truncates them, <code><a href="../../reference/read_prm.html">read_prm()</a></code>
-aborts), duplicated keys, Windows line endings, and the stocking flag
+aborts), duplicated keys, Windows line endings, time units that Atlantis
+ignores (it then reads the time in seconds), and the stocking flag
 combinations known to give wrong results. <code><a href="../../reference/check_init.html">check_init()</a></code>
 checks the initial-conditions file in the cells Atlantis actually uses:
 NaN or negative values, cells left unset where Atlantis silently uses a
@@ -293,8 +294,11 @@ truncated <code>output.nc</code> rather than a non-zero exit status.
 <code><a href="../../reference/check_run.html">check_run()</a></code> compares the last time step of the output with
 the end of the run: a run counts as complete only if it reaches
 <code>tstop</code>, within one output interval (<code>toutinc</code>).
-Both are read from the run file with their units, as Atlantis reads them
-(<code>tstop 15000 day</code>; a bare number is in seconds).</p>
+Both are read from the run file as Atlantis reads them:
+<code>tstop 15000 day</code> is 15000 days, but Atlantis ignores a unit
+it does not know as written (e.g. <code>days</code> or <code>Day</code>)
+and reads the value in seconds, as a bare number;
+<code><a href="../../reference/check_prm.html">check_prm()</a></code> reports such units.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/check_run.html">check_run</a></span><span class="op">(</span><span class="st">"outputFolder/output.nc"</span>, <span class="st">"run.prm"</span><span class="op">)</span></span></code></pre></div>
 <p>Like the other checks, it returns an <code>atlantis_check</code>
@@ -311,9 +315,10 @@ at.</p>
 <h3 id="the-score">The score<a class="anchor" aria-label="anchor" href="#the-score"></a>
 </h3>
 <p>The score turns the model output into a single number that is small
-when the model behaves as desired. <span class="citation">@morell_ManualSemiautomated_2026</span> combine a fit
-to observed biomasses with a stability penalty on the trend of each
-group. When observations are scarce, a useful first target is
+when the model behaves as desired. <span class="citation">Morell et al.
+(<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span> combine
+a fit to observed biomasses with a stability penalty on the trend of
+each group. When observations are scarce, a useful first target is
 persistence: every group should stay close to its initial state over the
 whole run rather than collapse or explode.</p>
 <p><code>atlantio</code> implements this persistence score. For every
@@ -391,7 +396,7 @@ one.</li>
 <h3 id="the-objective-function-of-morell-et-al-">The objective function of Morell et al.<a class="anchor" aria-label="anchor" href="#the-objective-function-of-morell-et-al-"></a>
 </h3>
 <p><code>method = "lnorm2"</code> scores instead the objective function
-of <span class="citation">@morell_ManualSemiautomated_2026</span>, as
+of <span class="citation">Morell et al. (<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span>, as
 implemented in their calibration code with <code>calibrar</code>’s
 <code>lnorm2</code>, where the targets are built from the initial state.
 There is no tolerance band: every scored value is penalized by its
@@ -496,7 +501,8 @@ their score, and remove the bulky run files.</li>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">par_model</span>, <span class="va">res</span>, <span class="va">reason</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="co"># 4. output and score; any error becomes the penalty score</span></span>
+<span>  <span class="co"># 4. output and score; an error makes the run a failed one</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/atlantis_load_files.html">atlantis_load_files</a></span><span class="op">(</span><span class="va">atlantis</span>, <span class="va">out_file</span><span class="op">)</span></span>
 <span>    <span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/create_time_series_biomass.html">create_time_series_biomass</a></span><span class="op">(</span><span class="va">out</span>, group <span class="op">=</span> <span class="va">groups</span>, aggregate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -507,9 +513,12 @@ their score, and remove the bulky run files.</li>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ts <span class="op">=</span> <span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"time_series.rds"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="../../reference/score_table.html">compute_score</a></span><span class="op">(</span><span class="va">ts</span>, biomass <span class="op">=</span> <span class="va">biomass</span><span class="op">)</span></span>
-<span>  <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">par_model</span>, <span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">conditionMessage</a></span><span class="op">(</span><span class="va">e</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="va">e</span><span class="op">)</span></span>
+<span>  <span class="co"># the output is read through an open file handle: close it</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_close.html" class="external-link">nc_close</a></span><span class="op">(</span><span class="va">out</span><span class="op">@</span><span class="va">main_output</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">score</span>, <span class="st">"error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">par_model</span>, <span class="va">res</span>, <span class="fu"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">conditionMessage</a></span><span class="op">(</span><span class="va">score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="co"># 5. results</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span></span>
@@ -697,7 +706,7 @@ down per series:</p>
 <h3 id="the-next-parameter-folder">The next parameter folder<a class="anchor" aria-label="anchor" href="#the-next-parameter-folder"></a>
 </h3>
 <p>The next round starts from the calibrated values, possibly with a new
-set of parameters, which is how <span class="citation">@morell_ManualSemiautomated_2026</span> describe
+set of parameters, which is how <span class="citation">Morell et al. (<a href="#ref-morell_ManualSemiautomated_2026">2026</a>)</span> describe
 calibration as a semi-automated process rather than a single
 optimization. <code><a href="../../reference/apply_parameters.html">apply_parameters()</a></code> sets the values of a run
 in the model object, here on the model scale as saved in
@@ -723,8 +732,16 @@ values that differ and the parameters present in one file only:</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-morell_ManualSemiautomated_2026" class="csl-entry">
+Morell, Alaia, Isaac C. Kaplan, Hem Nalini Morzaria-Luna, et al. 2026.
+<span>“From Manual to Semi-Automated Calibration: <span>A</span>
+Practical Framework for Calibrating <span>Atlantis</span> Ecosystem
+Models.”</span> <em>Ecological Modelling</em> 520 (October): 111688. <a href="https://doi.org/10.1016/j.ecolmodel.2026.111688" class="external-link">https://doi.org/10.1016/j.ecolmodel.2026.111688</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

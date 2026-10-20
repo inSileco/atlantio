@@ -3,7 +3,7 @@
 package for a given Atlantis version. Supported versions are listed in
 atlantis_supported_versions."><meta property="og:description" content="Returns the list of Atlantis parameters bundled with the
 package for a given Atlantis version. Supported versions are listed in
-atlantis_supported_versions."><meta property="og:image" content="/logo.png"></head><body>
+atlantis_supported_versions."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -71,9 +71,11 @@ package for a given Atlantis version. Supported versions are listed in
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of 2 elements:</p><ul><li><p><code>meta</code>: metadata about the Atlantis code base the parameters were
+    <p>A list of 3 elements:</p><ul><li><p><code>meta</code>: metadata about the Atlantis code base the parameters were
 extracted from (<code>atlantis_source</code>, <code>atlantis_version</code>, <code>bm_struct</code>) and
 <code>files</code>, the list of parameter files declaring the parameters;</p></li>
+<li><p><code>abbreviations</code>: the placeholders of the parameter names (e.g. <code>GRP</code> in
+<code>mum_&lt;GRP&gt;</code>) and what they stand for;</p></li>
 <li><p><code>parameters</code>: a list where every element describes one parameter with
 the following fields: <code>name</code>, <code>description</code>, <code>source_file</code>, <code>value_type</code>,
 <code>dimension</code>, <code>units</code>, <code>bm_member</code>, <code>reader</code> and <code>conditional_on</code>.</p></li>

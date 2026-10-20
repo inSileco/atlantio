@@ -20,8 +20,8 @@ version, currently it includes two columns:
 
 ## Source
 
-Generated from `inst/raw-data/supported_version.R`.
+Generated from `data-raw/supported_version.R`.
 
 ## See also
 
-[`list_atlantis_parameters()`](list_atlantis_parameters.md)
+[`list_atlantis_parameters()`](https://insileco.io/atlantio/reference/list_atlantis_parameters.md)

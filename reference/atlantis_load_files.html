@@ -5,7 +5,7 @@ properties based on file extensions and content. Only properties with newly
 loaded data are updated; existing properties are preserved unless overwritten."><meta property="og:description" content="Load Atlantis input and output files into an existing Atlantis object. This
 function automatically detects file types and assigns data to the appropriate
 properties based on file extensions and content. Only properties with newly
-loaded data are updated; existing properties are preserved unless overwritten."><meta property="og:image" content="/logo.png"></head><body>
+loaded data are updated; existing properties are preserved unless overwritten."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -73,10 +73,11 @@ loaded data are updated; existing properties are preserved unless overwritten.</
 <dt id="arg-files">files<a class="anchor" aria-label="anchor" href="#arg-files"></a></dt>
 <dd><p>Either:</p><ul><li><p>Character vector of file paths to Atlantis files</p></li>
 <li><p>An <code>atlantis_file</code> object (created by <code><a href="read_atlantis_files.html">read_atlantis_files()</a></code>)</p></li>
-</ul><p>Supported file types include:</p><ul><li><p><code>.geometry</code> - Box Geometry Model files</p></li>
+</ul><p>Supported file types include:</p><ul><li><p><code>.bgm</code> - Box Geometry Model files</p></li>
 <li><p><code>.prm</code> - Parameter files (bio and run)</p></li>
 <li><p><code>.nc</code> - NetCDF output files</p></li>
-<li><p><code>.txt</code>, <code>.csv</code> - Diet and biomass snapshot files</p></li>
+<li><p><code>.csv</code> - Groups file</p></li>
+<li><p><code>.txt</code> - Diet and biomass outputs</p></li>
 </ul></dd>
 
 

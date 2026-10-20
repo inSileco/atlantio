@@ -66,8 +66,10 @@ them, i.e. equal to their fill value.
 
 ## See also
 
-[`check_prm()`](check_prm.md) for the parameter files,
-[`set_init_values()`](set_init_values.md) to change values.
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md) for
+the parameter files,
+[`set_init_values()`](https://insileco.io/atlantio/reference/set_init_values.md)
+to change values.
 
 ## Examples
 

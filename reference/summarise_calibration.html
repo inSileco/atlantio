@@ -5,7 +5,7 @@ parameters are pushed against their bounds, where the runs that failed
 went, and how the values moved from one generation to the next."><meta property="og:description" content="Summarises, for every parameter value of a calibration table, the values
 tried by the calibration runs: what the best runs agree on, which
 parameters are pushed against their bounds, where the runs that failed
-went, and how the values moved from one generation to the next."><meta property="og:image" content="/logo.png"></head><body>
+went, and how the values moved from one generation to the next."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -117,7 +117,8 @@ completed runs, calibration scale; <code>NA</code> without failed runs);</p></li
 <code>parameters</code>;</p></li>
 <li><p><code>scores</code>: per generation, the number of <code>runs</code>, of <code>failed</code> runs, and
 the <code>best</code> and <code>median</code> scores of the completed runs.</p></li>
-</ul></div>
+</ul><p>The runs without generation make the generation <code>NA</code>.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The runs are ranked by score among those that completed. The values are

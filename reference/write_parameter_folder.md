@@ -3,7 +3,7 @@
 Writes the input files of an Atlantis object into a folder, e.g. to
 build the parameter folder of the next calibration round from the
 previous one and the calibrated values (see
-[`apply_parameters()`](apply_parameters.md)).
+[`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md)).
 
 ## Usage
 
@@ -39,7 +39,10 @@ Invisibly, a data frame of the values changed, one row per value:
 The run and biology parameter files are written from their source file
 with only the values that differ from it changed, token by token: the
 comments, the units (e.g. `tstop 365 day`), the layout and the line
-endings are kept. The other input files loaded (geometry, groups,
+endings are kept. A key given several times in its file is not changed:
+Atlantis may read another occurrence than the one changed (see
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md)),
+so the function aborts. The other input files loaded (geometry, groups,
 initial conditions, ...) are copied. Every file keeps the name of its
 source.
 
@@ -50,8 +53,9 @@ copied whole into `dir` first, whose files are then replaced by those of
 
 ## See also
 
-[`apply_parameters()`](apply_parameters.md),
-[`compare_prm()`](compare_prm.md) to compare two parameter files.
+[`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md),
+[`compare_prm()`](https://insileco.io/atlantio/reference/compare_prm.md)
+to compare two parameter files.
 
 ## Examples
 
@@ -65,7 +69,7 @@ mod <- new_atlantis() |>
 mod@biology$mum_GZS[1] <- 0.04
 dir <- file.path(tempdir(), "params_v2")
 write_parameter_folder(mod, dir)
-#> ✔ 3 input files written to /tmp/RtmpP5F0Ji/params_v2,
+#> ✔ 3 input files written to /tmp/RtmptLGBUU/params_v2,
 #> 1 value changed.
 list.files(dir)
 #> [1] "tiny_biol.prm"   "tiny_groups.csv" "tiny_run.prm"   

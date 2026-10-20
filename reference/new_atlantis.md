@@ -2,8 +2,8 @@
 
 Constructor function for creating a new, empty Atlantis model object.
 All properties are initialized as NULL and can be populated later using
-[`atlantis_load_files()`](atlantis_load_files.md) or by direct
-assignment.
+[`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+or by direct assignment.
 
 ## Usage
 
@@ -16,8 +16,8 @@ new_atlantis(...)
 - ...:
 
   Optional named arguments to initialize specific properties. Property
-  names should match those defined in the Atlantis class (e.g.,
-  geometry, bio, run, etc.).
+  names should match those defined in the Atlantis class (e.g. geometry,
+  biology, run).
 
 ## Value
 
@@ -26,8 +26,8 @@ specified in the arguments.
 
 ## See also
 
-[`atlantis_load_files()`](atlantis_load_files.md) for loading data from
-files
+[`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+for loading data from files
 
 ## Examples
 
@@ -39,7 +39,7 @@ atlantis <- new_atlantis()
 # Create with some initial data
 atlantis <- new_atlantis(
   geometry = my_geometry_data,
-  bio = my_biology_params
+  biology = my_biology_params
 )
 } # }
 ```

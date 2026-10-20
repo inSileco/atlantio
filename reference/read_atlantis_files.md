@@ -57,19 +57,21 @@ pipeline for handling diverse Atlantis ecosystem model file formats. One
 or several files can be processed at once. Internally, the way files are
 processed is determined by file extension using a switch statement:
 
-- `.bgm`: Box geometry files → `[read_bgm()]`
+- `.bgm`: Box geometry files → `read_bgm()`
 
-- `.nc`: NetCDF files → `[read_nc()]`
+- `.nc`: NetCDF files → `read_nc()`
 
-- `.prm`: Parameter files → `[read_prm_files()]`
+- `.prm`: Parameter files → `read_prm_files()`
 
-- `.csv`: Group definition files → `[read_group_file()]`
+- `.csv`: Group definition files → `read_group_file()`
 
-- `.txt`: Various output formats → `[read_txt_files()]` Basic
-  examination of the content is done to determine the type of file and
-  exhaustive validation is carried out if available. Note that unknown
-  file types are marked as `"unknown"` rather than causing crashes, and
-  unreadable files are marked as `"cannot read"`.
+- `.txt`: Various output formats → `read_txt_files()`
+
+- `.xml`: XML files → `read_xml()` Basic examination of the content is
+  done to determine the type of file and exhaustive validation is
+  carried out if available. Note that unknown file types are marked as
+  `"unknown"` rather than causing crashes, and unreadable files are
+  marked as `"cannot read"`.
 
 ## Functions
 

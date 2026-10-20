@@ -1,7 +1,8 @@
 # Calibrating Atlantis model with atlantio and calibrar
 
 Semi-automatic calibration of an Atlantis model using `calibrar`,
-following the approach described in @morell_ManualSemiautomated_2026.
+following the approach described in Morell et al.
+([2026](#ref-morell_ManualSemiautomated_2026)).
 
 ``` r
 
@@ -10,7 +11,8 @@ library(atlantio)
 
 ## Overall approach
 
-As described in @morell_ManualSemiautomated_2026, the goal of using
+As described in Morell et al.
+([2026](#ref-morell_ManualSemiautomated_2026)), the goal of using
 `calibrar` is to automate the running of batches of simulations to
 improve model fit, while letting modellers nudge the model in the right
 direction. The model is run many times, and the set of parameters to
@@ -36,8 +38,8 @@ Each round involves the same steps:
 `atlantio` handles the Atlantis-specific parts: checking the input
 files, reading and writing the parameter files, expanding a calibration
 table, transforming parameter values, reading the model output and
-scoring it. `calibrar` handles the optimization.
-@morell_ManualSemiautomated_2026 use `atlantis2ls`
+scoring it. `calibrar` handles the optimization. Morell et al.
+([2026](#ref-morell_ManualSemiautomated_2026)) use `atlantis2ls`
 (<https://github.com/alaiam/atlantis2ls>) for the same role as
 `atlantio`.
 
@@ -82,7 +84,7 @@ orders of magnitude.
   transf: pow10
 ```
 
-[`generate_calibration_table()`](../../reference/generate_calibration_table.md)
+[`generate_calibration_table()`](https://insileco.io/atlantio/reference/generate_calibration_table.md)
 expands this file into a table with one row per value to optimize: array
 parameters (e.g. one value per cohort) yield one row per position. It
 needs the biology parameter file and the group file loaded first, so
@@ -118,14 +120,17 @@ directory.
 A calibration multiplies the cost of every input error by the number of
 runs, and many errors do not stop Atlantis: they silently change what it
 reads. Check the base inputs once before launching anything.
-[`check_prm()`](../../reference/check_prm.md) scans the parameter files
-line by line and reports, among others, arrays whose declared length
-does not match their values (Atlantis pads or truncates them,
-[`read_prm()`](../../reference/read_prm.md) aborts), duplicated keys,
-Windows line endings, and the stocking flag combinations known to give
-wrong results. [`check_init()`](../../reference/check_init.md) checks
-the initial-conditions file in the cells Atlantis actually uses: NaN or
-negative values, cells left unset where Atlantis silently uses a
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md)
+scans the parameter files line by line and reports, among others, arrays
+whose declared length does not match their values (Atlantis pads or
+truncates them,
+[`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+aborts), duplicated keys, Windows line endings, time units that Atlantis
+ignores (it then reads the time in seconds), and the stocking flag
+combinations known to give wrong results.
+[`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
+checks the initial-conditions file in the cells Atlantis actually uses:
+NaN or negative values, cells left unset where Atlantis silently uses a
 non-zero `_FillValue`, groups switched on but missing or empty, and
 pools orders of magnitude away from the other groups of their type.
 
@@ -152,10 +157,11 @@ if (any(findings$severity == "error")) {
 ```
 
 Values of the initial-conditions file reported by
-[`check_init()`](../../reference/check_init.md) can be fixed with
-[`set_init_values()`](../../reference/set_init_values.md), which sets a
-variable per box (and layer) from a table, in place or in a copy of the
-file:
+[`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
+can be fixed with
+[`set_init_values()`](https://insileco.io/atlantio/reference/set_init_values.md),
+which sets a variable per box (and layer) from a table, in place or in a
+copy of the file:
 
 ``` r
 
@@ -232,11 +238,15 @@ An Atlantis fatal error ends in
 [`quit()`](https://rdrr.io/r/base/quit.html), which exits with status 0
 after printing to stderr. A crash therefore usually shows as a truncated
 `output.nc` rather than a non-zero exit status.
-[`check_run()`](../../reference/check_run.md) compares the last time
-step of the output with the end of the run: a run counts as complete
-only if it reaches `tstop`, within one output interval (`toutinc`). Both
-are read from the run file with their units, as Atlantis reads them
-(`tstop 15000 day`; a bare number is in seconds).
+[`check_run()`](https://insileco.io/atlantio/reference/check_run.md)
+compares the last time step of the output with the end of the run: a run
+counts as complete only if it reaches `tstop`, within one output
+interval (`toutinc`). Both are read from the run file as Atlantis reads
+them: `tstop 15000 day` is 15000 days, but Atlantis ignores a unit it
+does not know as written (e.g. `days` or `Day`) and reads the value in
+seconds, as a bare number;
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md)
+reports such units.
 
 ``` r
 
@@ -253,11 +263,12 @@ stopped at.
 ### The score
 
 The score turns the model output into a single number that is small when
-the model behaves as desired. @morell_ManualSemiautomated_2026 combine a
-fit to observed biomasses with a stability penalty on the trend of each
-group. When observations are scarce, a useful first target is
-persistence: every group should stay close to its initial state over the
-whole run rather than collapse or explode.
+the model behaves as desired. Morell et al.
+([2026](#ref-morell_ManualSemiautomated_2026)) combine a fit to observed
+biomasses with a stability penalty on the trend of each group. When
+observations are scarce, a useful first target is persistence: every
+group should stay close to its initial state over the whole run rather
+than collapse or explode.
 
 `atlantio` implements this persistence score. For every group and age
 class, the tracers of interest (numbers, structural and reserve weight)
@@ -269,9 +280,9 @@ at the edge of the band. Only the last years of the run are scored, so
 that the model is allowed a spin-up period.
 
 The model output is first read into a tracer table.
-[`atlantis_load_files()`](../../reference/atlantis_load_files.md) reads
-the output NetCDF into the model object, and
-[`create_time_series_biomass()`](../../reference/create_time_series_biomass.md)
+[`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+reads the output NetCDF into the model object, and
+[`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md)
 returns a tidy table of the age-structured tracers. With
 `aggregate = TRUE`, the series are reduced over boxes and layers while
 they are read, one cohort at a time, so the per-box table of a whole run
@@ -284,23 +295,24 @@ out <- atlantis_load_files(mod, "outputFolder/output.nc")
 ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
 ```
 
-[`aggregate_time_series()`](../../reference/aggregate_time_series.md)
+[`aggregate_time_series()`](https://insileco.io/atlantio/reference/aggregate_time_series.md)
 does the same reduction on a table already read per box and layer
 (numbers are summed, `StructN` and `ResN` are weighted by numbers). The
 biomass of every living group, including those without age structure
 (plankton, benthos), is in the biomass index Atlantis writes next to the
 output file, read with
-[`read_biomass_index()`](../../reference/read_biomass_index.md):
+[`read_biomass_index()`](https://insileco.io/atlantio/reference/read_biomass_index.md):
 
 ``` r
 
 biomass <- read_biomass_index("outputFolder/outputBiomIndx.txt", mod@group)
 ```
 
-[`score_table()`](../../reference/score_table.md) then returns the
-penalty of every series (group x age class x tracer, and group for the
-biomass), and [`compute_score()`](../../reference/score_table.md) their
-sum, the single number `calibrar` minimizes:
+[`score_table()`](https://insileco.io/atlantio/reference/score_table.md)
+then returns the penalty of every series (group x age class x tracer,
+and group for the biomass), and
+[`compute_score()`](https://insileco.io/atlantio/reference/score_table.md)
+their sum, the single number `calibrar` minimizes:
 
 ``` r
 
@@ -339,11 +351,11 @@ compute_score(
 
 ### The objective function of Morell et al.
 
-`method = "lnorm2"` scores instead the objective function of
-@morell_ManualSemiautomated_2026, as implemented in their calibration
-code with `calibrar`’s `lnorm2`, where the targets are built from the
-initial state. There is no tolerance band: every scored value is
-penalized by its squared log ratio to the target,
+`method = "lnorm2"` scores instead the objective function of Morell et
+al. ([2026](#ref-morell_ManualSemiautomated_2026)), as implemented in
+their calibration code with `calibrar`’s `lnorm2`, where the targets are
+built from the initial state. There is no tolerance band: every scored
+value is penalized by its squared log ratio to the target,
 `(log(x(t) + tiny) - log(b x(0) + tiny))^2`, and these are summed (not
 averaged) over the scored values of each series. The tracers scored are
 those of Morell et al.: the weight-at-age (`Weight`, the wet weight of
@@ -390,9 +402,9 @@ which are not read by `atlantio`, and the stability penalty on the
 year-to-year change of the biomass, which is not part of their
 calibration code.
 
-[`window_values()`](../../reference/window_values.md), used internally,
-shows which values of a series are scored for a given window and
-statistic:
+[`window_values()`](https://insileco.io/atlantio/reference/window_values.md),
+used internally, shows which values of a series are scored for a given
+window and statistic:
 
 ``` r
 
@@ -409,16 +421,17 @@ run, a truncated output or a scoring error must return a large penalty
 The objective function chains one calibration iteration:
 
 1.  **apply the parameters**:
-    [`apply_parameters()`](../../reference/apply_parameters.md) maps the
-    values from the calibration scale to the model scale and sets them
-    in the parameter files loaded in the model object;
+    [`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md)
+    maps the values from the calibration scale to the model scale and
+    sets them in the parameter files loaded in the model object;
 2.  **create a unique run directory** and write the inputs there with
-    [`write_parameter_folder()`](../../reference/write_parameter_folder.md):
+    [`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md):
     it copies the base inputs and writes the biology file with only the
     calibrated values changed, keeping its comments and units; then add
     the run script;
 3.  **run the model** and check, with
-    [`check_run()`](../../reference/check_run.md), that it completed;
+    [`check_run()`](https://insileco.io/atlantio/reference/check_run.md),
+    that it completed;
 4.  **read the output** and compute the score;
 5.  **save** the time series and the parameter values with their score,
     and remove the bulky run files.
@@ -455,7 +468,8 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
     return(failed_run(run_dir, par, par_model, res, reason))
   }
 
-  # 4. output and score; any error becomes the penalty score
+  # 4. output and score; an error makes the run a failed one
+  out <- NULL
   score <- tryCatch({
     out <- atlantis_load_files(atlantis, out_file)
     ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
@@ -466,9 +480,12 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
     saveRDS(list(ts = ts, biomass = biomass),
       file.path(run_dir, "time_series.rds"))
     compute_score(ts, biomass = biomass)
-  }, error = function(e) {
-    failed_run(run_dir, par, par_model, res, conditionMessage(e))
-  })
+  }, error = function(e) e)
+  # the output is read through an open file handle: close it
+  if (!is.null(out)) try(ncdf4::nc_close(out@main_output), silent = TRUE)
+  if (inherits(score, "error")) {
+    return(failed_run(run_dir, par, par_model, res, conditionMessage(score)))
+  }
 
   # 5. results
   saveRDS(
@@ -510,7 +527,7 @@ failed_run <- function(run_dir, par, par_model, res, reason) {
 
 Naming the run directories after their generation, e.g. with the prefix
 `gen003_`, lets
-[`summarise_calibration()`](../../reference/summarise_calibration.md)
+[`summarise_calibration()`](https://insileco.io/atlantio/reference/summarise_calibration.md)
 follow the values from one generation to the next (see Step 5).
 `calibrar` does not pass the generation to the objective function, but
 evaluates every generation in full before the next one, so it can be
@@ -521,7 +538,7 @@ derived from the number of run directories already present and
 
 The natural starting point is the current set of values in the biology
 file, mapped back to the calibration scale with
-[`inverse_transform_parameter_value()`](../../reference/inverse_transform_parameter_value.md)
+[`inverse_transform_parameter_value()`](https://insileco.io/atlantio/reference/inverse_transform_parameter_value.md)
 and clamped into the bounds. Evaluate the objective function once at
 this point before launching the calibration: this checks the whole chain
 and gives the reference score to beat.
@@ -615,11 +632,11 @@ inspection.
 
 ### The tuned parameters
 
-[`read_calibration_runs()`](../../reference/read_calibration_runs.md)
+[`read_calibration_runs()`](https://insileco.io/atlantio/reference/read_calibration_runs.md)
 gathers the `parameters.rds` of every run into one table (one row per
 run and parameter value, with the score, whether the run failed and why,
 and the generation read from the `genNNN_` prefix of the folder name).
-[`summarise_calibration()`](../../reference/summarise_calibration.md)
+[`summarise_calibration()`](https://insileco.io/atlantio/reference/summarise_calibration.md)
 summarises it per parameter value of the calibration table:
 
 ``` r
@@ -656,8 +673,8 @@ filtered out of `runs` first.
 
 The time series of the best runs show which groups drive the score and
 whether the tolerance band or the scoring window need adjusting.
-[`score_table()`](../../reference/score_table.md) on the saved time
-series breaks the score down per series:
+[`score_table()`](https://insileco.io/atlantio/reference/score_table.md)
+on the saved time series breaks the score down per series:
 
 ``` r
 
@@ -670,13 +687,13 @@ head(st[order(st$penalty, decreasing = TRUE), ], 10)
 ### The next parameter folder
 
 The next round starts from the calibrated values, possibly with a new
-set of parameters, which is how @morell_ManualSemiautomated_2026
-describe calibration as a semi-automated process rather than a single
-optimization.
-[`apply_parameters()`](../../reference/apply_parameters.md) sets the
-values of a run in the model object, here on the model scale as saved in
-`parameters.rds`, and
-[`write_parameter_folder()`](../../reference/write_parameter_folder.md)
+set of parameters, which is how Morell et al.
+([2026](#ref-morell_ManualSemiautomated_2026)) describe calibration as a
+semi-automated process rather than a single optimization.
+[`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md)
+sets the values of a run in the model object, here on the model scale as
+saved in `parameters.rds`, and
+[`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md)
 writes the new parameter folder from the previous one. Only the
 calibrated values change in the biology file; the files not loaded in
 the object (physics, forcing) are copied from `from`:
@@ -691,10 +708,10 @@ changes <- write_parameter_folder(mod_next, "params_calibration_v2",
 changes
 ```
 
-[`compare_prm()`](../../reference/compare_prm.md) compares two parameter
-files by parameter name, so moved lines, comments and layout do not show
-up, only the values that differ and the parameters present in one file
-only:
+[`compare_prm()`](https://insileco.io/atlantio/reference/compare_prm.md)
+compares two parameter files by parameter name, so moved lines, comments
+and layout do not show up, only the values that differ and the
+parameters present in one file only:
 
 ``` r
 
@@ -705,3 +722,8 @@ compare_prm(
 ```
 
 ## References
+
+Morell, Alaia, Isaac C. Kaplan, Hem Nalini Morzaria-Luna, et al. 2026.
+“From Manual to Semi-Automated Calibration: A Practical Framework for
+Calibrating Atlantis Ecosystem Models.” *Ecological Modelling* 520
+(October): 111688. <https://doi.org/10.1016/j.ecolmodel.2026.111688>.

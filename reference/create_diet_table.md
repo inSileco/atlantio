@@ -44,7 +44,7 @@ to 4 `pPREY` values per prey-predator combination:
 
 - pPREY2XXX2: adult prey, adult predator where XXX denotes the code of
   the predator. Note that the realised diet in Atlantis will depend on
-  other factor, for instance the coeficient `mum`, assuming it is used
+  other factors, for instance the coefficient `mum`, assuming it is used
   by the functional response (see `predcase_XXXX`).
 
 ## References

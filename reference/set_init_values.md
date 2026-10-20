@@ -37,7 +37,7 @@ set_init_values(path, variable, values, file = path)
 
 ## See also
 
-[`check_init()`](check_init.md)
+[`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
 
 ## Examples
 

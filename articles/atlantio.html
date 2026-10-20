@@ -115,18 +115,15 @@ files, so every example below can be run as is.</p>
 <span><span class="co">#&gt;  [7] "tiny_physics.prm"   "tiny_run.prm"       "tiny_solar.ts"     </span></span>
 <span><span class="co">#&gt; [10] "tiny.bgm"</span></span>
 <span><span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"outputs"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "export.ts"                   "inputs.ts"                  </span></span>
-<span><span class="co">#&gt;  [3] "log.txt"                     "output.nc"                  </span></span>
-<span><span class="co">#&gt;  [5] "outputAgeBiomIndx.txt"       "outputAnnualAgeBiomIndx.txt"</span></span>
-<span><span class="co">#&gt;  [7] "outputBiomIndx.txt"          "outputBoxBiomass.txt"       </span></span>
-<span><span class="co">#&gt;  [9] "outputDietCheck.txt"         "outputMigration.txt"        </span></span>
-<span><span class="co">#&gt; [11] "outputMort.txt"              "outputMortPerPred.txt"      </span></span>
-<span><span class="co">#&gt; [13] "outputPredPropCheck.txt"     "outputPROD.nc"              </span></span>
-<span><span class="co">#&gt; [15] "outputSpecificMort.txt"      "outputSpecificPredMort.txt" </span></span>
-<span><span class="co">#&gt; [17] "outputSSB.txt"               "outputTOT.nc"               </span></span>
-<span><span class="co">#&gt; [19] "outputVertSize.txt"          "outputYOY.txt"              </span></span>
-<span><span class="co">#&gt; [21] "tiny_biol.xml"               "tiny_groups.xml"            </span></span>
-<span><span class="co">#&gt; [23] "tiny_run.xml"                "tiny.bgm"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "log.txt"                     "output.nc"                  </span></span>
+<span><span class="co">#&gt;  [3] "outputAgeBiomIndx.txt"       "outputAnnualAgeBiomIndx.txt"</span></span>
+<span><span class="co">#&gt;  [5] "outputBiomIndx.txt"          "outputBoxBiomass.txt"       </span></span>
+<span><span class="co">#&gt;  [7] "outputDietCheck.txt"         "outputMigration.txt"        </span></span>
+<span><span class="co">#&gt;  [9] "outputMort.txt"              "outputMortPerPred.txt"      </span></span>
+<span><span class="co">#&gt; [11] "outputPredPropCheck.txt"     "outputSpecificMort.txt"     </span></span>
+<span><span class="co">#&gt; [13] "outputSpecificPredMort.txt"  "outputSSB.txt"              </span></span>
+<span><span class="co">#&gt; [15] "outputVertSize.txt"          "outputYOY.txt"              </span></span>
+<span><span class="co">#&gt; [17] "tiny_biol.xml"               "tiny.bgm"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="building-a-model">Building a model<a class="anchor" aria-label="anchor" href="#building-a-model"></a>
@@ -425,9 +422,9 @@ predator to prey, ready for network analysis or plotting.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_foodweb.html">create_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="va">fw</span></span>
-<span><span class="co">#&gt; IGRAPH d9a8b78 DNW- 18 62 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 35da9e9 DNW- 18 62 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from d9a8b78 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 35da9e9 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] WAE-&gt;WAE YPH-&gt;WAE WAE-&gt;YPH YPH-&gt;YPH WAE-&gt;GZS WAE-&gt;RDG YPH-&gt;RDG RDG-&gt;DRE</span></span>
 <span><span class="co">#&gt;  [9] WAE-&gt;DRE YPH-&gt;DRE GZS-&gt;CHI RDG-&gt;CHI WAE-&gt;CHI YPH-&gt;CHI CAL-&gt;DIA DRE-&gt;DIA</span></span>
 <span><span class="co">#&gt; [17] GZS-&gt;DIA ROT-&gt;DIA CAL-&gt;GRN DRE-&gt;GRN GZS-&gt;GRN ROT-&gt;GRN DRE-&gt;CAL GZS-&gt;CAL</span></span>

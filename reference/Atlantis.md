@@ -48,9 +48,11 @@ Atlantis(
 
 - initial:
 
-  `[list]`  
-  Initial conditions from .nc file specifying starting biomass, numbers,
-  and other state variables for each functional group.
+  `[ncdf4]`  
+  Initial conditions: the open netCDF file (see
+  [`read_nc()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)),
+  to close with
+  [`ncdf4::nc_close()`](https://rdrr.io/pkg/ncdf4/man/nc_close.html).
 
 - biology:
 
@@ -78,7 +80,7 @@ Atlantis(
 
 - fisheries:
 
-  `[list]`  
+  `[data.frame]`  
   Fisheries configuration and catch time series data for commercial and
   recreational fishing activities.
 
@@ -90,60 +92,70 @@ Atlantis(
 
 - main_output:
 
-  `[data.frame]`  
-  Primary model outputs including biomass and abundance time series for
-  all functional groups aggregated across space.
+  `[ncdf4]`  
+  Main output: the open netCDF file of the run (see
+  [`read_nc()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)),
+  read by
+  [`create_time_series()`](https://insileco.io/atlantio/reference/create_time_series.md)
+  and
+  [`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md);
+  close it with
+  [`ncdf4::nc_close()`](https://rdrr.io/pkg/ncdf4/man/nc_close.html).
 
 - biomass_all:
 
-  `[array]`  
-  Complete biomass snapshots at specific time points showing spatial
-  distribution across all boxes and depth layers.
+  `[data.frame]`  
+  Biomass of every group over the whole model domain (`BiomIndx.txt`).
 
 - biomass_box:
 
-  `[array]`  
-  Biomass snapshots aggregated by box (spatial polygon) for each
-  functional group and time point.
+  `[data.frame]`  
+  Biomass of every group per box (`BoxBiomass.txt`).
 
 - biomass_age:
 
-  `[array]`  
-  Age-structured biomass snapshots showing cohort dynamics for
-  vertebrate functional groups.
+  `[data.frame]`  
+  Biomass per age class of the age-structured groups
+  (`AgeBiomIndx.txt`).
 
 - biomass_age_annual:
 
-  `[array]`  
-  Annual summaries of age-structured biomass data for long-term trend
-  analysis.
+  `[data.frame]`  
+  The same, yearly (`AnnualAgeBiomIndx.txt`).
 
 - diet:
 
-  `[matrix]`  
-  Diet composition matrix showing predator-prey relationships and
-  consumption rates between functional groups.
+  `[data.frame]`  
+  Diet composition of the predators (`DietCheck.txt`).
 
 - diet_detailed:
 
-  `[array]`  
-  Detailed diet matrices with temporal, spatial, and size-based
-  resolution of predation interactions.
+  `[data.frame]`  
+  Diet composition per box and layer (`DetailedDietCheck.txt`).
 
 - yoy:
 
-  `[array]`  
-  Snapshot of biomass of recruits per year.
+  `[data.frame]`  
+  Biomass of recruits per year (`YOY.txt`).
 
 - file_paths:
 
-  `[dataframe]`  
-  Data frame listing path to input and output files.
+  `[data.frame]`  
+  The files: the rows of
+  [input_files](https://insileco.io/atlantio/reference/input_files.md)
+  with the path of each file loaded (`NA` otherwise).
 
 - version:
 
   `[character]`  
   Atlantis version used.
+
+## Details
+
+[`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+fills every property but `physics`, `forcing`, `fisheries` and
+`harvest`, which can be set by hand, e.g.
+`x@harvest <- read_prm("harvest.prm")`.
 
 ## Model Components
 
@@ -167,5 +179,5 @@ The Atlantis class contains the following major component types:
 
 ## References
 
-Output list avaialbe here
-<https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/markdown_output/AtlantisUserGuide_PartI_CLEAN.html#simulation-outputs>
+The outputs are described in the Atlantis User's Guide Part I
+<https://research.csiro.au/atlantis/wp-content/uploads/sites/52/2025/05/AtlantisUserGuide_PartI.pdf>

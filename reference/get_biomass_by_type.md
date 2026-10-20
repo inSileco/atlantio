@@ -28,10 +28,12 @@ get_biomass_by_type(atlantis, bm_type)
   - `"biomass_age"` - Age-structured biomass for vertebrate functional
     groups
 
+  - `"biomass_age_annual"` - Annual age-structured biomass
+
 ## Value
 
-The requested biomass data object (typically a data.frame or array), or
-`NULL` if the specified type is not available in the Atlantis object.
+The requested biomass table (a data frame), or `NULL` if that output is
+not loaded in the Atlantis object. Any other `bm_type` is an error.
 
 ## Examples
 

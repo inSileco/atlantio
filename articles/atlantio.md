@@ -30,7 +30,8 @@ This vignette is a quick tour of what the package currently does:
 ## Example files
 
 The package ships with a tiny Atlantis model (inputs and outputs of a
-short run). [`atlantis_examples()`](../reference/atlantis_examples.md)
+short run).
+[`atlantis_examples()`](https://insileco.io/atlantio/reference/atlantis_examples.md)
 returns the path to these files, so every example below can be run as
 is.
 
@@ -42,18 +43,15 @@ atlantis_examples("inputs") |> list.files()
 #>  [7] "tiny_physics.prm"   "tiny_run.prm"       "tiny_solar.ts"     
 #> [10] "tiny.bgm"
 atlantis_examples("outputs") |> list.files()
-#>  [1] "export.ts"                   "inputs.ts"                  
-#>  [3] "log.txt"                     "output.nc"                  
-#>  [5] "outputAgeBiomIndx.txt"       "outputAnnualAgeBiomIndx.txt"
-#>  [7] "outputBiomIndx.txt"          "outputBoxBiomass.txt"       
-#>  [9] "outputDietCheck.txt"         "outputMigration.txt"        
-#> [11] "outputMort.txt"              "outputMortPerPred.txt"      
-#> [13] "outputPredPropCheck.txt"     "outputPROD.nc"              
-#> [15] "outputSpecificMort.txt"      "outputSpecificPredMort.txt" 
-#> [17] "outputSSB.txt"               "outputTOT.nc"               
-#> [19] "outputVertSize.txt"          "outputYOY.txt"              
-#> [21] "tiny_biol.xml"               "tiny_groups.xml"            
-#> [23] "tiny_run.xml"                "tiny.bgm"
+#>  [1] "log.txt"                     "output.nc"                  
+#>  [3] "outputAgeBiomIndx.txt"       "outputAnnualAgeBiomIndx.txt"
+#>  [5] "outputBiomIndx.txt"          "outputBoxBiomass.txt"       
+#>  [7] "outputDietCheck.txt"         "outputMigration.txt"        
+#>  [9] "outputMort.txt"              "outputMortPerPred.txt"      
+#> [11] "outputPredPropCheck.txt"     "outputSpecificMort.txt"     
+#> [13] "outputSpecificPredMort.txt"  "outputSSB.txt"              
+#> [15] "outputVertSize.txt"          "outputYOY.txt"              
+#> [17] "tiny_biol.xml"               "tiny.bgm"
 ```
 
 ## Building a model
@@ -61,8 +59,9 @@ atlantis_examples("outputs") |> list.files()
 An `Atlantis` object is a container with one slot per kind of Atlantis
 file (geometry, run file, biology parameters, group file, main output,
 biomass tables, diet tables, etc.).
-[`new_atlantis()`](../reference/new_atlantis.md) creates an empty one
-and printing it shows which components are available.
+[`new_atlantis()`](https://insileco.io/atlantio/reference/new_atlantis.md)
+creates an empty one and printing it shows which components are
+available.
 
 ``` r
 
@@ -84,9 +83,9 @@ mod
 #> ✖ Biomass (per age)
 ```
 
-[`atlantis_load_files()`](../reference/atlantis_load_files.md) reads
-files, detects their type from their extension and content, and stores
-them in the right slot. Here we add the geometry, the biology
+[`atlantis_load_files()`](https://insileco.io/atlantio/reference/atlantis_load_files.md)
+reads files, detects their type from their extension and content, and
+stores them in the right slot. Here we add the geometry, the biology
 parameters, the group file and the run file.
 
 ``` r
@@ -185,10 +184,12 @@ been run (see below).
 ## Reading and writing parameter files
 
 `.prm` files are the main way to configure Atlantis.
-[`read_prm()`](../reference/read_prm.md) parses them into a named list
-where every entry keeps its comments as an attribute, and
-[`write_prm()`](../reference/read_prm.md) does the reverse. This makes
-it easy to edit a few parameters programmatically and write a new file.
+[`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+parses them into a named list where every entry keeps its comments as an
+attribute, and
+[`write_prm()`](https://insileco.io/atlantio/reference/read_prm.md) does
+the reverse. This makes it easy to edit a few parameters
+programmatically and write a new file.
 
 ``` r
 
@@ -219,13 +220,13 @@ the attribute `unit` and written back. Change values element-wise, as
 the comments, and Atlantis reads a number without unit in seconds. To
 write modified parameters into a copy of an existing file, keeping its
 comments and layout, use
-[`write_parameter_folder()`](../reference/write_parameter_folder.md),
+[`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md),
 which changes only the values that differ (see the [calibration
-vignette](calibration/index.md)).
+vignette](https://insileco.io/atlantio/articles/calibration/index.md)).
 
-[`compare_prm()`](../reference/compare_prm.md) compares two parameter
-files, or parameter lists, by parameter name, so that moved lines,
-comments and layout do not show up:
+[`compare_prm()`](https://insileco.io/atlantio/reference/compare_prm.md)
+compares two parameter files, or parameter lists, by parameter name, so
+that moved lines, comments and layout do not show up:
 
 ``` r
 
@@ -240,13 +241,14 @@ compare_prm(read_prm(atlantis_examples("inputs", "tiny_run.prm")), new)
 
 ### Checking the inputs
 
-[`check_prm()`](../reference/check_prm.md) and
-[`check_init()`](../reference/check_init.md) report the problems of
-parameter files and initial conditions that Atlantis reads silently, and
-[`check_run()`](../reference/check_run.md) whether a run reached its end
-(Atlantis exits with status 0 even when it crashes). All three return a
-table with one row per finding (`file`, `check`, `severity`, `key` and
-`message`), printed as a summary.
+[`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md) and
+[`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
+report the problems of parameter files and initial conditions that
+Atlantis reads silently, and
+[`check_run()`](https://insileco.io/atlantio/reference/check_run.md)
+whether a run reached its end (Atlantis exits with status 0 even when it
+crashes). All three return a table with one row per finding (`file`,
+`check`, `severity`, `key` and `message`), printed as a summary.
 
 ``` r
 
@@ -285,8 +287,8 @@ mod
 
 ### Biomass tables
 
-[`get_biomass_by_type()`](../reference/get_biomass_by_type.md) returns
-one of the biomass tables (`"biomass_all"`, `"biomass_box"`,
+[`get_biomass_by_type()`](https://insileco.io/atlantio/reference/get_biomass_by_type.md)
+returns one of the biomass tables (`"biomass_all"`, `"biomass_box"`,
 `"biomass_age"` or `"biomass_age_annual"`).
 
 ``` r
@@ -308,10 +310,10 @@ mod |>
 
 ### Time series from the NetCDF output
 
-[`create_time_series()`](../reference/create_time_series.md) extracts
-any variable of the main output as a tidy data frame, optionally
-restricted to a set of boxes and layers. Time is in seconds since the
-start of the run.
+[`create_time_series()`](https://insileco.io/atlantio/reference/create_time_series.md)
+extracts any variable of the main output as a tidy data frame,
+optionally restricted to a set of boxes and layers. Time is in seconds
+since the start of the run.
 
 ``` r
 
@@ -331,7 +333,7 @@ mod |>
 #> 6 2160000   2     1    15     Temp degrees Celcius
 ```
 
-[`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+[`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md)
 gathers reserve and structural nitrogen, numbers and weight for an
 age-structured group, per box, layer and age class.
 
@@ -366,9 +368,9 @@ ts_yph |>
 
 The biology parameter file contains the prey availability matrix
 (`pPREY` parameters).
-[`create_diet_table()`](../reference/create_diet_table.md) reshapes it
-into a table with one row per predator (and stages) and one column per
-prey.
+[`create_diet_table()`](https://insileco.io/atlantio/reference/create_diet_table.md)
+reshapes it into a table with one row per predator (and stages) and one
+column per prey.
 
 ``` r
 
@@ -385,17 +387,18 @@ diet[1:6, 1:6]
 #> pPREY2WAE1 0.000 0.0 0.01 0.0   0 0.10
 ```
 
-[`create_foodweb()`](../reference/create_foodweb.md) goes one step
-further and returns the binary food web as an `igraph` object, with
-edges from predator to prey, ready for network analysis or plotting.
+[`create_foodweb()`](https://insileco.io/atlantio/reference/create_foodweb.md)
+goes one step further and returns the binary food web as an `igraph`
+object, with edges from predator to prey, ready for network analysis or
+plotting.
 
 ``` r
 
 fw <- create_foodweb(mod)
 fw
-#> IGRAPH d9a8b78 DNW- 18 62 -- 
+#> IGRAPH 35da9e9 DNW- 18 62 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from d9a8b78 (vertex names):
+#> + edges from 35da9e9 (vertex names):
 #>  [1] WAE->WAE YPH->WAE WAE->YPH YPH->YPH WAE->GZS WAE->RDG YPH->RDG RDG->DRE
 #>  [9] WAE->DRE YPH->DRE GZS->CHI RDG->CHI WAE->CHI YPH->CHI CAL->DIA DRE->DIA
 #> [17] GZS->DIA ROT->DIA CAL->GRN DRE->GRN GZS->GRN ROT->GRN DRE->CAL GZS->CAL
@@ -431,7 +434,7 @@ plot(
 
 atlantio embeds a description of Atlantis parameters extracted from the
 source code.
-[`list_atlantis_parameters()`](../reference/list_atlantis_parameters.md)
+[`list_atlantis_parameters()`](https://insileco.io/atlantio/reference/list_atlantis_parameters.md)
 returns metadata about the Atlantis version and a list of parameters
 with their description, type and where they are read.
 
@@ -479,15 +482,16 @@ prm_list$parameters[[1]]
 #> NULL
 ```
 
-See the [parameter set vignette](parameters/index.md) for a searchable
-table.
+See the [parameter set
+vignette](https://insileco.io/atlantio/articles/parameters/index.md) for
+a searchable table.
 
 ### Generating template files
 
-[`generate_file()`](../reference/generate_file.md) uses these
-descriptions to generate a parameter file with recommended values and
-comments. Values that need to be provided by the user are marked with
-`<<TO_EDIT>>`. Only the run file is supported for now.
+[`generate_file()`](https://insileco.io/atlantio/reference/generate_file.md)
+uses these descriptions to generate a parameter file with recommended
+values and comments. Values that need to be provided by the user are
+marked with `<<TO_EDIT>>`. Only the run file is supported for now.
 
 ``` r
 
@@ -509,7 +513,7 @@ readLines(run_file, n = 12)
 
 ### Preparing a calibration
 
-[`generate_calibration_table()`](../reference/generate_calibration_table.md)
+[`generate_calibration_table()`](https://insileco.io/atlantio/reference/generate_calibration_table.md)
 turns a short YAML specification into the table of parameters to
 calibrate expected by `calibrar`: one row per parameter and position,
 with bounds, the transformation applied and the file the parameter
@@ -543,9 +547,9 @@ mod |>
 #> 6 mum_RDG 0.009661128  -6  -1        1  pow10 biology_prm
 ```
 
-[`transform_parameter_value()`](../reference/transform_parameter_value.md)
+[`transform_parameter_value()`](https://insileco.io/atlantio/reference/transform_parameter_value.md)
 and
-[`inverse_transform_parameter_value()`](../reference/inverse_transform_parameter_value.md)
+[`inverse_transform_parameter_value()`](https://insileco.io/atlantio/reference/inverse_transform_parameter_value.md)
 map values between the calibration scale and the scale used in the
 parameter file.
 
@@ -560,7 +564,7 @@ inverse_transform_parameter_value(0.001, "pow10")
 The full workflow (running Atlantis, computing the objective function,
 driving `calibrar`, summarising the runs and writing the next parameter
 folder) is described in the [calibration
-vignette](calibration/index.md).
+vignette](https://insileco.io/atlantio/articles/calibration/index.md).
 
 ## References
 

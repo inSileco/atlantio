@@ -35,14 +35,14 @@ into one row per value to calibrate. The following fields are
 recognised:
 
 - `name` (required): the parameter name, as listed in
-  [`list_atlantis_parameters()`](list_atlantis_parameters.md). The name
-  may contain a placeholder such as `<GRP>` (e.g. `mum_<GRP>`); the
-  placeholder is then expanded over the values of an extra field of the
-  same name without angle brackets (see `GRP` below). Entries without a
-  placeholder (e.g. `rec_m`) yield the parameter as is. Names with
-  several placeholders are expanded over all combinations, e.g. the diet
-  availabilities `pPREY<PREYCOHORT><PRED><PREDCOHORT>` with the fields
-  `PREYCOHORT`, `PRED` and `PREDCOHORT` (`pPREY1WAE2` is the
+  [`list_atlantis_parameters()`](https://insileco.io/atlantio/reference/list_atlantis_parameters.md).
+  The name may contain a placeholder such as `<GRP>` (e.g. `mum_<GRP>`);
+  the placeholder is then expanded over the values of an extra field of
+  the same name without angle brackets (see `GRP` below). Entries
+  without a placeholder (e.g. `rec_m`) yield the parameter as is. Names
+  with several placeholders are expanded over all combinations, e.g. the
+  diet availabilities `pPREY<PREYCOHORT><PRED><PREDCOHORT>` with the
+  fields `PREYCOHORT`, `PRED` and `PREDCOHORT` (`pPREY1WAE2` is the
   availability of juvenile prey to adult walleye).
 
 - `position` (optional): integer index, or vector of indices, of the
@@ -62,9 +62,9 @@ recognised:
 - `transf` (optional): transformation mapping the calibration scale to
   the scale used in the parameter file, one of `"identity"` (default),
   `"pow10"`, `"pow2"` or `"exp"`, see
-  [`transform_parameter_value()`](transform_parameter_value.md). A log
-  scale (`pow10` or `exp`) is recommended for rate parameters spanning
-  several orders of magnitude.
+  [`transform_parameter_value()`](https://insileco.io/atlantio/reference/transform_parameter_value.md).
+  A log scale (`pow10` or `exp`) is recommended for rate parameters
+  spanning several orders of magnitude.
 
 - `min`, `max` (optional): lower and upper bounds of the search,
   expressed on the calibration scale. With `transf: pow10`, `min: -3`

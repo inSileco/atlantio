@@ -23,13 +23,13 @@ summarise_calibration(
 - runs:
 
   The runs: a data frame as returned by
-  [`read_calibration_runs()`](read_calibration_runs.md), or the folder
-  to read them from.
+  [`read_calibration_runs()`](https://insileco.io/atlantio/reference/read_calibration_runs.md),
+  or the folder to read them from.
 
 - calib_table:
 
   The calibration table of the runs, as returned by
-  [`generate_calibration_table()`](generate_calibration_table.md).
+  [`generate_calibration_table()`](https://insileco.io/atlantio/reference/generate_calibration_table.md).
 
 - n_best:
 
@@ -70,6 +70,8 @@ A list of three data frames:
 - `scores`: per generation, the number of `runs`, of `failed` runs, and
   the `best` and `median` scores of the completed runs.
 
+The runs without generation make the generation `NA`.
+
 ## Details
 
 The runs are ranked by score among those that completed. The values are
@@ -82,9 +84,9 @@ computed on the calibration scale and then mapped to the model scale.
 
 ## See also
 
-[`read_calibration_runs()`](read_calibration_runs.md),
-[`apply_parameters()`](apply_parameters.md) to apply the values of a
-run.
+[`read_calibration_runs()`](https://insileco.io/atlantio/reference/read_calibration_runs.md),
+[`apply_parameters()`](https://insileco.io/atlantio/reference/apply_parameters.md)
+to apply the values of a run.
 
 ## Examples
 

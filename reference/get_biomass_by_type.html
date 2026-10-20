@@ -3,7 +3,7 @@
 aggregation type. Different biomass outputs provide different levels of
 spatial, temporal, and demographic resolution."><meta property="og:description" content="Extract biomass data from an Atlantis object based on the specified
 aggregation type. Different biomass outputs provide different levels of
-spatial, temporal, and demographic resolution."><meta property="og:image" content="/logo.png"></head><body>
+spatial, temporal, and demographic resolution."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -71,13 +71,15 @@ spatial, temporal, and demographic resolution.</p>
 <dd><p>Character string specifying the biomass data type:</p><ul><li><p><code>"biomass_all"</code> - Total biomass indices aggregated across all spatial boxes</p></li>
 <li><p><code>"biomass_box"</code> - Biomass by spatial box (polygon-level resolution)</p></li>
 <li><p><code>"biomass_age"</code> - Age-structured biomass for vertebrate functional groups</p></li>
+<li><p><code>"biomass_age_annual"</code> - Annual age-structured biomass</p></li>
 </ul></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The requested biomass data object (typically a data.frame or array),
-or <code>NULL</code> if the specified type is not available in the Atlantis object.</p>
+    <p>The requested biomass table (a data frame), or <code>NULL</code> if that
+output is not loaded in the Atlantis object. Any other <code>bm_type</code> is an
+error.</p>
     </div>
 
     <div class="section level2">

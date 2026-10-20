@@ -91,8 +91,8 @@ atl$parameters[1:2]
 #> [1] "bm->include_atmosphere"
 ```
 
-The table below display the entire set of parameters, note that the
-followwing abbreviations are used: - : groups abbreviation - :
+The table below displays the entire set of parameters; note that the
+following abbreviations are used: - : groups abbreviation - :
 fisheries - : cohort - : move group code - : tracer name
 
 ## Biology parameters
@@ -746,349 +746,91 @@ fisheries - : cohort - : move group code - : tracer name
 
 | Name | Description | Units | Type | File | Dimension |
 |:---|:---|:---|:---|:---|:---|
-| ecotest | Ecology test/diagnostic verbosity flag |  | int | biology_prm | scalar |
-| availflag | Switch controlling how prey availability is interpreted |  | int | biology_prm | scalar |
-| flagrandom | Enable stochastic/random processes |  | int | biology_prm | scalar |
-| readin_popratio | Read population ratio (stock) data flag |  | int | biology_prm | scalar |
-| flagresp | Respiration submodel flag |  | int | biology_prm | scalar |
-| flagavgmig | Average migration flag |  | int | biology_prm | scalar |
-| flagbactstim | Bacterial stimulation flag |  | int | biology_prm | scalar |
-| flagtrackpops | Track populations flag |  | int | biology_prm | scalar |
-| flagseason | Seasonal forcing flag |  | int | biology_prm | scalar |
-| flaglight | Light limitation model flag |  | int | biology_prm | scalar |
-| flaglightopt | Light optimisation option |  | int | biology_prm | scalar |
-| lim_sun_hours | Limit primary production to daylight hours flag |  | int | biology_prm | scalar |
-| flagmodeltemp | Temperature dependence model flag |  | int | biology_prm | scalar |
-| flagq10 | Global Q10 temperature scaling flag |  | int | biology_prm | scalar |
-| O2case | Oxygen limitation case selector |  | int | biology_prm | scalar |
-| flagnut | Nutrient limitation flag |  | int | biology_prm | scalar |
-| flagmicro | Microbial loop flag |  | int | biology_prm | scalar |
-| flagtempchange | Apply prescribed temperature change flag |  | int | biology_prm | scalar |
-| flagsaltchange | Apply prescribed salinity change flag |  | int | biology_prm | scalar |
-| flagpHchange | Apply prescribed pH change flag |  | int | biology_prm | scalar |
-| flagstarve | Starvation mortality flag |  | int | biology_prm | scalar |
-| flagdegrade | Detritus degradation flag |  | int | biology_prm | scalar |
-| flagroc | Rate-of-change effects flag |  | int | biology_prm | scalar |
-| flaghomog_sp | Homogeneous spatial distribution flag |  | int | biology_prm | scalar |
-| flagagestruct | Age structure global flag |  | int | biology_prm | scalar |
-| flagsenesce | Senescence mortality flag |  | int | biology_prm | scalar |
-| flagtsforcerecruit | Time-series forced recruitment flag |  | int | biology_prm | scalar |
-| flag_modify_KWSR | Modify weight-at-spawn ratio flag |  | int | biology_prm | scalar |
-| flag_extpop_growth_option | External population growth option |  | int | biology_prm | scalar |
-| juv_transition_thresh | Juvenile-to-adult size transition threshold |  | double | biology_prm | scalar |
-| mat_transition_thresh | Maturity transition threshold |  | double | biology_prm | scalar |
-| norm_larval_distrib | Normalise larval distribution flag |  | int | biology_prm | scalar |
-| larvae_connect_only | Larvae connectivity-only flag |  | int | biology_prm | scalar |
-| enviro_independ_larvae | Environment-independent larvae flag |  | int | biology_prm | scalar |
-| flag_recruit_effect | Recruitment environmental effect flag |  | int | biology_prm | scalar |
-| flag_macro_model | Macrophyte/seagrass model flag |  | int | biology_prm | scalar |
-| flag_benthos_sediment_link | Benthos-sediment coupling flag |  | int | biology_prm | scalar |
-| flag_competing_epiff | Competing epibenthic filter feeders flag |  | int | biology_prm | scalar |
-| max_available_habitat | Maximum available habitat fraction |  | double | biology_prm | scalar |
-| flag_invert_biohab | Invertebrate biogenic habitat flag |  | int | biology_prm | scalar |
-| flag_olddiet | Use legacy diet handling flag |  | int | biology_prm | scalar |
-| flag_fine_ontogenetic_diets | Fine-grained per-age diet matrices flag |  | int | biology_prm | scalar |
-| UseHardFeedingWindow | Use hard (step) feeding window flag |  | int | biology_prm | scalar |
-| UseBiLogisticFeedingWindow | Use bi-logistic feeding window flag |  | int | biology_prm | scalar |
-| flag_satiation | Predator satiation flag |  | int | biology_prm | scalar |
-| flag_shrinkfat | Allow shrinking/fat loss flag |  | int | biology_prm | scalar |
-| flag_predratiodepend | Ratio-dependent predation flag |  | int | biology_prm | scalar |
-| flag_dynamicXRS | Dynamic reserve/structural ratio flag |  | int | biology_prm | scalar |
-| flag_repcostSpawn | Reproduction cost at spawning flag |  | int | biology_prm | scalar |
-| flag_lengthSN | Length from structural N flag |  | int | biology_prm | scalar |
-| XRS_cap | Cap on reserve-to-structural ratio |  | double | biology_prm | scalar |
-| flag_rel_cover | Relative cover model flag |  | int | biology_prm | scalar |
-| flag_report_water_detritus | Report water-column detritus flag |  | int | biology_prm | scalar |
-| flag_refuge_model | Prey refuge model flag |  | int | biology_prm | scalar |
-| flag_rugosity_model | Rugosity model flag |  | int | biology_prm | scalar |
-| flag_georugosity | Geological (background) rugosity flag |  | int | biology_prm | scalar |
-| RugCover_Coefft | Rugosity-cover relationship coefficient |  | double | biology_prm | scalar |
-| RugCover_Const | Rugosity-cover relationship constant |  | double | biology_prm | scalar |
-| RugCover_Cap | Rugosity-cover relationship cap |  | double | biology_prm | scalar |
-| min_rugosity | Minimum rugosity |  | double | biology_prm | scalar |
-| max_rugosity | Maximum rugosity |  | double | biology_prm | scalar |
-| rugosity_const | Rugosity baseline constant |  | double | biology_prm | scalar |
-| rugosity_bozec_a | Bozec rugosity model coefficient a |  | double | biology_prm | scalar |
-| rugosity_bozec_b | Bozec rugosity model coefficient b |  | double | biology_prm | scalar |
-| rugosity_bozec_c | Bozec rugosity model coefficient c |  | double | biology_prm | scalar |
-| rugosity_bozec_d | Bozec rugosity model coefficient d |  | double | biology_prm | scalar |
-| flagmodelpH | pH dynamics model flag |  | int | biology_prm | scalar |
-| pH_sensitivity_model | pH sensitivity model selector |  | int | biology_prm | scalar |
-| flagPHmortcase | pH mortality case selector |  | int | biology_prm | scalar |
-| pH_surface_depth | Surface pH layer depth boundary | m | double | biology_prm | scalar |
-| pH_mid_depth | Mid pH layer depth boundary | m | double | biology_prm | scalar |
-| pH_surface_coefft_T | Surface pH regression coefficient on temperature |  | double | biology_prm | scalar |
-| pH_surface_coefft_S | Surface pH regression coefficient on salinity |  | double | biology_prm | scalar |
-| pH_surface_coefft_O | Surface pH regression coefficient on oxygen |  | double | biology_prm | scalar |
-| pH_surface_const | Surface pH regression constant |  | double | biology_prm | scalar |
-| pH_mid_coefft_T | Mid-layer pH regression coefficient on temperature |  | double | biology_prm | scalar |
-| pH_mid_coefft_S | Mid-layer pH regression coefficient on salinity |  | double | biology_prm | scalar |
-| pH_mid_coefft_O | Mid-layer pH regression coefficient on oxygen |  | double | biology_prm | scalar |
-| pH_mid_const | Mid-layer pH regression constant |  | double | biology_prm | scalar |
-| pH_deep_coefft_T | Deep-layer pH regression coefficient on temperature |  | double | biology_prm | scalar |
-| pH_deep_coefft_S | Deep-layer pH regression coefficient on salinity |  | double | biology_prm | scalar |
-| pH_deep_coefft_O | Deep-layer pH regression coefficient on oxygen |  | double | biology_prm | scalar |
-| pH_deep_const | Deep-layer pH regression constant |  | double | biology_prm | scalar |
-| flagmodelArag | Aragonite saturation model flag |  | int | biology_prm | scalar |
-| K_max_num_DHW | Max number of degree heating weeks records |  | int | biology_prm | scalar |
-| Karag_A | Aragonite regression coefficient A |  | double | biology_prm | scalar |
-| Karag_B | Aragonite regression coefficient B |  | double | biology_prm | scalar |
-| Karag_C | Aragonite regression coefficient C |  | double | biology_prm | scalar |
-| Karag_pH | Aragonite regression coefficient on pH |  | double | biology_prm | scalar |
-| Kca_const | Calcium constant for calcification |  | double | biology_prm | scalar |
-| K_Ks | Calcification saturation half-constant |  | double | biology_prm | scalar |
-| Ksmother_coefft | Smothering coefficient |  | double | biology_prm | scalar |
-| Ksmother_const | Smothering constant |  | double | biology_prm | scalar |
-| Pads_r_t0 | Phosphate adsorption rate at reference temp |  | double | biology_prm | scalar |
-| Pads_K | Phosphate adsorption half-saturation |  | double | biology_prm | scalar |
-| Pads_KO | Phosphate adsorption oxygen dependence |  | double | biology_prm | scalar |
-| r_immob_PIP_t0 | Particulate inorganic P immobilisation rate at reference temp |  | double | biology_prm | scalar |
-| Enviro_turb | Environmental turbidity switch |  | int | biology_prm | scalar |
-| K_TUR | Turbidity half-saturation |  | double | biology_prm | scalar |
-| K_TUR_DEP | Turbidity depth dependence |  | double | biology_prm | scalar |
-| K_MAX_TUR | Maximum turbidity |  | double | biology_prm | scalar |
-| K_IRR | Irradiance half-saturation |  | double | biology_prm | scalar |
-| K_MAX_IRR | Maximum irradiance |  | double | biology_prm | scalar |
-| K_MIN_IRR | Minimum irradiance |  | double | biology_prm | scalar |
-| r_DC_T15 | Labile detritus carbon breakdown rate at 15C | d-1 | double | biology_prm | scalar |
-| r_DL_T15 | Labile detritus breakdown rate at 15C | d-1 | double | biology_prm | scalar |
-| r_DR_T15 | Refractory detritus breakdown rate at 15C | d-1 | double | biology_prm | scalar |
-| r_DON_T15 | Dissolved organic N breakdown rate at 15C | d-1 | double | biology_prm | scalar |
-| r_DSi_T15 | Dissolved silica regeneration rate at 15C | d-1 | double | biology_prm | scalar |
-| FDR_DC | Fraction of refractory detritus to DC |  | double | biology_prm | scalar |
-| FDR_DL | Fraction of refractory detritus to DL |  | double | biology_prm | scalar |
-| FDON_D | Fraction of detritus to DON |  | double | biology_prm | scalar |
-| R_0_T15 | Base remineralisation rate at 15C | d-1 | double | biology_prm | scalar |
-| R_D_T15 | Detritus remineralisation rate at 15C | d-1 | double | biology_prm | scalar |
-| Dmax | Maximum depth for remineralisation | m | double | biology_prm | scalar |
-| K_nit_T15 | Nitrification rate at 15C | d-1 | double | biology_prm | scalar |
-| K_conc | Nitrification concentration half-saturation |  | double | biology_prm | scalar |
-| p_NH_anad | Proportion NH from anaerobic decomposition |  | double | biology_prm | scalar |
-| X_ON | Oxygen-to-nitrogen Redfield ratio |  | double | biology_prm | scalar |
-| X_CN | Carbon-to-nitrogen Redfield ratio |  | double | biology_prm | scalar |
-| X_CHLN | Chlorophyll-to-nitrogen ratio |  | double | biology_prm | scalar |
-| X_SiN | Silica-to-nitrogen ratio |  | double | biology_prm | scalar |
-| X_FeN | Iron-to-nitrogen ratio |  | double | biology_prm | scalar |
-| k_wetdry | Wet/dry weight conversion factor |  | double | biology_prm | scalar |
-| k_w_cdepth | Light attenuation coefficient at critical depth | m-1 | double | biology_prm | scalar |
-| k_w_depth | Light attenuation coefficient with depth | m-1 | double | biology_prm | scalar |
-| k_w_deep | Deep-water light attenuation coefficient | m-1 | double | biology_prm | scalar |
-| k_w_shallow | Shallow-water light attenuation coefficient | m-1 | double | biology_prm | scalar |
-| k_PN | Light attenuation per unit particulate N |  | double | biology_prm | scalar |
-| k_DON | Light attenuation per unit DON |  | double | biology_prm | scalar |
-| k_DL | Light attenuation per unit labile detritus |  | double | biology_prm | scalar |
-| k_IS | Light attenuation per unit inorganic suspended matter |  | double | biology_prm | scalar |
-| k_SED | Light attenuation per unit sediment |  | double | biology_prm | scalar |
-| KIOP_min | Minimum I-optimal half-saturation |  | double | biology_prm | scalar |
-| KIOP_shift | I-optimal shift parameter |  | double | biology_prm | scalar |
-| KI_avail | Irradiance availability scalar |  | double | biology_prm | scalar |
-| K_addepth | Additional depth offset for light calc | m | double | biology_prm | scalar |
-| swr_scalar | Shortwave radiation scaling factor |  | double | biology_prm | scalar |
-| swr_const | Shortwave radiation constant |  | double | biology_prm | scalar |
-| swr_cos_coefft | Shortwave radiation seasonal cosine coefficient |  | double | biology_prm | scalar |
-| swr_cos_offset | Shortwave radiation seasonal cosine offset |  | double | biology_prm | scalar |
-| albedo_ice | Ice albedo |  | double | biology_prm | scalar |
-| k_bs | Light attenuation under bare snow |  | double | biology_prm | scalar |
-| k_bi | Light attenuation under bare ice |  | double | biology_prm | scalar |
-| k_rs | Light attenuation under refrozen snow |  | double | biology_prm | scalar |
-| k_ri | Light attenuation under refrozen ice |  | double | biology_prm | scalar |
-| R_bi | Reflectance of bare ice |  | double | biology_prm | scalar |
-| k_ice | Light attenuation coefficient for ice | m-1 | double | biology_prm | scalar |
-| ka_star | Specific light absorption coefficient |  | double | biology_prm | scalar |
-| Tchange_max_num | Number of prescribed temperature-change records |  | int | biology_prm | scalar |
-| Tchange | Prescribed temperature-change time-series (value/time pairs) | degC | double_array | biology_prm | timeseries |
-| Schange_max_num | Number of prescribed salinity-change records |  | int | biology_prm | scalar |
-| Schange | Prescribed salinity-change time-series |  | double_array | biology_prm | timeseries |
-| pHchange_max_num | Number of prescribed pH-change records |  | int | biology_prm | scalar |
-| PHchange | Prescribed pH-change time-series |  | double_array | biology_prm | timeseries |
-| RTOP | Top of refuge tolerance |  | double | biology_prm | scalar |
-| K_Lc | Critical light constant |  | double | biology_prm | scalar |
-| RelTol | Relative numerical tolerance |  | double | biology_prm | scalar |
-| Flux_tol | Flux tolerance threshold |  | double | biology_prm | scalar |
-| min_pool | Minimum tracer pool concentration |  | double | biology_prm | scalar |
-| min_dens | Minimum density threshold |  | double | biology_prm | scalar |
-| min_channel_depth | Minimum channel depth | m | double | biology_prm | scalar |
-| flag_do_var_express | Variable expression flag (evolution) |  | int | biology_prm | scalar |
-| flag_do_evolution | Enable evolution module |  | int | biology_prm | scalar |
-| flag_bound_change | Allow trait bound change flag |  | int | biology_prm | scalar |
-| flag_inheritance | Trait inheritance flag |  | int | biology_prm | scalar |
-| flag_evolvar_capped | Cap evolved variance flag |  | int | biology_prm | scalar |
-| evol_stdev_range | Evolutionary standard deviation range |  | double | biology_prm | scalar |
-| max_rate_evol | Maximum rate of evolutionary change |  | double | biology_prm | scalar |
-| flag_mult_grow_curves | Multiple growth morph curves flag |  | int | biology_prm | scalar |
-| ActiveTrait/\<GRP\> | Per-group active evolutionary trait flags (one row of trait toggles per group) |  | double_array | biology_prm | per_group |
-| MB_wc | Microbial biomass water-column reference |  | double | biology_prm | scalar |
-| eddy_scale | Eddy diffusivity scaling for PP |  | double | biology_prm | scalar |
-| XPB_DL | Fraction of PB flux to labile detritus |  | double | biology_prm | scalar |
-| XBB_DL | Fraction of BB flux to labile detritus |  | double | biology_prm | scalar |
-| XPB_DR | Fraction of PB flux to refractory detritus |  | double | biology_prm | scalar |
-| XBB_DR | Fraction of BB flux to refractory detritus |  | double | biology_prm | scalar |
-| k_PB | Pelagic bacteria rate constant |  | double | biology_prm | scalar |
-| k_BB | Benthic bacteria rate constant |  | double | biology_prm | scalar |
-| flaghabdepend | Habitat-dependent processes flag |  | int | biology_prm | scalar |
-| flag_move_habdepend | Habitat-dependent movement flag |  | int | biology_prm | scalar |
-| flagenviro_displace | Environmental displacement flag |  | int | biology_prm | scalar |
-| flagenviro_kill | Environmental kill flag |  | int | biology_prm | scalar |
-| REEFchange_max_num | Number of reef-cover change records |  | int | biology_prm | scalar |
-| FLATchange_max_num | Number of flat-cover change records |  | int | biology_prm | scalar |
-| SOFTchange_max_num | Number of soft-cover change records |  | int | biology_prm | scalar |
-| REEFchange | Reef-substrate cover change time-series |  | double_array | biology_prm | timeseries |
-| FLATchange | Flat-substrate cover change time-series |  | double_array | biology_prm | timeseries |
-| SOFTchange | Soft-substrate cover change time-series |  | double_array | biology_prm | timeseries |
-| Group_Habitat_Preference/\<GRP\> | Per-group habitat preference array over habitat types |  | double_array | biology_prm | per_group |
-| Group_Ice_Preference/\<GRP\> | Per-group ice habitat preference array |  | double_array | biology_prm | per_group |
-| Group_IceReprod_Preference/\<GRP\> | Per-group ice reproduction preference array |  | double_array | biology_prm | per_group |
-| roc_wgt | Rate-of-change weighting |  | double | biology_prm | scalar |
-| k_roc_food | Rate-of-change food scaling constant |  | double | biology_prm | scalar |
-| flagtempdepend_move | Temperature-dependent movement flag |  | int | biology_prm | scalar |
-| flagtempdepend_reprod | Temperature-dependent reproduction flag |  | int | biology_prm | scalar |
-| flagsaltdepend | Salinity-dependent processes flag |  | int | biology_prm | scalar |
-| flagO2depend | Oxygen-dependent processes flag |  | int | biology_prm | scalar |
-| flagconstrain_epiwander | Constrain epibenthic wandering flag |  | int | biology_prm | scalar |
-| X_RS | Reserve-to-structural target ratio |  | double | biology_prm | scalar |
-| Kthresh1 | Movement/feeding threshold constant 1 (read twice; two threshold slots) |  | double | biology_prm | scalar |
-| KHTD | Habitat threshold constant (deep) |  | double | biology_prm | scalar |
-| KHTI | Habitat threshold constant (intertidal) |  | double | biology_prm | scalar |
-| SeasonalDistribution/\<GRP\>/\<STAGE\> | Per-group/per-stage seasonal horizontal distribution (juvenile/adult, per box) |  | double_array | biology_prm | per_box |
-| p_BBfish | Proportion bacteria cleaned from fish-ingested detritus |  | double | biology_prm | scalar |
-| p_BBben | Proportion bacteria cleaned from benthic-ingested detritus |  | double | biology_prm | scalar |
-| p_PBwc | Proportion of pelagic bacteria available in water column |  | double | biology_prm | scalar |
-| p_PBben | Proportion of pelagic bacteria available in benthos |  | double | biology_prm | scalar |
-| k_refDL | Reference labile-detritus level for omnivore supplement feeding |  | double | biology_prm | scalar |
-| k_refDR | Reference refractory-detritus level for supplement feeding |  | double | biology_prm | scalar |
-| k_refsDL | Reference sediment labile-detritus level |  | double | biology_prm | scalar |
-| flagfishrates | Use fish-specific clearance/growth rates flag |  | int | biology_prm | scalar |
-| li_a_invert | Length-weight allometry coefficient a for invertebrates |  | double | biology_prm | scalar |
-| li_b_invert | Length-weight allometry exponent b for invertebrates |  | double | biology_prm | scalar |
-| pPREY\<PREYCOHORT\>\<PRED\>\<PREDCOHORT\> | Vertebrate predator-prey availability matrix (pSPVERTeat), availability of each prey group to a predator age class |  | double_array | biology_prm | per_prey |
-| pPREY\<PRED\> | Invertebrate/biomass-pool predator-prey availability row (single cohort) |  | double_array | biology_prm | per_prey |
-| DetritusSedimentFoodAvail/\<GRP\>\[/\<COHORT\>\] | Availability of detritus/sediment groups to a predator (per detritus group, per cohort for age-structured) |  | double_array | biology_prm | per_prey |
-| AgeDietAvail/\<GRP\> | Fine ontogenetic (per-age) prey availability matrix |  | double_array | biology_prm | per_prey |
-| SeagrassFoodAvail/\<GRP\> | Availability of seagrass/macrophyte parts to grazers |  | double_array | biology_prm | per_prey |
-| Supplemental_Diets/\<GRP\> | Imported/supplemental feed distribution per box for cultured/supplemented groups |  | double_array | biology_prm | per_box |
-| Catch_Opportunity/Catch_Availability/\<GRP\> | Availability of fishery catch to opportunistic catch-eaters (per prey group) |  | double_array | biology_prm | per_prey |
-| Catch_Opportunity/Proportion_Exploitable/\<GRP\> | Proportion of each fishery’s catch exploitable by catch-eaters |  | double_array | biology_prm | other |
-| C\_\<GRP\> | Per-cohort vertebrate clearance (search-volume) rate; prm key C\_\<GRP\> array over age classes | m3 (mg N)-1 d-1 | double_array | biology_prm | per_cohort |
-| C\_\<GRP\>\_T15 | Invertebrate grazer clearance rate at 15C; scalar per group | m3 (mg N)-1 d-1 | double | biology_prm | per_group |
-| BHalpha\_\<GRP\> | Beverton-Holt recruitment parameter alpha (maximum recruitment); scalar per age-structured group | individuals | double | biology_prm | per_group |
-| BHbeta\_\<GRP\> | Beverton-Holt recruitment parameter beta (half-saturation stock biomass); scalar per age-structured group | mg N | double | biology_prm | per_group |
-| \<GRP\>\_mL | Linear mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 | double_array | biology_prm | per_stage |
-| \<GRP\>\_mQ | Quadratic (density-dependent) mortality rate at 15C; one value per stage (2 values for stage-structured groups, a scalar otherwise) | d-1 (mg N m-3)-1 | double_array | biology_prm | per_stage |
-| mum\_\<GRP\> | Per-cohort vertebrate maximum growth (consumption) rate; prm key mum\_\<GRP\> array over age classes | mg N d-1 (per individual) | double_array | biology_prm | per_cohort |
-| mum\_\<GRP\>\_T15 | Invertebrate/PP/bacteria maximum growth rate at 15C; scalar per group | d-1 | double | biology_prm | per_group |
-| InvertebrateSN/\<GRP\> | Invertebrate structural-N (size) reference per group | mg N | double_array | biology_prm | per_group |
-| Q10 | Global Q10 temperature scaling factor |  | double | biology_prm | scalar |
-| temp_coefftB | Temperature response coefficient B |  | double | biology_prm | scalar |
-| temp_coefftC | Temperature response coefficient C |  | double | biology_prm | scalar |
-| temp_exp | Temperature response exponent |  | double | biology_prm | scalar |
-| KST_fish | Standard metabolic temperature scalar - fish |  | double | biology_prm | scalar |
-| KST_shark | Standard metabolic temperature scalar - shark |  | double | biology_prm | scalar |
-| KST_bird | Standard metabolic temperature scalar - bird |  | double | biology_prm | scalar |
-| KST_mammal | Standard metabolic temperature scalar - mammal |  | double | biology_prm | scalar |
-| Ktmp_fish | Temperature respiration coefficient - fish |  | double | biology_prm | scalar |
-| Ktmp_shark | Temperature respiration coefficient - shark |  | double | biology_prm | scalar |
-| Ktmp_bird | Temperature respiration coefficient - bird |  | double | biology_prm | scalar |
-| Ktmp_mammal | Temperature respiration coefficient - mammal |  | double | biology_prm | scalar |
-| Kthreshm | Mortality threshold constant |  | double | biology_prm | scalar |
-| FFDDR | Fraction of feeding-derived detritus going to refractory pool |  | double | biology_prm | scalar |
-| FDL_fish | Fraction labile detritus from fish mortality |  | double | biology_prm | scalar |
-| FDL_benth | Fraction labile detritus from benthic invert mortality |  | double | biology_prm | scalar |
-| FDL_top | Fraction labile detritus from top predator mortality |  | double | biology_prm | scalar |
-| FDL_wc | Fraction labile detritus from water-column group mortality |  | double | biology_prm | scalar |
-| FDL_SG_roots | Fraction labile detritus from seagrass roots |  | double | biology_prm | scalar |
-| FDL_SG_leaves | Fraction labile detritus from seagrass leaves |  | double | biology_prm | scalar |
-| FPB_DR | Fraction pelagic-bacteria flux to refractory detritus |  | double | biology_prm | scalar |
-| FBB_DR | Fraction benthic-bacteria flux to refractory detritus |  | double | biology_prm | scalar |
-| FPB_DON | Fraction pelagic-bacteria flux to DON |  | double | biology_prm | scalar |
-| FBB_DON | Fraction benthic-bacteria flux to DON |  | double | biology_prm | scalar |
-| Fben_den | Fraction benthic denitrification |  | double | biology_prm | scalar |
-| ImplicitSeabirdMortalityRate/\<GRP\> | Implicit (external) seabird mortality rate per group | d-1 | double_array | biology_prm | per_group |
-| ImplicitFishMortalityRate/\<GRP\> | Implicit (external) fish mortality rate per group | d-1 | double_array | biology_prm | per_group |
-| flagtrecruitdistrib | Time-varying recruit distribution flag |  | int | biology_prm | scalar |
-| recover_trigger | Population recovery trigger level |  | double | biology_prm | scalar |
-| recover_span | Recovery span duration |  | double | biology_prm | scalar |
-| recover_subseq | Subsequent recovery parameter |  | double | biology_prm | scalar |
-| lognorm_mu | Lognormal recruitment mean parameter |  | double | biology_prm | scalar |
-| lognorm_sigma | Lognormal recruitment standard deviation parameter |  | double | biology_prm | scalar |
-| rec_m | Recruitment mean (stochastic) parameter |  | double | biology_prm | scalar |
-| rec_sigma | Recruitment standard deviation parameter |  | double | biology_prm | scalar |
-| recruitRange | Recruitment search range |  | double | biology_prm | scalar |
-| recruitRangeFlat | Flat recruitment range |  | double | biology_prm | scalar |
-| ref_chl | Reference chlorophyll for recruitment effect |  | double | biology_prm | scalar |
-| FSPB\_\<GRP\> | Per-cohort proportion of spawning biomass; prm key FSPB\_\<GRP\> array over age classes |  | double_array | biology_prm | per_cohort |
-| KDENR\_\<GRP\> | Per-cohort density-dependent recruitment parameter (Reproduction/KDENR) |  | double_array | biology_prm | per_cohort |
-| recSTOCK\_\<GRP\> | Per-stock recruitment allocation (Reproduction/recSTOCK) |  | double_array | biology_prm | other |
-| popratioStock\_\<GRP\> | Per-stock population ratio at initialisation (Reproduction/popratioStock) |  | double_array | biology_prm | other |
-| pStock\_\<GRP\> | Per-stock diet/spatial proportion (Diet/pStock) |  | double_array | biology_prm | other |
-| VerticalRecruitLocation/\<GRP\> | Per-group vertical layer distribution for recruits |  | double_array | biology_prm | per_layer |
-| RecruitDistribution/\<GRP\> | Per-group horizontal recruit distribution over boxes |  | double_array | biology_prm | per_box |
-| AquacultDistribution/\<GRP\> | Per-group horizontal aquaculture stocking distribution over boxes |  | double_array | biology_prm | per_box |
-| \<GRP\>\_Time_Spawn | Per-spawn-event spawning time-of-year per group (prm key \*\_Time_Spawn) | day-of-year | int_array | biology_prm | per_cohort |
-| Time_Age\_\<GRP\> | Per-event time-to-age cohort entry per group (prm key Time_Age\_\<GRP\>) | day | int_array | biology_prm | per_cohort |
-| StockStructure/\<GRP\> | Per-group per-box stock membership (integer stock id per box) |  | int_array | biology_prm | per_box |
-| VerticalStockStructure/\<GRP\> | Per-group per-layer vertical stock membership |  | int_array | biology_prm | per_layer |
-| invading_sp_model | Invading-species model flag |  | int | biology_prm | scalar |
-| InvaderIndex | Functional-group index of the invader |  | int | biology_prm | scalar |
-| minInvaderAge | Minimum age of invading individuals |  | int | biology_prm | scalar |
-| maxInvaderAge | Maximum age of invading individuals |  | int | biology_prm | scalar |
-| InvaderEntryBox | Box index where invader enters |  | int | biology_prm | scalar |
-| InvadersEntering | Number of invaders entering |  | double | biology_prm | scalar |
-| InvaderMinDepth | Minimum entry depth for invader | m | double | biology_prm | scalar |
-| InvaderMaxDepth | Maximum entry depth for invader | m | double | biology_prm | scalar |
-| InvaderStartDay | Day-of-year invasion starts | day-of-year | int | biology_prm | scalar |
-| InvaderEndDay | Day-of-year invasion ends | day-of-year | int | biology_prm | scalar |
-| InvaderScalar | Scaling of invader numbers |  | double | biology_prm | scalar |
-| InvaderSpeed | Invader movement speed |  | double | biology_prm | scalar |
-| InvaderEntryLayer | Vertical layer of invader entry |  | int | biology_prm | scalar |
-| p_IBice | Proportion of biota associated with ice |  | double | biology_prm | scalar |
-| flag_dissolved_pollutants | Track dissolved pollutants flag |  | int | biology_prm | scalar |
-| flag_contamMortModel | Contaminant mortality model flag |  | int | biology_prm | scalar |
-| flag_contamInteractModel | Contaminant interaction model flag |  | int | biology_prm | scalar |
-| flag_contamGrowthModel | Contaminant growth-effect model flag |  | int | biology_prm | scalar |
-| flag_contamReprodModel | Contaminant reproduction-effect model flag |  | int | biology_prm | scalar |
-| flag_contamOnlyAmplify | Contaminant amplify-only flag |  | int | biology_prm | scalar |
-| flag_contamMove | Contaminant movement flag |  | int | biology_prm | scalar |
-| flag_contamMinTemp | Contaminant minimum-temperature flag |  | int | biology_prm | scalar |
-| flag_contam_halflife_spbased | Species-based contaminant half-life flag |  | int | biology_prm | scalar |
-| flag_contamMaternalTransfer | Maternal contaminant transfer flag |  | int | biology_prm | scalar |
-| flag_contam_distrib | Contaminant distribution flag |  | int | biology_prm | scalar |
-| biopools_dodge_contam | Biological pools bypass contaminant flag |  | int | biology_prm | scalar |
-| min_pool_cont | Minimum contaminant pool concentration |  | double | biology_prm | scalar |
-| contam_tau | Contaminant decay time constant |  | double | biology_prm | scalar |
-| contam_sig_uptake_const | Contaminant sigmoidal uptake constant |  | double | biology_prm | scalar |
-| flag_detritus_contam | Detritus contaminant tracking flag |  | int | biology_prm | scalar |
-| k_migslow | Migration slowdown constant |  | double | biology_prm | scalar |
-| Migration/MigrateIOBox/\<GRP\>\[/\<COHORT\>\]/Migrate\<N\> | Per-migration destination box proportions for migrating groups |  | double_array | biology_prm | per_box |
-| Migration/KMIG_DEN/\<GRP\> | Initial density of pre-existing out-of-model migrators |  | double_array | biology_prm | per_cohort |
-| Migration/KMIG_RN/\<GRP\> | Initial reserve N of pre-existing out-of-model migrators | mg N | double_array | biology_prm | per_cohort |
-| Migration/KMIG_SN/\<GRP\> | Initial structural N of pre-existing out-of-model migrators | mg N | double_array | biology_prm | per_cohort |
-| Migration/KMIG_INVERT\<N\>/\<GRP\> | Initial density of out-of-model invertebrate migrators per migration |  | double_array | biology_prm | per_cohort |
-| flag\<GRP\> | Group functioning (on/off) flag |  | int | biology_prm | per_group |
-| flagdem\<GRP\> | Preferred-location (demersal) trend flag |  | int | biology_prm | per_group |
-| flagplankfish\<GRP\> | Planktivore flag |  | int | biology_prm | per_group |
-| \<GRP\>thresh | Flux threshold for sediment/bacteria flux |  | double | biology_prm | per_group |
-| \<GRP\>damp | Flux damping coefficient |  | double | biology_prm | per_group |
-| SPECIES_FAMILY Reproduction_flags | Per-group reproduction flags and parameters. One entry each, prm key = base_GRP: flagbearlive (live-bearing), feed_while_spawn, flagmother (parental care), flagrecruit (recruitment function id), flagrecpeak, flagstocking, flagkeep_plusgroup, Recruit_Period, *Recruit_Time, *cohort_recruit_entry, *spawn_period, KSPA* (spawn area), FSP* (spawn fraction), Kcov_juv*/Bcov_juv\_/Acov_juv\_/Kcov_ad\_/Bcov_ad\_/Acov_ad\_ (cover coeffts), RugCover_scalar, *age_mat (age at maturity), recover_start, KWSR*, KWRR\_, recover_mult\_, BHbeta\_/BHalpha\_ (Beverton-Holt), Rbeta\_/Ralpha\_ (Ricker), PP\_ (constant recruits), *log_mult, *norm_sigma, *flag_recruit_stochastic, prod_alpha*, den_depend_beta1*/beta2*, temp_coefft\_, rate_coefft\_, wind_coefft\_, rec_var\_, *min/max_spawn_temp, *min/max_spawn_salt, prop_spawn_lost*, jack_a*/jack_b\_, rec_HabDepend, intersp_depend_recruit\_/sp\_/scale\_, aquacult_fry, KA\_/KB\_ (weight-length). | varies | double | biology_prm | per_group |
-| overwinterStartTofY\_\<GRP\> | Overwinter start time-of-year (encystment block) | day-of-year | double | biology_prm | per_group |
-| SPECIES_FAMILY Overwinter_Encystment | Per-group overwintering/encystment params: overwinterStartTofY\_, overwinterEndTofY\_, overwinterStartTemp\_, overwinterEndTemp\_, crit_mum\_, crit_nut\_, crit_temp\_, encyst_rate\_, hatch_rate\_, encyst_period\_, flagencyst\_. | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY Evolution | Per-group evolution params: max_prop_shift\_, inheritance\_, trait_variance\_, min_trait_variance\_. |  | double | biology_prm | per_group |
-| SPECIES_FAMILY FeedingDetritusFractions | Per-group fractions of feeding-derived material to detritus: FDM\_\<GRP\> (mortality detritus), FDG\_\<GRP\> (egesta), FDGDL\_, FDGDR\_. |  | double | biology_prm | per_group |
-| SPECIES_FAMILY FeedingDynamics | Per-group/predator feeding parameters: *catcheater, flagactiveDAY (diel activity), vla*\<GRP\>*T15 (assimilation), KL*\<GRP\>/KU\_\<GRP\>/KUP\_\<GRP\>/KLP\_\<GRP\> (feeding window lower/upper), Kmax_coefft\_\<GRP\>, KDEP\_\<GRP\> (sediment penetration depth), vlb\_, hta\_, htb\_ (handling time), pR\_ (reserve proportion fed), li_a\_/li_b\_/linf\_/Kbert\_/tzero\_ (length-at-age, VB), min_li_mat\_, predcase (functional response type), age_structured_prey\_, p_split\_, *extra_feed, vl*\<GRP\> (invert search volume), ht\_ (invert handling time), hvm\_, turbid_refuge\_, RSmax\_/RSmid\_/RSslope\_/RSprop\_/SNcost\_/RNcost\_/RSstarve\_ (reserve dynamics), E\_\<GRP\>/EPlant\_\<GRP\>/EDL\_\<GRP\>/EDR\_\<GRP\> (assimilation efficiencies on prey/plant/labile/refractory). | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY Q10_Temperature | Per-group temperature response: flagq10eff, flagq10receff, q10\_\<GRP\>, q10_method\_, q10_optimal_temp\_, q10_correction\_, temp_coefftA\_, flagtempsensitive, flagfecundsensitive. |  | double | biology_prm | per_group |
-| SPECIES_FAMILY Salinity_pH_sensitivity | Per-group salinity/pH sensitivity: flagSaltSensitive, salt_correction\_, flagpHsensitive, pHsensitive_model\_, pH_constA\_/B\_/C\_, min_pH\_/max_pH\_, KN_pH\_, optimal_pH\_, pH_correction\_, contract_tol\_, flagcontract_tol\_, flagpredavaileffect, flagnutvaleffect, pHmortstart\_, pHmortA\_/B\_, pHmortmid\_. |  | double | biology_prm | per_group |
-| SPECIES_FAMILY Pollution_impact | Per-group pollution light/noise sensitivity coefficients: light_coefft\_, noise_coefft\_. |  | double | biology_prm | per_group |
-| SPECIES_FAMILY PrimaryProducer_uptake | Per-PP/seagrass parameters: KTUR\_ (bioturbation), KIRR\_ (infauna irradiance), KN\_ (DIN half-sat), KS\_ (Si half-sat), KF\_ (Fe half-sat), flag\*lim, KI\_\<GRP\>*T15 (light half-sat), L_KI*\<GRP\>*T15 (seagrass leaf light), Kext*/Ksub\_/KN_epi\_/KsubEpi\_/Ktrans\_ (seagrass), Beta_D\_, PBmax_D\_, P_uptake\_/P_scale_uptake\_/P_concp\_/P_min_internal\_/P_max_internal\_, C_uptake\_/C_scale_uptake\_/C_concp\_, PSA_min\_/C_min\_, Phyto_Resp_Rate\_, KP\_ (P half-sat), KLYS\_ (lysis rate), FSBDR\_. | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY Mortality | Per-group/per-cohort mortality rates at 15C: *mQ (quadratic), *mL (linear), *mLext (external linear), *mPext (external proportional); plus mS*\<GRP\>*T15 (macrophyte senescence), mStarve* (starvation), mT* (temperature mortality), mD* (depth-oxygen), mO* (oxygen), KO2\_ (lethal O2), KO2LIM\_ (limiting O2), turbidity mortality \_turbid_L/\_turbid_a/\_turbid_b. The \_mQ/\_mL/\_mLext/\_mPext and turbidity entries are read per-cohort via Read_Cohort_Species_Param_Values; others via Util_XML_Read_Species_Param. | d-1 | double | biology_prm | per_cohort |
-| SPECIES_FAMILY Physical_limits_movement | Per-group physical limitation and movement: low\_/max\_/sat\_/thresh (basal/sed-FF feeding limits), \_ddepend_move (movement model), \_max/min_move_temp, \_max/min_move_salt, \_K_temp_const, *K_salt_const, Speed*, \_mindepth/\_maxdepth/\_maxtotdepth, \_min_O2, \_K_o2_const, \_homerangerad, \_overlap, k_trans, \_remin_contrib. | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY Coral_Sponge | Per-group coral/sponge params (bleaching, calcification, rugosity, smothering): \_bleach_periodA/B, \_mBleach, \_bleaching_rate, \_bleach_recovery_rate, \_bleach_tempshift, \_bleach_growshift, \_bleach_temp, \_min_bleach_temp, \_prop_zooxanth, \_DHW_thresh, \_threshdepth, \_depmum_scalar, \_min/max_bleach_salt, \_HostRemin, \_calcifRefBaseline, \_calcifTconst/Tcoefft/Topt/Lambda, \_FeedLightThresh, \_PropLightFeed, \_coral_max_accel_trans/A/B, \_CrecruitA/B/C, \_coral_overgrow, \_coral_compete, \_sponge_overgrow, \_sponge_compete, \_Ksmother_A/B, \_Vmax_deltaSi, \_Km_deltaSi, \_rug_erode, \_rug_bleacherode, \_rugFeedScalar, \_rug_factor, \_colony_ha, \_rug_erode_sponge, \_rugosity_inc/\_rugosity_dec, \_colony_diam. | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY Fishing_targetting | Per-group fishing/management flags read from bio prm: flagfish (targeting), flag_access_thru_wc\_, *age_harvest (aquaculture), tier (HCR tier), regionalSP, basketSP, basket_size, max_co_sp*, coType\_, tac_resetperiod, cpue_cdf_poor_r\_/p\_, cpue_cdf_top_r\_/p\_, samplesize, allometic li_a/li_b/li_bin/li_start/li_max, R_max, avg_inv_size, flag_assess, assess_bootstrap, assess_nat_mort, flag_prod_model, top_pcnt, bot_pcnt, assess_datastream, whichRAssess\_, ICE_KDEP\_. | varies | double | biology_prm | per_group |
-| SPECIES_FAMILY RBC_assessment | Per-group reference-biomass-control / stock-assessment parameters (RBCSpeciesParamStructArray, atUtilXML.c:511-636): DiscType\_, MaxH\_, Growthage_L1\_/L2\_, MinCatch\_, AssessStart\_, NumRegions\_, Nsexes\_, Tier1/2/3Sig\_, isTriggerSpecies\_, trigger_threshold\_, UseRBCAveraging\_, Maturity_Inflect\_/Slope\_, T1_steep_phase\_, tiertype\_, Tier3\_\* (Fcalc/time/maxage/M/S25/S50/F/h/matlen/maxF), CCsel_years\_, Tier4\_\* (avtime/CPUEyrmin/max/m/alpha/Cmaxmult/Bo_correct), Tier5\_\* (length/S50/cv/flt/reg/p/sel/q), PostRule\_, CPUEmult\_, MaxChange\_, TriggerResponseScen\_, MG_offset\_, Regime_shift_assess\_, RecDevBack\_, Hsteep\_, Agesel_Pattern\_, AssessFreq\_, BallParkF\_/Yr\_, NumChangeLambda\_, num_enviro_obs\_, num_growth_morphs\_, Nsex_samp\_, MaxAge\_, Nyfuture\_, NumFisheries\_, Nlen\_, Lbin\_, thresh_mat\_, femsexratio\_, flagLAdirect\_/SLAdirect\_/WAdirect\_, SigmaR1\_/R2\_/R_future\_, PSigmaR1\_, Regime_year\_, RecDevMinYr\_/MaxYr\_, RecDevFlag\_, AutoCorRecDev\_, LFSSlim\_, AFSSlim\_, NumSurvey\_, Regime_year_assess\_, NblockPattern\_, SRBlock\_, assRecDevMinYear\_, MultispAssessType\_, mgt_indicator\_, init_mgt_category\_/sp\_, PGMSYBHalpha\_/beta\_. | varies | double | biology_prm | per_group |
+| flagecon_on | Flag showing whether want economics loaded and submodel run (1) or not (0) |  | int | run_prm | scalar |
+| flag_fisheries_on | Flag showing whether want fisheries loaded and submodel run (1) or not (0) |  | int | run_prm | scalar |
+| flag_migration_on | Flag indicating whether any migrations active |  | int | run_prm | scalar |
+| flag_skip_biol | Flag showing whether want biological model run (1) or not (0 - only used when debugging fisheries) |  | int | run_prm | scalar |
+| flag_skip_phys | Flag showing whether want physics model run (0) or not (1 - only used when debugging fisheries) |  | int | run_prm | scalar |
+| check_dups | 1 to check for duplicates in your prm files (very slow; turn off once duplicates removed) |  | int | run_prm | scalar |
+| title | Free-text title/description of the model run scenario |  | string | run_prm | scalar |
+| dt | Model time step (carries a time unit token, e.g. hour) | time (e.g. hour/day; stored in seconds) | double | run_prm | scalar |
+| tstop | Stop time after the given period (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| flagIsEstuary | Flag to indicate if the model is estuary (requires a sediment tracer in initial conditions) |  | int | run_prm | scalar |
+| flagIsPolar | Flag indicating polar - so there will be 24 hrs of daylight/night seasonally |  | int | run_prm | scalar |
+| flagpassivetracer | Flag indicating whether passive tracers of advection need to be active in the model |  | int | run_prm | scalar |
+| flagAllowLand | Flag allowing terrestrial/land processes |  | int | run_prm | scalar |
+| flag_pollutant_impacts | Flag enabling pollutant impacts |  | int | run_prm | scalar |
+| fishmove | Set to 0 to turn vertebrate movement off for debugging purposes |  | int | run_prm | scalar |
+| flaghemisphere | Flag for hemisphere model is in (0 = southern; 1 = northern) |  | int | run_prm | scalar |
+| trackAtomicRatio | Flag to track additional atomic-ratio tracers (N:C, N:P) |  | int | run_prm | scalar |
+| flagratio_warn | Flag to issue warnings related to atomic-ratio tracking |  | int | run_prm | scalar |
+| N_to_C | Nitrogen-to-carbon atomic ratio used when tracking atomic ratios |  | double | run_prm | scalar |
+| N_to_P | Nitrogen-to-phosphorus atomic ratio used when tracking atomic ratios |  | double | run_prm | scalar |
+| external_populations | Flag for running a full population model when groups are outside the model domain (0 = no, 1 = yes) |  | int | run_prm | scalar |
+| flag_multiyr_migs | Flag indicating whether multi-year (\> 1 yr long) migrations need to be included |  | int | run_prm | scalar |
+| track_rugosity_arag | Flag indicating that rugosity and aragonite saturation to be tracked - needed for coral |  | int | run_prm | scalar |
+| track_pH | Flag indicating that want to track pH |  | int | run_prm | scalar |
+| flag_use_deltaH | Flag controlling use of delta-H (enthalpy) term |  | int | run_prm | scalar |
+| mirror_invalid | Flag controlling mirroring/handling of invalid box values |  | int | run_prm | scalar |
+| flag_replicated_old | Legacy flag to replicate old code behaviour |  | int | run_prm | scalar |
+| flag_replicated_old_PPmort | Legacy flag to replicate old primary-producer mortality behaviour |  | int | run_prm | scalar |
+| flag_old_embryo_init | Allows legacy models to have the same starting conditions under the new code as in older versions |  | int | run_prm | scalar |
+| flag_replicate_old_calendar | Allows legacy models to replicate environmental influence on recruit distribution in newer code |  | int | run_prm | scalar |
+| flag_sanity_check | Whether the code making sure overlapping of recruits cannot add inappropriately is enabled |  | int | run_prm | scalar |
+| store_aggregate_yoy | Flag to store aggregate young-of-year (YOY) values |  | int | run_prm | scalar |
+| store_mig_array | Flag to store the migration array |  | int | run_prm | scalar |
+| flag_contam_sanity_check | Flag enabling contaminant sanity checking |  | int | run_prm | scalar |
+| num_contaminants | Number of contaminants tracked in the model |  | int | run_prm | scalar |
+| contaminant_names | Names of the tracked contaminants |  | string_array | run_prm | other |
+| contaminant_units | Units of the tracked contaminants |  | string_array | run_prm | other |
+| toutstart | Output start time (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| toutinc | Write output with this periodicity (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| toutfinc | Write fisheries output with this periodicity (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| tburnday | Burn-in period before output begins (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| tsumout | Write stock state summary with this periodicity (time unit token, e.g. day) | time (e.g. day; stored in seconds) | double | run_prm | scalar |
+| flag_age_output | Age-output mode (0/1 text-based; set to 2 for netcdf output) |  | int | run_prm | scalar |
+| fishout | Switch to turn fisheries output on = 1, off = 0 |  | int | run_prm | scalar |
+| flagreusefile | Switch for appending output file (no = 0, yes = 1, replace = 2) |  | int | run_prm | scalar |
+| flagannual_Mest | Whether to write out estimates of mortality per predator annually (1) or not (0) |  | int | run_prm | scalar |
+| verbose | Detailed logged output level |  | int | run_prm | scalar |
+| checkbox | Give detailed logged output for this box |  | int | run_prm | scalar |
+| checkstart | Start detailed logged output after this date (time unit token, e.g. day) | time (e.g. day; read in seconds then converted to days) | double | run_prm | scalar |
+| checkstop | Stop detailed logged output after this date (time unit token, e.g. day) | time (e.g. day; read in seconds then converted to days) | double | run_prm | scalar |
+| fishtest | Count up total population for each vertebrate after each main subroutine (0=no, 1=yes) |  | int | run_prm | scalar |
+| flaggape | Periodically list prey vs gape statistics (tuning diagnostic) |  | int | run_prm | scalar |
+| flagchecksize | Periodically list relative size (tuning diagnostic) |  | int | run_prm | scalar |
+| flagagecheck | Periodically list age structure per cohort (tuning diagnostic) |  | int | run_prm | scalar |
+| flagdietcheck | Periodically list realised diet matchups (tuning diagnostic) |  | int | run_prm | scalar |
+| flagenviro_warn | Flag for warning messages about spawn and movement being environmentally constrained |  | int | run_prm | scalar |
+| flag_mig_in_bioindx | Whether migrating biomass is included in the biomass index output |  | int | run_prm | scalar |
+| checkNH | Give detailed logged output for NH in checkbox |  | int | run_prm | scalar |
+| checkDL | Give detailed logged output for DL (labile detritus) in checkbox |  | int | run_prm | scalar |
+| checkDR | Give detailed logged output for DR (refractory detritus) in checkbox |  | int | run_prm | scalar |
+| checkbiom | Give detailed logged output for biomasses in checkbox |  | int | run_prm | scalar |
+| which_fleet | ID number of fleet to track (find number in fisheries input file) |  | int | run_prm | scalar |
+| which_check | ID number of group to track (find number from functional group input file) |  | int | run_prm | scalar |
+| move_check | ID number of group where tracking movements |  | int | run_prm | scalar |
+| debug | Debug mode (0=off, 1=debug fishing, 2=debug discards, 3=debug histfishing, …) |  | int | run_prm | scalar |
+| debug_it | Iteration-level debug flag |  | int | run_prm | scalar |
+| K_num_tot_sp | Total number of biological groups in the model (must match functional group definition file) |  | int | run_prm | scalar |
+| K_num_stocks_per_sp | Maximum number of stocks per group in the model |  | int | run_prm | scalar |
+| K_num_detritus | Total number of detritus groups in the model (labile, refractory and carrion) |  | int | run_prm | scalar |
+| K_num_bed_types | Maximum number of seabed types (currently only reef, soft and flat; must be 3) |  | int | run_prm | scalar |
+| K_num_cover_types | Maximum number of habitat types (= K_num_bed_types + cover groups + 1 for canyons) |  | int | run_prm | scalar |
+| K_num_catchqueue | Length (in days) of catch list used in running average to give recent CPUE for effort model | day (scaled by dt_scale to time-steps after read) | int | run_prm | scalar |
+| K_num_fisheries | Maximum number of fisheries (must match fisheries definition input file) |  | int | run_prm | scalar |
+| K_num_ports | Maximum number of ports in the model area |  | int | run_prm | scalar |
+| K_num_reg | Maximum number of management zonings used in the model |  | int | run_prm | scalar |
+| K_num_markets | Maximum number of markets in the model area |  | int | run_prm | scalar |
+| K_num_basket | Maximum number of species in basket quota |  | int | run_prm | scalar |
+| flagscaleinit | Flag to indicate whether scaling initial vertebrate densities (1=yes, 0=no) |  | int | run_prm | scalar |
+| init_scalar | Per-group vertebrate density scalar to bring values in cdf up to actual intended values |  | double_array | run_prm | per_group |
 
 ## Abbreviations
 
 ``` r
 
-atl$abbreviation
+atl$abbreviations
 #> $GRP
 #> [1] "species (functional) group code, e.g. FPS; range 0..K_num_tot_sp-1"
 #> 

@@ -5,7 +5,7 @@ of every group over the whole model domain, in tonnes, `Time` in days)
 and keeps the living groups, i.e. every group but the detritus
 (`GroupType` `LAB_DET`, `REF_DET` and `CARRION`). Groups are named by
 the `Name` column of the groups file, as in the tables of
-[`create_time_series_biomass()`](create_time_series_biomass.md).
+[`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md).
 
 ## Usage
 

@@ -21,7 +21,7 @@ apply_parameters(x, calib_table, par, scale = c("calibration", "model"))
 - calib_table:
 
   A calibration table, as returned by
-  [`generate_calibration_table()`](generate_calibration_table.md).
+  [`generate_calibration_table()`](https://insileco.io/atlantio/reference/generate_calibration_table.md).
 
 - par:
 
@@ -31,8 +31,8 @@ apply_parameters(x, calib_table, par, scale = c("calibration", "model"))
 
   Scale of `par`: `"calibration"` (default), the scale the optimizer
   works on, mapped to the file scale with
-  [`transform_parameter_value()`](transform_parameter_value.md), or
-  `"model"`, the values as written in the parameter files.
+  [`transform_parameter_value()`](https://insileco.io/atlantio/reference/transform_parameter_value.md),
+  or `"model"`, the values as written in the parameter files.
 
 ## Value
 
@@ -40,8 +40,10 @@ apply_parameters(x, calib_table, par, scale = c("calibration", "model"))
 
 ## See also
 
-[`write_parameter_folder()`](write_parameter_folder.md) to write the
-files, [`compare_prm()`](compare_prm.md) to compare them.
+[`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md)
+to write the files,
+[`compare_prm()`](https://insileco.io/atlantio/reference/compare_prm.md)
+to compare them.
 
 ## Examples
 

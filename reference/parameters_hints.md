@@ -19,15 +19,17 @@ A named list with 2 elements:
 
   - `title` - Model run title/description
 
-  - `dt` - Time step size (days)
+  - `dt` - Time step
 
-  - `tstop` - End time of simulation (days)
+  - `tstop` - End time of simulation
 
-  - `toutstart` - Start time for output (days)
+  - `toutstart` - Start time for output
 
-  - `toutinc` - Output time increment (days)
+  - `toutinc` - Output time increment
 
-  - `toutfinc` - Final output time increment (days)
+  - `toutfinc` - Fisheries output time increment
+
+  The times are in seconds, unless a unit follows the value.
 
 - bio:
 
@@ -40,10 +42,6 @@ A named list with 2 elements:
   - `min_pool` - Minimum pool size
 
   - `min_dens` - Minimum density threshold
-
-## Source
-
-Generated from `inst/parameters/create_hints.R`
 
 ## Examples
 

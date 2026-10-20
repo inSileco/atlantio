@@ -9,7 +9,7 @@ stderr and exits with status 0, leaving the output written so far. The
 exit status therefore does not tell a completed run from a crashed one:
 only the time reached by the main output does. A run counts as complete
 if the last time step of its main output is within one output interval
-(toutinc) of the end of the run (tstop)."><meta property="og:image" content="/logo.png"></head><body>
+(toutinc) of the end of the run (tstop)."><meta property="og:image" content="https://insileco.io/atlantio/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -92,8 +92,11 @@ if the last time step of its main output is within one output interval
     <p>The checks (column <code>check</code> of the result) are:</p><ul><li><p><code>"missing"</code> (error): no main output, the run failed before writing it;</p></li>
 <li><p><code>"unreadable"</code> (error): the main output cannot be opened;</p></li>
 <li><p><code>"incomplete"</code> (error): the main output stops before <code>tstop</code>.</p></li>
-</ul><p><code>tstop</code> and <code>toutinc</code> are read with their units as Atlantis reads them
-(e.g. <code>tstop 365 day</code>; a bare number is in seconds).</p>
+</ul><p><code>tstop</code> and <code>toutinc</code> are read as Atlantis reads them: their first
+occurrence, in their unit if Atlantis knows it as written, in seconds
+otherwise. <code>tstop 365 day</code> is 365
+days, but <code>tstop 365 days</code> and <code>tstop 365</code> are 365 seconds (see the
+<code>"units"</code> check of <code><a href="check_prm.html">check_prm()</a></code>).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

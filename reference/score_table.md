@@ -36,8 +36,9 @@ compute_score(ts, ...)
 - biomass:
 
   Biomass table with columns `group`, `time` (seconds) and `Biomass`,
-  e.g. from [`read_biomass_index()`](read_biomass_index.md), or `NULL`
-  (default) to score the age-structured tracers only.
+  e.g. from
+  [`read_biomass_index()`](https://insileco.io/atlantio/reference/read_biomass_index.md),
+  or `NULL` (default) to score the age-structured tracers only.
 
 - tolerance:
 
@@ -48,9 +49,9 @@ compute_score(ts, ...)
 - summary:
 
   Statistic each series is scored on over the window (see `stat` in
-  [`window_values()`](window_values.md)): one for every tracer, or a
-  vector (a list to pass functions) named by tracer, the tracers left
-  out using `"snapshot"`.
+  [`window_values()`](https://insileco.io/atlantio/reference/window_values.md)):
+  one for every tracer, or a vector (a list to pass functions) named by
+  tracer, the tracers left out using `"snapshot"`.
 
 - window_years:
 
@@ -99,8 +100,8 @@ compute_score(ts, ...)
 
 Each series is first reduced to its scored values over the last
 `window_years` years of the run by
-[`window_values()`](window_values.md), with the statistic `summary`
-gives for its tracer. Scored values within
+[`window_values()`](https://insileco.io/atlantio/reference/window_values.md),
+with the statistic `summary` gives for its tracer. Scored values within
 `[1 - tolerance, 1 + tolerance]` times the initial value are not
 penalized; outside that band only the excess beyond the band edge is
 squared, which keeps the objective continuous at the edge. The squared
@@ -124,10 +125,11 @@ With either method, the penalty of a series is multiplied by the
 `weight` of its tracer, and the initial value by its `target_factor`.
 
 The age-structured tracers are aggregated over boxes and layers first
-(see [`aggregate_time_series()`](aggregate_time_series.md)), so `ts` can
-be the raw table of
-[`create_time_series_biomass()`](create_time_series_biomass.md) or its
-aggregate. Biomass series that start at zero are left out.
+(see
+[`aggregate_time_series()`](https://insileco.io/atlantio/reference/aggregate_time_series.md)),
+so `ts` can be the raw table of
+[`create_time_series_biomass()`](https://insileco.io/atlantio/reference/create_time_series_biomass.md)
+or its aggregate. Biomass series that start at zero are left out.
 
 ## References
 

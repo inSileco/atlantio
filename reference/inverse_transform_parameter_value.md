@@ -1,8 +1,8 @@
 # Map a parameter value from the file scale back to the calibration scale
 
 Inverse of
-[`transform_parameter_value()`](transform_parameter_value.md), used to
-get starting values in the space explored by the optimizer.
+[`transform_parameter_value()`](https://insileco.io/atlantio/reference/transform_parameter_value.md),
+used to get starting values in the space explored by the optimizer.
 
 ## Usage
 

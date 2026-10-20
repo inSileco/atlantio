@@ -1,10 +1,12 @@
 # Check Atlantis parameter files
 
 Lists the problems of Atlantis parameter files that Atlantis reads
-silently (or reads differently from [`read_prm()`](read_prm.md)), and
+silently (or reads differently from
+[`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)), and
 combinations of flags known to give wrong results. The files are scanned
 line by line, so a malformed array does not stop the other checks (it
-does stop [`read_prm()`](read_prm.md)).
+does stop
+[`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)).
 
 ## Usage
 
@@ -32,19 +34,36 @@ The checks on every file (column `check` of the result) are:
 
 - `"count"` (error): an array whose declared length differs from the
   number of values on the next line; Atlantis pads with the last value
-  or ignores the extra values, [`read_prm()`](read_prm.md) aborts;
+  or ignores the extra values,
+  [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+  aborts;
 
-- `"duplicate"` (warning): a key given twice;
+- `"duplicate"`: a key given twice. In the run file, an error: Atlantis
+  reads the first occurrence (the last for the contaminant names and
+  units), while
+  [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
+  keeps the last. In the other files, a warning: Atlantis may also read
+  another occurrence than
+  [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md);
 
 - `"line_endings"` (warning): Windows (CRLF) line endings;
 
-- `"tabs"` (note): tabs as separators;
+- `"tabs"` (note): tabs as separators.
 
-- `"units"` (note): time units after values (e.g. `dt 12 hour`), which
-  Atlantis converts to seconds;
+The checks on the run file are:
 
-- `"unknown"` (note): keys of the run file missing from the run
-  template.
+- `"units"`: the units after the times, which Atlantis reads in seconds
+  (`dt`, `tstop`, `toutstart`, `toutinc`, `toutfinc`, `tburnday`,
+  `tsumout`, `checkstart` and `checkstop`). Atlantis converts a value
+  with its unit only if the unit is spelled exactly as one of `us`,
+  `usec`, `ms`, `msec`, `s`, `sec`, `second`, `min`, `minute`, `h`,
+  `hr`, `hour`, `d`, `day` or `week`; otherwise it ignores the unit and
+  reads the value in seconds. Error for a unit Atlantis ignores, e.g.
+  `days`, `Day` or `year`, or a unit that ends a line with Windows line
+  endings (Atlantis reads the carriage return as part of it); note
+  listing the units it converts;
+
+- `"unknown"` (note): keys missing from the run template.
 
 And the checks across files, which need `bio` (and `force` for the last
 one), for every group stocked (`flagstocking<GRP> 1` or
@@ -64,7 +83,8 @@ one), for every group stocked (`flagstocking<GRP> 1` or
 
 ## See also
 
-[`check_init()`](check_init.md) for the initial-conditions file.
+[`check_init()`](https://insileco.io/atlantio/reference/check_init.md)
+for the initial-conditions file.
 
 ## Examples
 

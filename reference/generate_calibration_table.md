@@ -1,12 +1,12 @@
 # Generate a calibration table
 
-S7 generic for building the list of parameters to calibrate from a YAML
-specification file.
+Builds the list of parameters to calibrate from a YAML specification
+file.
 
 ## Usage
 
 ``` r
-generate_calibration_table(x, ...)
+generate_calibration_table(x, path, version = "3-6722")
 ```
 
 ## Arguments
@@ -15,9 +15,13 @@ generate_calibration_table(x, ...)
 
   An `Atlantis` object.
 
-- ...:
+- path:
 
-  Additional arguments passed to methods
+  Path to the YAML file describing the parameters to calibrate.
+
+- version:
+
+  Atlantis version identifier. Default is `"3-6722"`.
 
 ## Value
 

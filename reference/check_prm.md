@@ -40,9 +40,8 @@ The checks on every file (column `check` of the result) are:
 
 - `"tabs"` (note): tabs as separators;
 
-- `"units"` (note): time units after values (e.g. `dt 12 hour`);
-  Atlantis converts them, [`read_prm()`](read_prm.md) keeps the numbers
-  only;
+- `"units"` (note): time units after values (e.g. `dt 12 hour`), which
+  Atlantis converts to seconds;
 
 - `"unknown"` (note): keys of the run file missing from the run
   template.

@@ -1,26 +1,38 @@
-# Create Time Series for Atlantis objects
+# Create time series from the main output
 
-S7 generic for creating time series data from Atlantis objects
+Extracts variables of the main netCDF output of an Atlantis model as a
+tidy data frame, optionally restricted to a set of boxes and layers.
 
 ## Usage
 
 ``` r
-create_time_series(x, ...)
+create_time_series(x, variable, box = NULL, layer = NULL)
 ```
 
 ## Arguments
 
 - x:
 
-  An object to create time series from
+  An `Atlantis` object with the main output loaded.
 
-- ...:
+- variable:
 
-  Additional arguments passed to methods
+  Names of the variables (see `names(x@main_output$var)`).
+
+- box:
+
+  Boxes, numbered from 0 as in Atlantis; all boxes if `NULL`.
+
+- layer:
+
+  Layers, numbered from 1; all layers if `NULL`. Ignored for 2D
+  variables, whose rows have `layer` -1.
 
 ## Value
 
-A time series data structure
+A data frame with one row per variable x box x layer x time and the
+columns `time` (seconds), `box`, `layer`, `value`, `variable` and
+`units`.
 
 ## Examples
 

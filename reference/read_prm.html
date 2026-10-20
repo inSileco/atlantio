@@ -77,8 +77,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list made of key-value elements.
-Note that comments and length of vectr</p>
+    <p>A list made of key-value elements. The comments, the length of arrays and
+the time unit after a value are kept as the attributes <code>comments</code>,
+<code>array_length</code> and <code>unit</code> of the elements.</p>
 <p>The prm file.</p>
     </div>
     <div class="section level2">
@@ -92,6 +93,11 @@ Note that comments and length of vectr</p>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a> <span class="fl">1.0</span> <span class="fl">1.0</span> <span class="fl">1.0</span> <span class="dv">1</span>.<span class="fl">0.</span></span></code></pre><p></p></div>
 <p>The key differences between <code>read_prm()</code> and the Atlantis parser are:</p><ul><li><p>Comments: lines starting with # are not skipped, they are collected and stored as
 an attributes to the list elements</p></li>
+<li><p>Units: Atlantis converts a time unit after a value (e.g. <code>tstop 365 day</code>)
+to seconds; <code>read_prm()</code> keeps the number and the unit, as the attribute
+<code>unit</code>, which <code>write_prm()</code> writes back. A number without unit is read in
+seconds, so change values element-wise (<code>x$tstop[1] &lt;- 730</code>): replacing
+the element (<code>x$tstop &lt;- 730</code>) drops its attributes.</p></li>
 <li><p>Array padding: in the original parser, if fewer values than declared size,
 the last value is repeated to fill. <code>read_prm()</code> will throw an error instead.</p></li>
 </ul><p>To be consistent with the Atlantis parser, lines with more than 4000

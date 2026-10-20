@@ -88,10 +88,9 @@ and the calibrated values (see <code><a href="apply_parameters.html">apply_param
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The run and biology parameter files are written from their source file
 with only the values that differ from it changed, token by token: the
-comments, the units (e.g. <code>tstop 365 day</code>, which <code><a href="read_prm.html">write_prm()</a></code> would turn
-into 365 seconds), the layout and the line endings are kept. The other
-input files loaded (geometry, groups, initial conditions, ...) are copied.
-Every file keeps the name of its source.</p>
+comments, the units (e.g. <code>tstop 365 day</code>), the layout and the line
+endings are kept. The other input files loaded (geometry, groups, initial
+conditions, ...) are copied. Every file keeps the name of its source.</p>
 <p>Files that are not loaded in <code>x</code>, such as the physics and forcing
 parameter files or the forcing time series, come from <code>from</code>: a folder
 copied whole into <code>dir</code> first, whose files are then replaced by those of
@@ -111,12 +110,10 @@ files.</p></div>
 <span class="r-in"><span>    <span class="fu"><a href="atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_biol.prm"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_groups.csv"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>8 Unknown parameters: flagratio_warn, K_max_num_zoning, N_to_C, N_to_P,</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> flag_contam_sanity_check, external_box, trackWind, and flag_contamReprodModel</span>
 <span class="r-in"><span><span class="va">mod</span><span class="op">@</span><span class="va">biology</span><span class="op">$</span><span class="va">mum_GZS</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0.04</span></span></span>
 <span class="r-in"><span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"params_v2"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_parameter_folder</span><span class="op">(</span><span class="va">mod</span>, <span class="va">dir</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> 3 input files written to <span style="color: #0000BB;">/tmp/RtmpM953Io/params_v2</span>,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> 3 input files written to <span style="color: #0000BB;">/tmp/RtmpKyEZPZ/params_v2</span>,</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 1 value changed.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dir</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tiny_biol.prm"   "tiny_groups.csv" "tiny_run.prm"   </span>

@@ -30,8 +30,9 @@ write_prm(x, file = stdout(), add_comments = TRUE, sep = " ")
 
 ## Value
 
-A list made of key-value elements. Note that comments and length of
-vectr
+A list made of key-value elements. The comments, the length of arrays
+and the time unit after a value are kept as the attributes `comments`,
+`array_length` and `unit` of the elements.
 
 The prm file.
 
@@ -50,6 +51,13 @@ The key differences between `read_prm()` and the Atlantis parser are:
 
 - Comments: lines starting with \# are not skipped, they are collected
   and stored as an attributes to the list elements
+
+- Units: Atlantis converts a time unit after a value (e.g.
+  `tstop 365 day`) to seconds; `read_prm()` keeps the number and the
+  unit, as the attribute `unit`, which `write_prm()` writes back. A
+  number without unit is read in seconds, so change values element-wise
+  (`x$tstop[1] <- 730`): replacing the element (`x$tstop <- 730`) drops
+  its attributes.
 
 - Array padding: in the original parser, if fewer values than declared
   size, the last value is repeated to fill. `read_prm()` will throw an

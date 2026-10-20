@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get Started with atlantio</h1>
             
-            <h4 data-toc-skip class="date">2026-10-19</h4>
+            <h4 data-toc-skip class="date">2026-10-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/inSileco/atlantio/blob/main/vignettes/atlantio.Rmd" class="external-link"><code>vignettes/atlantio.Rmd</code></a></small>
       <div class="d-none name"><code>atlantio.Rmd</code></div>
@@ -165,8 +165,6 @@ run file.</p>
 <span>    <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_groups.csv"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_run.prm"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: 8 Unknown parameters: flagratio_warn, K_max_num_zoning, N_to_C, N_to_P,</span></span>
-<span><span class="co">#&gt; flag_contam_sanity_check, external_box, trackWind, and flag_contamReprodModel</span></span>
 <span><span class="va">mod</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="color: #00BB00; font-weight: bold;">Atlantis Model</span> ──</span></span>
@@ -240,7 +238,9 @@ are named lists.</p>
 <span><span class="va">mod</span><span class="op">@</span><span class="va">run</span><span class="op">$</span><span class="va">tstop</span></span>
 <span><span class="co">#&gt; [1] 365</span></span>
 <span><span class="co">#&gt; attr(,"comments")</span></span>
-<span><span class="co">#&gt; [1] "day # 1-year run; set 5 day for a quick smoke test"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "1-year run; set 5 day for a quick smoke test"</span></span>
+<span><span class="co">#&gt; attr(,"unit")</span></span>
+<span><span class="co">#&gt; [1] "day"</span></span></code></pre></div>
 <p>Files can be added at any time, for instance outputs once the model
 has been run (see below).</p>
 </div>
@@ -259,27 +259,28 @@ programmatically and write a new file.</p>
 <span><span class="va">prm</span><span class="op">$</span><span class="va">tstop</span></span>
 <span><span class="co">#&gt; [1] 365</span></span>
 <span><span class="co">#&gt; attr(,"comments")</span></span>
-<span><span class="co">#&gt; [1] "day # 1-year run; set 5 day for a quick smoke test"</span></span>
+<span><span class="co">#&gt; [1] "1-year run; set 5 day for a quick smoke test"</span></span>
+<span><span class="co">#&gt; attr(,"unit")</span></span>
+<span><span class="co">#&gt; [1] "day"</span></span>
 <span></span>
-<span><span class="va">prm</span><span class="op">$</span><span class="va">tstop</span> <span class="op">&lt;-</span> <span class="fl">730</span></span>
+<span><span class="va">prm</span><span class="op">$</span><span class="va">tstop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">730</span></span>
 <span><span class="fu"><a href="../reference/read_prm.html">write_prm</a></span><span class="op">(</span><span class="va">prm</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tstop"</span>, <span class="st">"dt"</span>, <span class="st">"toutstart"</span>, <span class="st">"toutinc"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tstop 730</span></span>
-<span><span class="co">#&gt; # hour</span></span>
-<span><span class="co">#&gt; dt 12</span></span>
-<span><span class="co">#&gt; # day</span></span>
-<span><span class="co">#&gt; toutstart 0</span></span>
-<span><span class="co">#&gt; # day</span></span>
-<span><span class="co">#&gt; toutinc 5</span></span></code></pre></div>
+<span><span class="co">#&gt; # 1-year run; set 5 day for a quick smoke test</span></span>
+<span><span class="co">#&gt; tstop 730 day</span></span>
+<span><span class="co">#&gt; dt 12 hour</span></span>
+<span><span class="co">#&gt; toutstart 0 day</span></span>
+<span><span class="co">#&gt; toutinc 5 day</span></span></code></pre></div>
 <p>Pass a path to <code>file</code> to write to disk instead of the
 console.</p>
-<p>Note that <code><a href="../reference/read_prm.html">read_prm()</a></code> keeps the numbers only: the time
-units of the run file go to the comments, so <code>tstop 365 day</code>
-is written back as <code>tstop 365</code>, which Atlantis reads as 365
-seconds. To write modified parameters into a copy of an existing file,
-keeping its units, comments and layout, use
-<code><a href="../reference/write_parameter_folder.html">write_parameter_folder()</a></code>, which changes only the values
-that differ (see the <a href="calibration/index.html">calibration
-vignette</a>).</p>
+<p>The time units of the run file (<code>day</code> in
+<code>tstop 365 day</code>) are kept as the attribute <code>unit</code>
+and written back. Change values element-wise, as
+<code>prm$tstop[1] &lt;- 730</code> above:
+<code>prm$tstop &lt;- 730</code> would drop the unit and the comments,
+and Atlantis reads a number without unit in seconds. To write modified
+parameters into a copy of an existing file, keeping its comments and
+layout, use <code><a href="../reference/write_parameter_folder.html">write_parameter_folder()</a></code>, which changes only
+the values that differ (see the <a href="calibration/index.html">calibration vignette</a>).</p>
 <p><code><a href="../reference/compare_prm.html">compare_prm()</a></code> compares two parameter files, or parameter
 lists, by parameter name, so that moved lines, comments and layout do
 not show up:</p>
@@ -310,10 +311,10 @@ printed as a summary.</p>
 <span><span class="fu"><a href="../reference/check_prm.html">check_prm</a></span><span class="op">(</span>run <span class="op">=</span> <span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"inputs"</span>, <span class="st">"tiny_run.prm"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 0 errors, 0 warnings, 3 notes.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (tabs): tabs as separators on 21 lines.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (units): 9 values followed by a unit, which Atlantis converts</span></span>
-<span><span class="co">#&gt;   but read_prm() drops (to the comments): checkstart 0 day, checkstop 366666660</span></span>
-<span><span class="co">#&gt;   day, dt 12 hour, tstop 365 day, toutstart 0 day, toutinc 5 day, toutfinc 365</span></span>
-<span><span class="co">#&gt;   day, tburnday 0 day, and tsumout 5 day.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (units): 9 values followed by a time unit, which Atlantis</span></span>
+<span><span class="co">#&gt;   converts to seconds: checkstart 0 day, checkstop 366666660 day, dt 12 hour,</span></span>
+<span><span class="co">#&gt;   tstop 365 day, toutstart 0 day, toutinc 5 day, toutfinc 365 day, tburnday 0</span></span>
+<span><span class="co">#&gt;   day, and tsumout 5 day.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> tiny_run.prm  (unknown): 8 keys not in the run template: <span style="color: #00BB00;">flagratio_warn</span>,</span></span>
 <span><span class="co">#&gt;   <span style="color: #00BB00;">K_max_num_zoning</span>, <span style="color: #00BB00;">N_to_C</span>, <span style="color: #00BB00;">N_to_P</span>, <span style="color: #00BB00;">flag_contam_sanity_check</span>, <span style="color: #00BB00;">external_box</span>,</span></span>
 <span><span class="co">#&gt;   <span style="color: #00BB00;">trackWind</span>, and <span style="color: #00BB00;">flag_contamReprodModel</span>.</span></span></code></pre></div>
@@ -404,7 +405,8 @@ box, layer and age class.</p>
 </h2>
 <p>The biology parameter file contains the prey availability matrix
 (<code>pPREY</code> parameters). <code><a href="../reference/create_diet_table.html">create_diet_table()</a></code>
-reshapes it into a prey-by-predator table.</p>
+reshapes it into a table with one row per predator (and stages) and one
+column per prey.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diet</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_diet_table.html">create_diet_table</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">diet</span><span class="op">)</span></span>
@@ -418,14 +420,14 @@ reshapes it into a prey-by-predator table.</p>
 <span><span class="co">#&gt; pPREY1WAE1 0.001 0.1 0.10 0.1   0 0.10</span></span>
 <span><span class="co">#&gt; pPREY2WAE1 0.000 0.0 0.01 0.0   0 0.10</span></span></code></pre></div>
 <p><code><a href="../reference/create_foodweb.html">create_foodweb()</a></code> goes one step further and returns the
-binary food web as an <code>igraph</code> object, ready for network
-analysis or plotting.</p>
+binary food web as an <code>igraph</code> object, with edges from
+predator to prey, ready for network analysis or plotting.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_foodweb.html">create_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="va">fw</span></span>
-<span><span class="co">#&gt; IGRAPH f5aa8a2 DNW- 18 62 -- </span></span>
+<span><span class="co">#&gt; IGRAPH c2b6e48 DNW- 18 62 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from f5aa8a2 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from c2b6e48 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] WAE-&gt;WAE YPH-&gt;WAE WAE-&gt;YPH YPH-&gt;YPH WAE-&gt;GZS WAE-&gt;RDG YPH-&gt;RDG RDG-&gt;DRE</span></span>
 <span><span class="co">#&gt;  [9] WAE-&gt;DRE YPH-&gt;DRE GZS-&gt;CHI RDG-&gt;CHI WAE-&gt;CHI YPH-&gt;CHI CAL-&gt;DIA DRE-&gt;DIA</span></span>
 <span><span class="co">#&gt; [17] GZS-&gt;DIA ROT-&gt;DIA CAL-&gt;GRN DRE-&gt;GRN GZS-&gt;GRN ROT-&gt;GRN DRE-&gt;CAL GZS-&gt;CAL</span></span>

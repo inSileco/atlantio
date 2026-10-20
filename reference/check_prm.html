@@ -89,8 +89,8 @@ ignores the extra values, <code><a href="read_prm.html">read_prm()</a></code> ab
 <li><p><code>"duplicate"</code> (warning): a key given twice;</p></li>
 <li><p><code>"line_endings"</code> (warning): Windows (CRLF) line endings;</p></li>
 <li><p><code>"tabs"</code> (note): tabs as separators;</p></li>
-<li><p><code>"units"</code> (note): time units after values (e.g. <code>dt 12 hour</code>); Atlantis
-converts them, <code><a href="read_prm.html">read_prm()</a></code> keeps the numbers only;</p></li>
+<li><p><code>"units"</code> (note): time units after values (e.g. <code>dt 12 hour</code>), which
+Atlantis converts to seconds;</p></li>
 <li><p><code>"unknown"</code> (note): keys of the run file missing from the run template.</p></li>
 </ul><p>And the checks across files, which need <code>bio</code> (and <code>force</code> for the last
 one), for every group stocked (<code>flagstocking&lt;GRP&gt; 1</code> or

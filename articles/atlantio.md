@@ -98,8 +98,6 @@ mod <- mod |>
     atlantis_examples("inputs", "tiny_groups.csv"),
     atlantis_examples("inputs", "tiny_run.prm")
   ))
-#> Warning: 8 Unknown parameters: flagratio_warn, K_max_num_zoning, N_to_C, N_to_P,
-#> flag_contam_sanity_check, external_box, trackWind, and flag_contamReprodModel
 mod
 #> 
 #> ── Atlantis Model ──
@@ -176,7 +174,9 @@ mod@biology$mum_YPH
 mod@run$tstop
 #> [1] 365
 #> attr(,"comments")
-#> [1] "day # 1-year run; set 5 day for a quick smoke test"
+#> [1] "1-year run; set 5 day for a quick smoke test"
+#> attr(,"unit")
+#> [1] "day"
 ```
 
 Files can be added at any time, for instance outputs once the model has
@@ -198,26 +198,27 @@ length(prm)
 prm$tstop
 #> [1] 365
 #> attr(,"comments")
-#> [1] "day # 1-year run; set 5 day for a quick smoke test"
+#> [1] "1-year run; set 5 day for a quick smoke test"
+#> attr(,"unit")
+#> [1] "day"
 
-prm$tstop <- 730
+prm$tstop[1] <- 730
 write_prm(prm[c("tstop", "dt", "toutstart", "toutinc")])
-#> tstop 730
-#> # hour
-#> dt 12
-#> # day
-#> toutstart 0
-#> # day
-#> toutinc 5
+#> # 1-year run; set 5 day for a quick smoke test
+#> tstop 730 day
+#> dt 12 hour
+#> toutstart 0 day
+#> toutinc 5 day
 ```
 
 Pass a path to `file` to write to disk instead of the console.
 
-Note that [`read_prm()`](../reference/read_prm.md) keeps the numbers
-only: the time units of the run file go to the comments, so
-`tstop 365 day` is written back as `tstop 365`, which Atlantis reads as
-365 seconds. To write modified parameters into a copy of an existing
-file, keeping its units, comments and layout, use
+The time units of the run file (`day` in `tstop 365 day`) are kept as
+the attribute `unit` and written back. Change values element-wise, as
+`prm$tstop[1] <- 730` above: `prm$tstop <- 730` would drop the unit and
+the comments, and Atlantis reads a number without unit in seconds. To
+write modified parameters into a copy of an existing file, keeping its
+comments and layout, use
 [`write_parameter_folder()`](../reference/write_parameter_folder.md),
 which changes only the values that differ (see the [calibration
 vignette](calibration/index.md)).
@@ -257,10 +258,10 @@ check_run(
 check_prm(run = atlantis_examples("inputs", "tiny_run.prm"))
 #> 0 errors, 0 warnings, 3 notes.
 #> ℹ tiny_run.prm  (tabs): tabs as separators on 21 lines.
-#> ℹ tiny_run.prm  (units): 9 values followed by a unit, which Atlantis converts
-#>   but read_prm() drops (to the comments): checkstart 0 day, checkstop 366666660
-#>   day, dt 12 hour, tstop 365 day, toutstart 0 day, toutinc 5 day, toutfinc 365
-#>   day, tburnday 0 day, and tsumout 5 day.
+#> ℹ tiny_run.prm  (units): 9 values followed by a time unit, which Atlantis
+#>   converts to seconds: checkstart 0 day, checkstop 366666660 day, dt 12 hour,
+#>   tstop 365 day, toutstart 0 day, toutinc 5 day, toutfinc 365 day, tburnday 0
+#>   day, and tsumout 5 day.
 #> ℹ tiny_run.prm  (unknown): 8 keys not in the run template: flagratio_warn,
 #>   K_max_num_zoning, N_to_C, N_to_P, flag_contam_sanity_check, external_box,
 #>   trackWind, and flag_contamReprodModel.
@@ -366,7 +367,8 @@ ts_yph |>
 The biology parameter file contains the prey availability matrix
 (`pPREY` parameters).
 [`create_diet_table()`](../reference/create_diet_table.md) reshapes it
-into a prey-by-predator table.
+into a table with one row per predator (and stages) and one column per
+prey.
 
 ``` r
 
@@ -384,16 +386,16 @@ diet[1:6, 1:6]
 ```
 
 [`create_foodweb()`](../reference/create_foodweb.md) goes one step
-further and returns the binary food web as an `igraph` object, ready for
-network analysis or plotting.
+further and returns the binary food web as an `igraph` object, with
+edges from predator to prey, ready for network analysis or plotting.
 
 ``` r
 
 fw <- create_foodweb(mod)
 fw
-#> IGRAPH f5aa8a2 DNW- 18 62 -- 
+#> IGRAPH c2b6e48 DNW- 18 62 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from f5aa8a2 (vertex names):
+#> + edges from c2b6e48 (vertex names):
 #>  [1] WAE->WAE YPH->WAE WAE->YPH YPH->YPH WAE->GZS WAE->RDG YPH->RDG RDG->DRE
 #>  [9] WAE->DRE YPH->DRE GZS->CHI RDG->CHI WAE->CHI YPH->CHI CAL->DIA DRE->DIA
 #> [17] GZS->DIA ROT->DIA CAL->GRN DRE->GRN GZS->GRN ROT->GRN DRE->CAL GZS->CAL

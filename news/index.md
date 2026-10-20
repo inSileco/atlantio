@@ -2,11 +2,44 @@
 
 ## atlantio (development version)
 
+- [`atlantis_load_files()`](../reference/atlantis_load_files.md) says
+  why a file cannot be read. It said that the file did not exist, and
+  reported only the first of several such files. Loading a run file no
+  longer warns about the keys missing from the run template, which
+  [`check_prm()`](../reference/check_prm.md) reports.
 - [`check_run()`](../reference/check_run.md) checks that a run
   completed: Atlantis exits with status 0 after a fatal error, so a run
   counts as complete only if the last time step of its main output
   reaches `tstop` (within one `toutinc`), read with its units as
   Atlantis reads them.
+- [`create_diet_table()`](../reference/create_diet_table.md),
+  [`create_foodweb()`](../reference/create_foodweb.md),
+  [`create_time_series()`](../reference/create_time_series.md),
+  [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  and
+  [`generate_calibration_table()`](../reference/generate_calibration_table.md)
+  are functions rather than S7 generics, so their help pages document
+  their arguments. They no longer accept unused arguments.
+- The help of [`create_diet_table()`](../reference/create_diet_table.md)
+  swapped predator and prey: its rows are the predators (with the
+  stages) and its columns the prey, and the edges of
+  [`create_foodweb()`](../reference/create_foodweb.md) go from predator
+  to prey.
+- [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  converts the nitrogen of biomass pools to wet weight with `X_CN` and
+  `k_wetdry`, as for the age-structured groups. It used `1 + X_RS`,
+  which made pool weights about 30 times too low.
+- [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  returns the epibenthic groups (one value per box, in mg N m-2),
+  weighted by the box area of the geometry file. It returned no row for
+  them.
+- [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  gains `boundary`: `boundary = FALSE` leaves out the boundary boxes, as
+  Atlantis’ biomass index does.
+- [`create_time_series_biomass()`](../reference/create_time_series_biomass.md)
+  labels biomass pools with the group name (it used the variable name,
+  e.g. `Diatom_N`) and an `NA` age, and labels correctly the groups
+  whose name holds a digit.
 - Writing a parameter set back into a parameter folder:
   - [`apply_parameters()`](../reference/apply_parameters.md) sets the
     values of a calibration table (on the calibration or the model
@@ -16,9 +49,7 @@
     optionally on top of a copy of another folder (for the files not
     loaded, such as the physics and forcing files). The run and biology
     files are patched in place, only the values that changed, so their
-    comments, units, layout and line endings are kept
-    ([`write_prm()`](../reference/read_prm.md) drops the units:
-    `tstop 365 day` becomes 365 seconds);
+    comments, units, layout and line endings are kept;
   - [`compare_prm()`](../reference/compare_prm.md) compares two
     parameter files by parameter name.
 - Summarising a calibration:
@@ -43,6 +74,19 @@
   [`write_parameter_folder()`](../reference/write_parameter_folder.md)
   in the objective function, and a new step 5 summarising the runs and
   writing the next parameter folder.
+- [`new_atlantis()`](../reference/new_atlantis.md) matches property
+  names exactly: `new_atlantis(diet_detailed = d)` also set `diet`.
+- [`read_atlantis_files()`](../reference/read_atlantis_files.md) uses
+  `filenames` when given several files. It ignored them, so renamed
+  outputs (e.g. Shiny uploads) were not recognised.
+- [`read_prm()`](../reference/read_prm.md) keeps the time unit after a
+  value (e.g. `day` in `tstop 365 day`) as the attribute `unit`, and
+  [`write_prm()`](../reference/read_prm.md) writes it back.
+  [`write_prm()`](../reference/read_prm.md) wrote the number alone,
+  which Atlantis reads in seconds.
+- [`read_prm()`](../reference/read_prm.md) reads arrays whose first
+  value has a sign (e.g. `-1 2 3`). Such rows were skipped, so the array
+  was read as its count.
 - [`score_table()`](../reference/score_table.md) and
   [`compute_score()`](../reference/score_table.md) gain
   `method = "lnorm2"`, the objective function of Morell et al. (2026) as

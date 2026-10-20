@@ -77,13 +77,12 @@ MIT
 - [`check_run()`](check_run.md) : Check that an Atlantis run completed
 - [`compare_prm()`](compare_prm.md) : Compare two Atlantis parameter
   files
-- [`create_diet_table()`](create_diet_table.md) : Create Diet Table
-- [`create_foodweb()`](create_foodweb.md) : Create Food Web for Atlantis
-  objects
-- [`create_time_series()`](create_time_series.md) : Create Time Series
-  for Atlantis objects
+- [`create_diet_table()`](create_diet_table.md) : Create a diet table
+- [`create_foodweb()`](create_foodweb.md) : Create a food web
+- [`create_time_series()`](create_time_series.md) : Create time series
+  from the main output
 - [`create_time_series_biomass()`](create_time_series_biomass.md) :
-  Create Time Series Biomass for Atlantis objects
+  Create biomass time series
 - [`generate_calibration_table()`](generate_calibration_table.md) :
   Generate a calibration table
 - [`generate_file()`](generate_file.md) : Generate parameter files

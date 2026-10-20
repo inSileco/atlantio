@@ -64,3 +64,31 @@ test_that("plot_foodweb() highlights pathways", {
   hl$prey[1] <- "XXX"
   expect_error(plot_foodweb(atl, highlight = hl), "unknown node")
 })
+
+test_that("plot_foodweb() focuses on some groups and their interactions", {
+  skip_if_not_installed("ggplot2")
+  atl <- create_atlantis_model()
+  edges <- foodweb_edges(atl)
+  p <- plot_foodweb(atl, focus = "WAE")
+  drawn <- p$layers[[1]]$data
+  expect_true(all(drawn$prey == "WAE" | drawn$predator == "WAE"))
+  expect_true(any(drawn$prey == "GZS" & drawn$predator == "WAE"))
+
+  nodes <- foodweb_nodes(atl, edges, NULL, focus = "WAE")
+  expect_setequal(
+    nodes$code,
+    unique(c(
+      "WAE",
+      edges$prey[edges$predator == "WAE"],
+      edges$predator[edges$prey == "WAE"]
+    ))
+  )
+  # trophic levels from the whole food web
+  all_nodes <- foodweb_nodes(atl, edges, NULL)
+  expect_equal(
+    nodes$tl,
+    all_nodes$tl[match(nodes$code, all_nodes$code)]
+  )
+  expect_no_error(ggplot2::ggplot_build(p))
+  expect_error(plot_foodweb(atl, focus = "XXX"), "unknown node")
+})

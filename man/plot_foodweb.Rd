@@ -4,7 +4,13 @@
 \alias{plot_foodweb}
 \title{Plot a food web}
 \usage{
-plot_foodweb(x, highlight = NULL, x_position = NULL, window = 730)
+plot_foodweb(
+  x,
+  highlight = NULL,
+  x_position = NULL,
+  focus = NULL,
+  window = 730
+)
 }
 \arguments{
 \item{x}{An \code{Atlantis} object with the biology and groups files loaded. If
@@ -19,6 +25,11 @@ absent from the food web (e.g. proposed links) are drawn dashed.}
 
 \item{x_position}{A named vector of horizontal positions (names are group
 codes) that overrides the default layout, for some or all nodes.}
+
+\item{focus}{A vector of group codes. If not \code{NULL}, only these groups, the
+groups they interact with (their prey and predators) and the links
+involving them are drawn. Trophic levels are still computed from the
+whole food web.}
 
 \item{window}{Number of days at the end of the run used to compute the
 final biomass.}
@@ -58,4 +69,7 @@ pathways <- data.frame(
   pathway = c(rep("Pelagic", 4), "Proposed")
 )
 plot_foodweb(my_model, highlight = pathways)
+
+# Walleye, its prey and its predators only
+plot_foodweb(my_model, focus = "WAE")
 }

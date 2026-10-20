@@ -15,6 +15,10 @@
 #'   absent from the food web (e.g. proposed links) are drawn dashed.
 #' @param x_position A named vector of horizontal positions (names are group
 #'   codes) that overrides the default layout, for some or all nodes.
+#' @param focus A vector of group codes. If not `NULL`, only these groups, the
+#'   groups they interact with (their prey and predators) and the links
+#'   involving them are drawn. Trophic levels are still computed from the
+#'   whole food web.
 #' @param window Number of days at the end of the run used to compute the
 #'   final biomass.
 #'
@@ -47,18 +51,31 @@
 #'   pathway = c(rep("Pelagic", 4), "Proposed")
 #' )
 #' plot_foodweb(my_model, highlight = pathways)
-plot_foodweb <- function(x, highlight = NULL, x_position = NULL, window = 730) {
+#'
+#' # Walleye, its prey and its predators only
+#' plot_foodweb(my_model, focus = "WAE")
+plot_foodweb <- function(
+  x,
+  highlight = NULL,
+  x_position = NULL,
+  focus = NULL,
+  window = 730
+) {
   rlang::check_installed("ggplot2", reason = "to plot the food web.")
   require_atlantis(x)
   require_biology_file(x)
   require_group_file(x)
 
   edges <- foodweb_edges(x)
-  nodes <- foodweb_nodes(x, edges, x_position)
+  nodes <- foodweb_nodes(x, edges, x_position, focus)
   nodes <- foodweb_biomass(x, nodes, window)
 
   # cannibalism (prey == predator) cannot be drawn as a curve
-  edges_xy <- foodweb_xy(edges[edges$prey != edges$predator, ], nodes)
+  shown <- edges$prey != edges$predator
+  if (!is.null(focus)) {
+    shown <- shown & (edges$prey %in% focus | edges$predator %in% focus)
+  }
+  edges_xy <- foodweb_xy(edges[shown, ], nodes)
   with_biomass <- !all(is.na(nodes$size))
 
   p <- ggplot2::ggplot() +
@@ -188,7 +205,7 @@ foodweb_edges <- function(x) {
 
 
 # Nodes with their trophic level (tl), habitat and position (x)
-foodweb_nodes <- function(x, edges, x_position) {
+foodweb_nodes <- function(x, edges, x_position, focus = NULL) {
   det <- x@group$GroupType %in% c("LAB_DET", "REF_DET", "CARRION")
   codes <- c(x@group$Code, paste0(x@group$Code[det], "sed"))
   type <- c(x@group$GroupType, rep("SED_DET", sum(det)))
@@ -209,6 +226,20 @@ foodweb_nodes <- function(x, edges, x_position) {
       )
     }
   )
+
+  if (!is.null(focus)) {
+    chk <- setdiff(focus, nodes$code)
+    if (length(chk)) {
+      cli::cli_abort("{length(chk)} unknown node{?s} in {.arg focus}: {chk}")
+    }
+    keep <- nodes$code %in%
+      c(
+        focus,
+        edges$prey[edges$predator %in% focus],
+        edges$predator[edges$prey %in% focus]
+      )
+    nodes <- nodes[keep, ]
+  }
 
   nodes$benthic <- grepl(
     "^(SED_|MOB_EP|FILTER|PHYTOBEN|MICROPHTYBENTHOS|SEAGRASS|CORAL|SPONGE|LG_INF|SM_INF|INF)",

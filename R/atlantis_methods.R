@@ -155,15 +155,7 @@ create_foodweb <- function(x) {
     cli::cli_abort("Diet table is empty; cannot create food web.")
   }
 
-  # the predator: a group code, the longest that matches (codes can hold
-  # digits, as the stages)
-  codes <- x@group$Code[order(-nchar(x@group$Code))]
-  pattern <- paste0(
-    "^pPREY[12]?(",
-    paste(stringr::str_escape(codes), collapse = "|"),
-    ")[12]?$"
-  )
-  vc_pred <- stringr::str_match(rownames(diet_table), pattern)[, 2]
+  vc_pred <- pprey_predator(rownames(diet_table), x@group$Code)
 
   diet_adj_mat <- rowsum(+(diet_table > 0), vc_pred) > 0
 
@@ -183,4 +175,17 @@ create_foodweb <- function(x) {
 
   df_edges |>
     igraph::graph_from_data_frame(directed = TRUE, vertices = df_vertices)
+}
+
+
+# The predator of pPREY keys: a group code, the longest that matches (codes can
+# hold digits, as the stages)
+pprey_predator <- function(keys, codes) {
+  codes <- codes[order(-nchar(codes))]
+  pattern <- paste0(
+    "^pPREY[12]?(",
+    paste(stringr::str_escape(codes), collapse = "|"),
+    ")[12]?$"
+  )
+  stringr::str_match(keys, pattern)[, 2]
 }

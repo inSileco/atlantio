@@ -432,7 +432,8 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
     return(failed_run(run_dir, par, par_model, res, reason))
   }
 
-  # 4. output and score; any error becomes the penalty score
+  # 4. output and score; an error makes the run a failed one
+  out <- NULL
   score <- tryCatch({
     out <- atlantis_load_files(atlantis, out_file)
     ts <- create_time_series_biomass(out, group = groups, aggregate = TRUE)
@@ -443,9 +444,12 @@ run_model <- function(par, atlantis, calib_table, base_dir, results_dir,
     saveRDS(list(ts = ts, biomass = biomass),
       file.path(run_dir, "time_series.rds"))
     compute_score(ts, biomass = biomass)
-  }, error = function(e) {
-    failed_run(run_dir, par, par_model, res, conditionMessage(e))
-  })
+  }, error = function(e) e)
+  # the output is read through an open file handle: close it
+  if (!is.null(out)) try(ncdf4::nc_close(out@main_output), silent = TRUE)
+  if (inherits(score, "error")) {
+    return(failed_run(run_dir, par, par_model, res, conditionMessage(score)))
+  }
 
   # 5. results
   saveRDS(

@@ -1,5 +1,9 @@
 # atlantio (development version)
 
+* The `run_model()` of the calibration article records a run whose scoring
+  fails as failed. It saved it as completed, with the penalty score, so
+  `summarise_calibration()` counted it among the completed runs. It also
+  closes the output it reads.
 * `check_prm()` and `check_run()` read the time units of the run file as
   Atlantis does. Atlantis converts a time with its unit only if the unit is
   spelled exactly as one of its units (`s`, `min`, `hour`, `day`, `week`,

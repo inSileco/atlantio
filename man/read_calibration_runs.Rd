@@ -9,11 +9,11 @@ read_calibration_runs(dir, pattern = "parameters.rds")
 \arguments{
 \item{dir}{The folder holding one subfolder per run.}
 
-\item{pattern}{Name of the files to read.}
+\item{pattern}{Name of the files to read, matched exactly.}
 }
 \value{
 A data frame with one row per run and parameter value: \code{run} (the
-folder name), \code{generation}, \code{score}, \code{failed}, \code{reason}, \code{name},
+folder, relative to \code{dir}), \code{generation}, \code{score}, \code{failed}, \code{reason}, \code{name},
 \code{position}, \code{value} (calibration scale) and \code{value_model}.
 }
 \description{

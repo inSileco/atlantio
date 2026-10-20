@@ -10,44 +10,42 @@
 #' `gen<number>_` (e.g. `gen003_atlantis_run_...`), `NA` otherwise.
 #'
 #' @param dir The folder holding one subfolder per run.
-#' @param pattern Name of the files to read.
+#' @param pattern Name of the files to read, matched exactly.
 #'
 #' @return A data frame with one row per run and parameter value: `run` (the
-#'   folder name), `generation`, `score`, `failed`, `reason`, `name`,
+#'   folder, relative to `dir`), `generation`, `score`, `failed`, `reason`, `name`,
 #'   `position`, `value` (calibration scale) and `value_model`.
 #'
 #' @seealso [summarise_calibration()]
 #'
 #' @export
 read_calibration_runs <- function(dir, pattern = "parameters.rds") {
-  files <- list.files(
-    dir,
-    paste0("^", gsub(".", "\\.", pattern, fixed = TRUE), "$"),
-    recursive = TRUE,
-    full.names = TRUE
-  )
+  # paths relative to dir: runs in nested folders keep distinct names
+  files <- list.files(dir, recursive = TRUE)
+  files <- files[basename(files) == pattern]
   if (!length(files)) {
     cli::cli_abort("No {.file {pattern}} found in {.path {dir}}.")
   }
   out <- lapply(files, \(f) {
-    p <- readRDS(f)
-    if (is.null(p$par) || is.null(names(p$par))) {
+    # [[ ]]: `$` would match `par_model` for a missing `par`
+    p <- readRDS(file.path(dir, f))
+    if (is.null(p[["par"]]) || is.null(names(p[["par"]]))) {
       cli::cli_abort("{.path {f}} has no named {.field par}.")
     }
-    run <- basename(dirname(f))
-    key <- names(p$par)
+    run <- dirname(f)
+    key <- names(p[["par"]])
     data.frame(
       run = run,
       generation = as.integer(
-        stringr::str_match(run, "^gen([0-9]+)_")[, 2]
+        stringr::str_match(basename(run), "^gen([0-9]+)_")[, 2]
       ),
-      score = p$score %||% NA_real_,
-      failed = isTRUE(p$failed),
-      reason = p$reason %||% NA_character_,
+      score = p[["score"]] %||% NA_real_,
+      failed = isTRUE(p[["failed"]]),
+      reason = p[["reason"]] %||% NA_character_,
       name = sub("\\.[0-9]+$", "", key),
       position = as.integer(sub("^.*\\.", "", key)),
-      value = unname(p$par),
-      value_model = unname(p$par_model %||% NA_real_)
+      value = unname(p[["par"]]),
+      value_model = unname(p[["par_model"]] %||% NA_real_)
     )
   })
   out <- do.call(rbind, out)
@@ -98,6 +96,8 @@ read_calibration_runs <- function(dir, pattern = "parameters.rds") {
 #'   * `scores`: per generation, the number of `runs`, of `failed` runs, and
 #'     the `best` and `median` scores of the completed runs.
 #'
+#'   The runs without generation make the generation `NA`.
+#'
 #' @seealso [read_calibration_runs()], [apply_parameters()] to apply the
 #'   values of a run.
 #'
@@ -109,8 +109,14 @@ read_calibration_runs <- function(dir, pattern = "parameters.rds") {
 #' }
 #'
 #' @export
-summarise_calibration <- function(runs, calib_table, n_best = 5, n_top = 20,
-                                  relative = NULL, bound_tol = 0.01) {
+summarise_calibration <- function(
+  runs,
+  calib_table,
+  n_best = 5,
+  n_top = 20,
+  relative = NULL,
+  bound_tol = 0.01
+) {
   if (is.character(runs)) {
     runs <- read_calibration_runs(runs)
   }
@@ -157,13 +163,20 @@ summarise_calibration <- function(runs, calib_table, n_best = 5, n_top = 20,
     vapply(seq_along(key), \(j) report(f(m[, j]), j), numeric(1))
   }
   range <- calib_table$max - calib_table$min
-  at_bound <- vapply(seq_along(key), \(j) {
-    if (!is.finite(range[j])) {
-      return(NA_integer_)
-    }
-    d <- pmin(abs(top[, j] - calib_table$min[j]), abs(top[, j] - calib_table$max[j]))
-    sum(d < bound_tol * range[j])
-  }, integer(1))
+  at_bound <- vapply(
+    seq_along(key),
+    \(j) {
+      if (!is.finite(range[j])) {
+        return(NA_integer_)
+      }
+      d <- pmin(
+        abs(top[, j] - calib_table$min[j]),
+        abs(top[, j] - calib_table$max[j])
+      )
+      sum(d < bound_tol * range[j])
+    },
+    integer(1)
+  )
   failed <- wide[info$failed, , drop = FALSE]
   failed_shift <- if (nrow(failed)) {
     colMeans(failed) - colMeans(wide[ok, , drop = FALSE])
@@ -183,7 +196,8 @@ summarise_calibration <- function(runs, calib_table, n_best = 5, n_top = 20,
     failed_shift = unname(failed_shift)
   )
 
-  gens <- sort(unique(info$generation))
+  # the runs without generation make one group, NA
+  gens <- sort(unique(info$generation), na.last = TRUE)
   generations <- lapply(gens, \(g) {
     sel <- ok & info$generation %in% g
     m <- wide[sel, , drop = FALSE][order(info$score[sel]), , drop = FALSE]

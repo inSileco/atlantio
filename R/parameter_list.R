@@ -31,6 +31,6 @@ list_atlantis_parameters <- function(version = "3-6722") {
     ) |>
       yaml::read_yaml()
   } else {
-    cli::cli_abort("Unknown version")
+    cli::cli_abort("Unknown version {.val {version}}.")
   }
 }

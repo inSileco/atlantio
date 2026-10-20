@@ -148,3 +148,37 @@ test_that("create_time_series_biomass() needs the geometry for epibenthic groups
     error = TRUE
   )
 })
+
+test_that("create_time_series_biomass() aborts when no box is left", {
+  skip_if_not_installed("sf")
+  mod <- new_atlantis() |>
+    atlantis_load_files(c(
+      atlantis_examples("inputs", "tiny.bgm"),
+      atlantis_examples("inputs", "tiny_biol.prm"),
+      atlantis_examples("inputs", "tiny_groups.csv"),
+      atlantis_examples("outputs", "output.nc")
+    ))
+  withr::defer(ncdf4::nc_close(mod@main_output))
+  expect_snapshot(
+    create_time_series_biomass(mod, "WAE", box = 0, boundary = FALSE),
+    error = TRUE
+  )
+  expect_snapshot(
+    create_time_series(mod, "Temp", box = integer()),
+    error = TRUE
+  )
+})
+
+test_that("the series ignore layer and age silently when not given", {
+  mod <- new_atlantis() |>
+    atlantis_load_files(c(
+      atlantis_examples("inputs", "tiny_biol.prm"),
+      atlantis_examples("inputs", "tiny_groups.csv"),
+      atlantis_examples("outputs", "output.nc")
+    ))
+  withr::defer(ncdf4::nc_close(mod@main_output))
+  expect_no_message(create_time_series(mod, "numlayers"))
+  expect_message(create_time_series(mod, "numlayers", layer = 1), "ignored")
+  expect_no_message(create_time_series_biomass(mod, "DIA"))
+  expect_message(create_time_series_biomass(mod, "DIA", age = 1), "ignored")
+})

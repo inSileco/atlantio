@@ -119,3 +119,16 @@ test_that("read_txt_files() classifies detailed diet output by column layout", {
   res <- suppressMessages(read_txt_files(fl, "outputDetailedDietCheck.txt"))
   expect_identical(res$type, "unknown")
 })
+
+test_that("read_nc() closes the netCDF files it does not keep", {
+  skip_if_not(dir.exists("/proc/self/fd"))
+  fl <- withr::local_tempfile(fileext = ".nc")
+  nc <- ncdf4::nc_create(
+    fl,
+    list(ncdf4::ncvar_def("v", "", ncdf4::ncdim_def("x", "", 1:2)))
+  )
+  ncdf4::nc_close(nc)
+  before <- length(list.files("/proc/self/fd"))
+  expect_identical(suppressMessages(read_nc(fl))$type, "unknown")
+  expect_identical(length(list.files("/proc/self/fd")), before)
+})

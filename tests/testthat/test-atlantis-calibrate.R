@@ -208,6 +208,38 @@ test_that("pPREY keys are expanded over all placeholders", {
   expect_true(all(10^res$max <= 1))
 })
 
+test_that("ignored_values can leave out every value of a parameter", {
+  vals <- unique(as.vector(mod@biology$mum_WAE))
+  yml <- withr::local_tempfile(fileext = ".yaml")
+  writeLines(
+    c(
+      "- name: mum_<GRP>",
+      "  GRP: WAE",
+      paste0(
+        "  ignored_values: [",
+        paste(format(vals, digits = 17), collapse = ", "),
+        "]"
+      )
+    ),
+    yml
+  )
+  expect_warning(res <- generate_calibration_table(mod, yml), "no row")
+  expect_identical(nrow(res), 0L)
+  expect_named(res, names(res_simplest))
+})
+
+test_that("values needed and missing give a hint", {
+  yml <- withr::local_tempfile(fileext = ".yaml")
+  writeLines(
+    c("- name: flagecon_on", "  min: 0.5", "  max: 2", "  is_factor: true"),
+    yml
+  )
+  expect_error(
+    generate_calibration_table(mod, yml),
+    "Values are required for `is_factor` and `ignored_values`"
+  )
+})
+
 test_that("per_prey dimension counts groups and detritus", {
   expect_identical(compute_parameter_dimension(mod, "per_prey"), 18L)
   expect_error(
@@ -240,4 +272,15 @@ test_that("keys of non-array type expand to a single value", {
   expect_identical(res$position, rep(1L, 5))
   expect_equal(res$cur_value[4:5], c(9.36e9, 3.07e9))
   expect_false(anyNA(res$cur_value))
+})
+
+test_that("generate_calibration_table() reads the parameters of its version", {
+  expect_error(
+    generate_calibration_table(
+      mod,
+      path_to_mock("right_simplest.yaml"),
+      "nope"
+    ),
+    "Unknown version"
+  )
 })

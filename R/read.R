@@ -42,9 +42,14 @@ read_atlantis_files <- function(files, filenames = basename(files)) {
   }
 
   out <- list(path = files)
+  known <- c("bgm", "nc", "prm", "csv", "xml", "txt")
   res <- tryCatch(
     switch(
-      fs::path_ext(files),
+      if (!file.exists(files) && fs::path_ext(files) %in% known) {
+        stop("the file does not exist")
+      } else {
+        fs::path_ext(files)
+      },
       bgm = read_bgm(files),
       nc = read_nc(files),
       prm = read_prm_files(files),
@@ -60,7 +65,6 @@ read_atlantis_files <- function(files, filenames = basename(files)) {
   )
 
   if (inherits(res, "error")) {
-    cli::cli_alert_danger("Cannot read: {res$message}")
     out <- c(out, list(type = "cannot read", object = res$message))
   } else {
     out <- c(out, res)
@@ -106,6 +110,7 @@ read_nc <- function(path) {
       )
     }
   } else {
+    ncdf4::nc_close(obj)
     cli::cli_alert("unknown netCDF file")
     list(
       type = "unknown",
@@ -169,7 +174,12 @@ read_prm_files <- function(path) {
 #' @export
 read_txt_files <- function(path, filename) {
   # altrep = FALSE: lazy (memory-mapped) reading keeps the file locked on Windows
-  out <- vroom::vroom(path, altrep = FALSE)
+  out <- vroom::vroom(
+    path,
+    altrep = FALSE,
+    show_col_types = FALSE,
+    progress = FALSE
+  )
   bnm <- filename
   nm <- names(out)
   if (grepl("BoxBiomass", bnm) && nm[2] == "Box") {

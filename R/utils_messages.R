@@ -16,6 +16,6 @@ msg_generated_by <- function() {
 
 vec_to_ul <- function(..., .envir = parent.frame()) {
   cli::cli_ul()
-  lapply(list(...), cli::cli_li, .envir = .envir)
+  lapply(Filter(Negate(is.null), list(...)), cli::cli_li, .envir = .envir)
   cli::cli_end()
 }

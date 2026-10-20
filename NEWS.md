@@ -4,6 +4,15 @@
   fails as failed. It saved it as completed, with the penalty score, so
   `summarise_calibration()` counted it among the completed runs. It also
   closes the output it reads.
+* Fewer messages. `read_atlantis_files()` no longer prints the column
+  specification of every text output, nor an alert for a file it cannot
+  read, which `atlantis_load_files()` reports: a missing file gives one
+  warning (it gave three). `create_time_series()` and
+  `create_time_series_biomass()` say that `layer` or `age` is ignored only
+  when it was given. Printing an `Atlantis` object whose geometry has no
+  depth no longer warns.
+* An `atlantis_check` table subset by columns prints as a data frame. It
+  printed "0 errors, 0 warnings, 0 notes." above the rows.
 * `check_prm()` and `check_run()` read the time units of the run file as
   Atlantis does. Atlantis converts a time with its unit only if the unit is
   spelled exactly as one of its units (`s`, `min`, `hour`, `day`, `week`,
@@ -19,16 +28,45 @@
   the other files, the warning says that Atlantis may read another
   occurrence. `check_run()` reads the first occurrence of `tstop` and
   `toutinc`, as Atlantis does; it read the last.
+* `create_diet_table()` names the sediment detritus columns after the
+  detritus groups of the groups file. It assumed `DL`, `DR` and `DC`.
+* `create_foodweb()` works with a single predator (it failed with
+  "incorrect number of dimensions") and with group codes holding a digit (it
+  cut them at the digit), and checks the groups file before the diet table.
+* `create_time_series_biomass()` aborts when `boundary = FALSE` leaves no
+  box, and `create_time_series()` when `box` is empty. Both failed with
+  "arguments imply differing number of rows".
+* `generate_calibration_table()` gives no row, with a warning, for an entry
+  whose values are all in `ignored_values`; it failed with "arguments imply
+  differing number of rows". Its error for a missing value shows why the
+  value is needed (the hint was lost).
+* `generate_calibration_table()` reads the parameters of `version`, once.
+  It ignored `version` and read the parameter list for every entry.
 * `generate_file()` writes the time step as `dt 12 hour`. It wrote
   `dt 12 Hours`, which Atlantis reads as 12 seconds.
+* `get_biomass_by_type()` returns the annual biomass at age
+  (`"biomass_age_annual"`), as the Get Started article says, and aborts on an
+  unknown type. It returned `NULL` for both, after an alert.
 * `input_files` matches the `Atlantis` class: the detailed diet output is
   named `diet_detailed`, as the property (it was `detail_diet`, so
   `atlantis_load_files()` never recorded its path), the age biomass outputs
   have the names Atlantis writes (`AgeBiomIndx.txt`, `AnnualAgeBiomIndx.txt`),
   and the physics and forcing files have a row.
+* `read_calibration_runs()` names a run after its folder relative to `dir`,
+  so runs in nested folders with the same name stay apart, matches the file
+  name exactly, and no longer reads `par_model` as `par` when `par` is
+  missing. `summarise_calibration()` gathers the runs without generation in
+  the generation `NA`; `generations` and `scores` were `NULL` when no run
+  had one.
+* `read_nc()` closes a netCDF file it does not recognise, and `check_run()`
+  an output without time dimension; both stayed open.
 * `read_prm()` also keeps the units `us`, `usec`, `ms` and `msec` after a
   value. It read them as comments, so `write_prm()` wrote the value without
   its unit.
+* `score_table()` and `compute_score()` abort when a series has no value
+  at t = 0, with the groups concerned. They failed with "`..1` must be of
+  size ..." or "subscript out of bounds".
+* `set_init_values()` removes the copy it made when it fails.
 * `write_parameter_folder()` aborts rather than change a key given several
   times in its file, as Atlantis may read another occurrence than the one
   changed. It changed the last one.

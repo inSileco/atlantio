@@ -108,8 +108,16 @@ test_that("read_biomass_index() keeps the living groups", {
 
 test_that("aggregate_time_series() sums weight and keeps units", {
   ts <- data.frame(
-    group = "Walleye", age = 1, time = 0, box = 0:1, layer = 1,
-    StructN = 1, ResN = 1, Nums = 1, weight = c(2, NA), units = "g"
+    group = "Walleye",
+    age = 1,
+    time = 0,
+    box = 0:1,
+    layer = 1,
+    StructN = 1,
+    ResN = 1,
+    Nums = 1,
+    weight = c(2, NA),
+    units = "g"
   )
   agg <- aggregate_time_series(ts)
   expect_equal(agg$weight, 2)
@@ -176,4 +184,13 @@ test_that("weight and target_factor are validated", {
     compute_score(make_ts(resn_end = 600), target_factor = c(ResN = 2)),
     0
   )
+})
+
+test_that("score_table() needs the values at t = 0", {
+  time <- seq(73 * 86400, 5 * year, by = 73 * 86400)
+  bm <- data.frame(group = "Diatom", time = time, Biomass = 1)
+  tol <- c(Nums = 0.5, StructN = 0.2, ResN = 0.2, Biomass = 0.5)
+  expect_error(score_table(make_ts(), bm, tol), "no value at t = 0")
+  ts <- make_ts()
+  expect_error(score_table(ts[ts$time > 0, ]), "no value at t = 0")
 })

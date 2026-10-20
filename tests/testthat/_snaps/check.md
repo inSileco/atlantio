@@ -16,3 +16,15 @@
     Message
       v No problem found.
 
+# a subset of the columns of a check prints as a data frame
+
+    Code
+      print(x[, c("key", "message")])
+    Output
+        key
+      1   a
+      2    
+                                                                              message
+      1 given 2 times (lines 1 and 2): Atlantis reads the first, read_prm() the last.
+      2                                             1 key not in the run template: a.
+

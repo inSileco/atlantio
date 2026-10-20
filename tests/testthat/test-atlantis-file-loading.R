@@ -138,6 +138,16 @@ test_that("atlantis_load_files() loads diet output", {
   )
 })
 
+test_that("get_biomass_by_type() returns every biomass table", {
+  fl <- atlantis_examples("outputs", "outputAnnualAgeBiomIndx.txt")
+  mod <- suppressMessages(suppressWarnings(
+    new_atlantis() |> atlantis_load_files(fl)
+  ))
+  expect_s3_class(get_biomass_by_type(mod, "biomass_age_annual"), "data.frame")
+  expect_null(get_biomass_by_type(mod, "biomass_age"))
+  expect_snapshot(get_biomass_by_type(mod, "biomass_annual"), error = TRUE)
+})
+
 test_that("atlantis_load_files() records the path of detailed diet output", {
   fl <- file.path(withr::local_tempdir(), "outputDetailedDietCheck.txt")
   writeLines(
@@ -155,4 +165,14 @@ test_that("atlantis_load_files() records the path of detailed diet output", {
     ],
     fl
   )
+})
+
+test_that("atlantis_load_files() warns once about a missing file", {
+  withr::local_dir(withr::local_tempdir())
+  expect_snapshot(res <- atlantis_load_files(new_atlantis(), "nope.prm"))
+})
+
+test_that("text outputs are read silently", {
+  fl <- atlantis_examples("outputs", "outputBiomIndx.txt")
+  expect_no_message(read_atlantis_files(fl))
 })

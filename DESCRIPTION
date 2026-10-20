@@ -20,7 +20,7 @@ Description: Facilitate data wrangling and ecosystem analysis with Atlantis
     model inputs and outputs. Provides an S7 class 'Atlantis' that represents
     an Atlantis model, functions to read and write Atlantis files, and methods
     to extract diet tables, food webs and time series from a model.
-URL: https://github.com/inSileco/atlantio
+URL: https://github.com/inSileco/atlantio, https://insileco.io/atlantio/
 BugReports: https://github.com/inSileco/atlantio/issues
 Depends: R (>= 4.2.0)
 Encoding: UTF-8

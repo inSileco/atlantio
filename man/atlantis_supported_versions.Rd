@@ -14,7 +14,7 @@ version, currently it includes two columns:
 }
 }
 \source{
-Generated from \code{inst/raw-data/supported_version.R}.
+Generated from \code{data-raw/supported_version.R}.
 }
 \usage{
 atlantis_supported_versions

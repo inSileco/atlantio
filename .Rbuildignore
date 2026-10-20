@@ -3,5 +3,7 @@
 ^README\.md$
 ^docs$
 ^pkgdown$
-^TODO\.md$
+^data-raw$
+^atlantio-review\.md$
+^method_morell_2026\.pdf$
 ^\.github$

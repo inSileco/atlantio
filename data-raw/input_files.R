@@ -1,4 +1,4 @@
-input_files <- yaml::read_yaml("inst/raw-data/input_files.yaml") |>
+input_files <- yaml::read_yaml("data-raw/input_files.yaml") |>
   lapply(as.data.frame) |>
   do.call(what = rbind) |>
   dplyr::rename(

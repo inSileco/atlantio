@@ -136,6 +136,12 @@ test_that("read_prm() and write_prm() keep time units", {
     c("tstop 365 day", "dt 12 hour", "toutinc 5 day")
   )
   expect_identical(prm_seconds(fl, "tstop"), 365 * 86400)
+
+  writeLines(c("dt 500 ms # half a second", "tstop 2 Days"), fl)
+  run <- read_prm(fl)
+  expect_identical(attr(run$dt, "unit"), "ms")
+  expect_identical(attr(run$dt, "comments"), "half a second")
+  expect_identical(attr(run$tstop, "unit"), "Days")
 })
 
 

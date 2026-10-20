@@ -127,7 +127,8 @@ reads. Check the base inputs once before launching anything.
 `check_prm()` scans the parameter files line by line and reports, among
 others, arrays whose declared length does not match their values (Atlantis
 pads or truncates them, `read_prm()` aborts), duplicated keys, Windows line
-endings, and the stocking flag combinations known to give wrong results.
+endings, time units that Atlantis ignores (it then reads the time in
+seconds), and the stocking flag combinations known to give wrong results.
 `check_init()` checks the initial-conditions file in the cells Atlantis
 actually uses: NaN or negative values, cells left unset where Atlantis
 silently uses a non-zero `_FillValue`, groups switched on but missing or
@@ -228,8 +229,10 @@ printing to stderr. A crash therefore usually shows as a truncated
 `output.nc` rather than a non-zero exit status. `check_run()` compares the
 last time step of the output with the end of the run: a run counts as
 complete only if it reaches `tstop`, within one output interval (`toutinc`).
-Both are read from the run file with their units, as Atlantis reads them
-(`tstop 15000 day`; a bare number is in seconds).
+Both are read from the run file as Atlantis reads them: `tstop 15000 day` is
+15000 days, but Atlantis ignores a unit it does not know as written (e.g.
+`days` or `Day`) and reads the value in seconds, as a bare number;
+`check_prm()` reports such units.
 
 ```R
 check_run("outputFolder/output.nc", "run.prm")

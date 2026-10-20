@@ -73,14 +73,20 @@ check_init <- function(path, groups = NULL, ratio = 100) {
     bad <- is.nan(x) | is.infinite(x)
     if (any(bad)) {
       findings[[length(findings) + 1]] <- check_finding(
-        file, "invalid", "error", v,
+        file,
+        "invalid",
+        "error",
+        v,
         "{sum(bad)} cell{?s} with NaN or infinite values."
       )
     }
     neg <- !is.na(x) & x < 0
     if (any(neg)) {
       findings[[length(findings) + 1]] <- check_finding(
-        file, "negative", "error", v,
+        file,
+        "negative",
+        "error",
+        v,
         "{sum(neg)} negative value{?s} (min {signif(min(x[neg]), 3)})."
       )
     }
@@ -88,7 +94,10 @@ check_init <- function(path, groups = NULL, ratio = 100) {
     set <- x[!is.na(x)]
     if (any(unset) && fill != 0 && !all(set == fill)) {
       findings[[length(findings) + 1]] <- check_finding(
-        file, "unset", "warning", v,
+        file,
+        "unset",
+        "warning",
+        v,
         if (length(set)) {
           "{sum(unset)} of {length(x)} cells unset: Atlantis uses the fill
           value {fill} there (values set: {signif(min(set), 3)} to
@@ -130,10 +139,20 @@ check_init <- function(path, groups = NULL, ratio = 100) {
 #'   ignores the extra values, [read_prm()] aborts;
 #' * `"duplicate"` (warning): a key given twice;
 #' * `"line_endings"` (warning): Windows (CRLF) line endings;
-#' * `"tabs"` (note): tabs as separators;
-#' * `"units"` (note): time units after values (e.g. `dt 12 hour`), which
-#'   Atlantis converts to seconds;
-#' * `"unknown"` (note): keys of the run file missing from the run template.
+#' * `"tabs"` (note): tabs as separators.
+#'
+#' The checks on the run file are:
+#' * `"units"`: the units after the times, which Atlantis reads in seconds
+#'   (`dt`, `tstop`, `toutstart`, `toutinc`, `toutfinc`, `tburnday`,
+#'   `tsumout`, `checkstart` and `checkstop`). Atlantis converts a value with
+#'   its unit only if the unit is spelled exactly as one of `us`, `usec`,
+#'   `ms`, `msec`, `s`, `sec`, `second`, `min`, `minute`, `h`, `hr`, `hour`,
+#'   `d`, `day` or `week`; otherwise it ignores the unit and reads the value
+#'   in seconds. Error for a unit Atlantis ignores, e.g. `days`, `Day` or
+#'   `year`, or a unit that ends a line with Windows line endings (Atlantis
+#'   reads the carriage return as part of it); note listing the units it
+#'   converts;
+#' * `"unknown"` (note): keys missing from the run template.
 #'
 #' And the checks across files, which need `bio` (and `force` for the last
 #' one), for every group stocked (`flagstocking<GRP> 1` or
@@ -165,7 +184,9 @@ check_init <- function(path, groups = NULL, ratio = 100) {
 check_prm <- function(bio = NULL, run = NULL, force = NULL) {
   paths <- c(bio = bio, run = run, force = force)
   if (!length(paths)) {
-    cli::cli_abort("Give at least one of {.arg bio}, {.arg run} or {.arg force}.")
+    cli::cli_abort(
+      "Give at least one of {.arg bio}, {.arg run} or {.arg force}."
+    )
   }
   scans <- lapply(paths, scan_prm)
   findings <- lapply(names(paths), \(k) {
@@ -201,8 +222,10 @@ check_prm <- function(bio = NULL, run = NULL, force = NULL) {
 #' * `"unreadable"` (error): the main output cannot be opened;
 #' * `"incomplete"` (error): the main output stops before `tstop`.
 #'
-#' `tstop` and `toutinc` are read with their units as Atlantis reads them
-#' (e.g. `tstop 365 day`; a bare number is in seconds).
+#' `tstop` and `toutinc` are read as Atlantis reads them: in their unit if
+#' Atlantis knows it as written, in seconds otherwise. `tstop 365 day` is 365
+#' days, but `tstop 365 days` and `tstop 365` are 365 seconds (see the
+#' `"units"` check of [check_prm()]).
 #'
 #' @param output Path to the main netCDF output of the run (e.g.
 #'   `output.nc`).
@@ -225,7 +248,10 @@ check_run <- function(output, run) {
   file <- basename(output)
   if (!file.exists(output)) {
     finding <- check_finding(
-      file, "missing", "error", "",
+      file,
+      "missing",
+      "error",
+      "",
       "not found: the run failed before writing its output."
     )
     return(new_atlantis_check(list(finding)))
@@ -236,7 +262,10 @@ check_run <- function(output, run) {
   )
   if (is.null(nc) || is.null(nc$dim$t)) {
     finding <- check_finding(
-      file, "unreadable", "error", "",
+      file,
+      "unreadable",
+      "error",
+      "",
       "cannot be read as an Atlantis output (no time dimension)."
     )
     return(new_atlantis_check(list(finding)))
@@ -252,7 +281,10 @@ check_run <- function(output, run) {
     days <- round(end / 86400, 1)
     days_stop <- round(tstop / 86400, 1)
     findings[[1]] <- check_finding(
-      file, "incomplete", "error", "tstop",
+      file,
+      "incomplete",
+      "error",
+      "tstop",
       "ends at day {days} of {days_stop}: the run stopped early (Atlantis
       exits with status 0 after a fatal error, see its stderr)."
     )
@@ -294,7 +326,9 @@ check_run <- function(output, run) {
 #' @export
 set_init_values <- function(path, variable, values, file = path) {
   if (!all(c("box", "value") %in% names(values))) {
-    cli::cli_abort("{.arg values} needs the columns {.field box} and {.field value}.")
+    cli::cli_abort(
+      "{.arg values} needs the columns {.field box} and {.field value}."
+    )
   }
   if (anyNA(values$value) || any(values$value < 0)) {
     cli::cli_abort("{.arg values} has missing or negative values.")
@@ -318,7 +352,9 @@ set_init_values <- function(path, variable, values, file = path) {
   }
   if ("z" %in% dims) {
     if (!"layer" %in% names(values)) {
-      cli::cli_abort("{.field {variable}} is 3D: {.arg values} needs {.field layer}.")
+      cli::cli_abort(
+        "{.field {variable}} is 3D: {.arg values} needs {.field layer}."
+      )
     }
     if (any(values$layer < 1 | values$layer > nc$dim$z$len)) {
       cli::cli_abort("Layers go from 1 to {nc$dim$z$len}.")
@@ -358,7 +394,11 @@ print.atlantis_check <- function(x, ...) {
   bullet <- c(error = "x", warning = "!", note = "i")[x$severity]
   txt <- paste0(
     x$file,
-    " {.field ", cli_escape(x$key), "} (", x$check, "): ",
+    " {.field ",
+    cli_escape(x$key),
+    "} (",
+    x$check,
+    "): ",
     cli_escape(x$message)
   )
   cli::cli_bullets(stats::setNames(txt, bullet))
@@ -371,8 +411,14 @@ print.atlantis_check <- function(x, ...) {
 check_severities <- c("error", "warning", "note")
 
 # one finding; `message` is a glue string evaluated in the caller
-check_finding <- function(file, check, severity, key, message,
-                          .envir = parent.frame()) {
+check_finding <- function(
+  file,
+  check,
+  severity,
+  key,
+  message,
+  .envir = parent.frame()
+) {
   data.frame(
     file = file,
     check = check,
@@ -444,7 +490,7 @@ init_values <- function(nc, v, cells) {
   x <- ncdf4::ncvar_get(nc, v, collapse_degen = FALSE)
   dims <- vapply(nc$var[[v]]$dim, \(d) d$name, character(1))
   if ("z" %in% dims) {
-    x <- x[, , 1]
+    x <- x[,, 1]
     inwc <- nc_att(nc, v, "inwc", 1) != 0
     insed <- nc_att(nc, v, "insed", 1) != 0
     # vertebrate tracers have neither flag set
@@ -472,19 +518,29 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
       total <- vapply(nums, \(v) sum(values[[v]]), numeric(1))
       if (sum(total) == 0) {
         findings[[length(findings) + 1]] <- check_finding(
-          file, "zero", "warning", g,
+          file,
+          "zero",
+          "warning",
+          g,
           "switched on but has no individual in any cell."
         )
       }
       for (v in nums) {
         for (tr in c("StructN", "ResN")) {
           w <- sub("_Nums$", paste0("_", tr), v)
-          if (is.null(values[[w]])) next
-          if (length(values[[w]]) != length(values[[v]])) next
+          if (is.null(values[[w]])) {
+            next
+          }
+          if (length(values[[w]]) != length(values[[v]])) {
+            next
+          }
           bad <- values[[v]] > 0 & values[[w]] == 0
           if (any(bad)) {
             findings[[length(findings) + 1]] <- check_finding(
-              file, "zero", "error", w,
+              file,
+              "zero",
+              "error",
+              w,
               "0 in {sum(bad)} cell{?s} with individuals."
             )
           }
@@ -494,7 +550,10 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
       for (v in pool) {
         if (sum(values[[v]]) == 0) {
           findings[[length(findings) + 1]] <- check_finding(
-            file, "zero", "warning", v,
+            file,
+            "zero",
+            "warning",
+            v,
             "{g} is switched on but this is 0 in every cell."
           )
         }
@@ -512,7 +571,10 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
       }
     } else {
       findings[[length(findings) + 1]] <- check_finding(
-        file, "missing", "error", g,
+        file,
+        "missing",
+        "error",
+        g,
         "switched on but has no variable in the file."
       )
     }
@@ -520,7 +582,9 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
   pools <- do.call(rbind, pools)
   for (fam in unique(pools$family)) {
     p <- pools[pools$family == fam, ]
-    if (nrow(p) < 2) next
+    if (nrow(p) < 2) {
+      next
+    }
     for (j in seq_len(nrow(p))) {
       # the median of the family, or the other pool if only two
       ref <- if (nrow(p) > 2) stats::median(p$typical) else p$typical[-j]
@@ -528,7 +592,10 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
       if (fold > ratio || fold < 1 / ratio) {
         sisters <- p$variable[-j]
         findings[[length(findings) + 1]] <- check_finding(
-          file, "sisters", "warning", p$variable[j],
+          file,
+          "sisters",
+          "warning",
+          p$variable[j],
           "typical value {signif(p$typical[j], 3)}, x{signif(fold, 2)} the
           {if (nrow(p) > 2) 'median' else 'value'} of its sisters
           ({signif(ref, 3)}; {.field {sisters}})."
@@ -540,82 +607,150 @@ check_init_groups <- function(file, groups, values, nc, ratio) {
 }
 
 # scan a parameter file line by line: one row per key with the line, the
-# value, the count of an array and the number of values given, and the unit
-# after the value
+# value, the word after it (a unit, if any), the count of an array and the
+# number of values given
 scan_prm <- function(path) {
-  raw <- readLines(path, warn = FALSE)
-  lines <- sub("\r$", "", raw)
+  lines <- readLines(path, warn = FALSE)
+  bytes <- readBin(path, "raw", file.size(path))
   code <- stringr::str_squish(sub("#.*$", "", lines))
   tok <- strsplit(code, "[[:blank:]]+")
   is_key <- grepl("^[A-Za-z]", code)
   is_row <- grepl("^[-+]?([0-9]|\\.[0-9])", code)
   keys <- which(is_key)
+  # the word after the value as Atlantis reads it
+  # (Util_XML_Parse_Create_Node() in atUtilXML.c): the line split on blanks
+  # and commas, comments included, with the carriage return of a CRLF line
+  # ending, which readLines() drops
+  cr <- ifelse(crlf_lines(bytes, length(lines))[keys], "\r", "")
+  words <- strsplit(sub("^[ ,\t]+", "", paste0(lines[keys], cr)), "[ ,\t]+")
   out <- data.frame(
     line = keys,
     key = vapply(tok[keys], `[`, character(1), 1L),
-    value = vapply(tok[keys], \(x) if (length(x) > 1) x[2] else NA_character_, character(1)),
-    unit = vapply(tok[keys], \(x) {
-      if (length(x) > 2 && !is.na(suppressWarnings(as.numeric(x[2]))) &&
-        tolower(x[3]) %in% prm_units) {
-        x[3]
-      } else {
-        NA_character_
-      }
-    }, character(1)),
+    value = vapply(
+      tok[keys],
+      \(x) if (length(x) > 1) x[2] else NA_character_,
+      character(1)
+    ),
+    unit = vapply(
+      words,
+      \(x) {
+        if (length(x) > 2 && !grepl("^(#|\r$)", x[3])) x[3] else NA_character_
+      },
+      character(1)
+    ),
     n_given = NA_integer_
   )
   # an array: the next non-empty line holds numbers
   for (k in seq_along(keys)) {
     nxt <- keys[k] + 1L
-    while (nxt <= length(code) && !nzchar(code[nxt])) nxt <- nxt + 1L
+    while (nxt <= length(code) && !nzchar(code[nxt])) {
+      nxt <- nxt + 1L
+    }
     if (nxt <= length(code) && is_row[nxt]) {
       out$n_given[k] <- length(tok[[nxt]])
     }
   }
-  # readLines() drops the carriage returns: count them in the bytes
-  attr(out, "crlf") <- sum(readBin(path, "raw", file.size(path)) == as.raw(13))
+  attr(out, "crlf") <- sum(bytes == as.raw(13))
   attr(out, "tabs") <- sum(grepl("\t", lines[is_key | is_row]))
   out
 }
 
-# time units Atlantis converts after a value (e.g. `dt 12 hour`)
-prm_units <- c(
-  "s", "sec", "secs", "second", "seconds", "min", "mins", "minute", "minutes",
-  "h", "hr", "hrs", "hour", "hours", "d", "day", "days", "week", "weeks",
-  "month", "months", "y", "yr", "yrs", "year", "years"
+# for each line of readLines(), whether it ends with CRLF: readLines() ends
+# a line at LF, CRLF or a lone CR, and drops the carriage return
+crlf_lines <- function(bytes, n) {
+  cr <- which(bytes == as.raw(13))
+  lf <- which(bytes == as.raw(10))
+  ends <- sort(c(lf, setdiff(cr, lf - 1L)))
+  c(ends %in% (cr + 1L), logical(n))[seq_len(n)]
+}
+
+# the units Atlantis converts to seconds (strtosecs() in sjwlib/time.c). In
+# the run file, it keeps the word after a time only if it is spelled exactly
+# as one of them (Util_XML_Parse_Create_Node() in atUtilXML.c), and reads
+# the value in seconds otherwise
+atlantis_seconds <- c(
+  us = 1e-6,
+  usec = 1e-6,
+  ms = 1e-3,
+  msec = 1e-3,
+  s = 1,
+  sec = 1,
+  second = 1,
+  min = 60,
+  minute = 60,
+  h = 3600,
+  hr = 3600,
+  hour = 3600,
+  d = 86400,
+  day = 86400,
+  week = 604800
 )
 
-# a time of a parameter file in seconds, with its unit read as Atlantis does
-# (strtosecs() in sjwlib/time.c): case-insensitive, optional trailing "s",
-# seconds when there is no unit
+# the keys of the run file Atlantis reads as times (atparamIO.c)
+atlantis_time_keys <- c(
+  "dt",
+  "tstop",
+  "toutstart",
+  "toutinc",
+  "toutfinc",
+  "tburnday",
+  "tsumout",
+  "checkstart",
+  "checkstop"
+)
+
+# words that look like a time unit: those of atlantis_seconds, months and
+# years, in any case and with an optional plural "s"
+is_time_unit <- function(x) {
+  time_unit_stem(x) %in% c(names(atlantis_seconds), "month", "y", "yr", "year")
+}
+
+# lower case and without a plural "s", as strtosecs() reads a unit
+time_unit_stem <- function(x) {
+  sub("^(.{2,})s$", "\\1", tolower(x))
+}
+
+# a time of the run file in seconds, as Atlantis reads it: in the unit after
+# the value if Atlantis keeps it, in seconds otherwise
 prm_seconds <- function(path, key, default = NULL) {
-  lines <- sub("\r$", "", readLines(path, warn = FALSE))
-  code <- stringr::str_squish(sub("#.*$", "", lines))
-  tok <- strsplit(code, "[[:blank:]]+")
-  hit <- Filter(\(x) length(x) > 1 && x[1] == key, tok)
+  scan <- scan_prm(path)
+  hit <- which(scan$key == key)
   if (!length(hit)) {
     if (!is.null(default)) {
       return(default)
     }
     cli::cli_abort("{.field {key}} not found in {.path {path}}.")
   }
-  x <- hit[[length(hit)]]
-  value <- suppressWarnings(as.numeric(x[2]))
-  unit <- if (length(x) > 2) sub("^(.{2,})s$", "\\1", tolower(x[3])) else "s"
-  if (is.na(value) || !unit %in% names(atlantis_seconds)) {
+  k <- hit[length(hit)]
+  value <- suppressWarnings(as.numeric(scan$value[k]))
+  if (is.na(value)) {
     cli::cli_abort(
-      "Cannot read {.field {key}} {paste(x[-1], collapse = ' ')} in
-      {.path {path}} as a time."
+      "Cannot read {.field {key}} {scan$value[k]} in {.path {path}} as a
+      time."
     )
+  }
+  unit <- scan$unit[k]
+  if (!unit %in% names(atlantis_seconds)) {
+    unit <- "s"
   }
   value * atlantis_seconds[[unit]]
 }
 
-atlantis_seconds <- c(
-  us = 1e-6, usec = 1e-6, ms = 1e-3, msec = 1e-3, s = 1, sec = 1, second = 1,
-  min = 60, minute = 60, h = 3600, hr = 3600, hour = 3600, d = 86400,
-  day = 86400, week = 604800
-)
+# how to write a unit that Atlantis ignores after a time
+unit_advice <- function(word) {
+  unit <- sub("\r$", "", word)
+  stem <- time_unit_stem(unit)
+  known <- stem %in% names(atlantis_seconds)
+  advice <- c(
+    if (known && unit != stem) paste0("write \"", stem, "\""),
+    if (!known) "Atlantis has no months or years, give the time in days",
+    if (endsWith(word, "\r")) {
+      "the carriage return of the Windows (CRLF) line ending sticks to the
+      unit: use LF line endings, or put a comment after the unit"
+    }
+  )
+  paste(advice, collapse = "; ")
+}
 
 prm_value <- function(scan, key, default = NA) {
   v <- scan$value[scan$key == key]
@@ -631,47 +766,80 @@ check_prm_file <- function(file, scan, type) {
   bad <- which(!is.na(scan$n_given) & n_declared != scan$n_given)
   for (k in bad) {
     findings[[length(findings) + 1]] <- check_finding(
-      file, "count", "error", scan$key[k],
+      file,
+      "count",
+      "error",
+      scan$key[k],
       "line {scan$line[k]} declares {n_declared[k]} value{?s} but the next
       line has {scan$n_given[k]}."
     )
   }
   for (key in unique(scan$key[duplicated(scan$key)])) {
     findings[[length(findings) + 1]] <- check_finding(
-      file, "duplicate", "warning", key,
+      file,
+      "duplicate",
+      "warning",
+      key,
       "given {sum(scan$key == key)} times (lines
       {scan$line[scan$key == key]})."
     )
   }
   if (attr(scan, "crlf")) {
     findings[[length(findings) + 1]] <- check_finding(
-      file, "line_endings", "warning", "",
+      file,
+      "line_endings",
+      "warning",
+      "",
       "Windows (CRLF) line endings on {attr(scan, 'crlf')} line{?s}."
     )
   }
   if (attr(scan, "tabs")) {
     findings[[length(findings) + 1]] <- check_finding(
-      file, "tabs", "note", "",
+      file,
+      "tabs",
+      "note",
+      "",
       "tabs as separators on {attr(scan, 'tabs')} line{?s}."
     )
   }
-  units <- which(!is.na(scan$unit))
-  if (length(units)) {
-    with_unit <- paste(scan$key[units], scan$value[units], scan$unit[units])
-    findings[[length(findings) + 1]] <- check_finding(
-      file, "units", "note", "",
-      "{length(units)} value{?s} followed by a time unit, which Atlantis
-      converts to seconds: {with_unit}."
-    )
-  }
   if (type == "run") {
+    times <- which(
+      scan$key %in% atlantis_time_keys & is_time_unit(sub("\r$", "", scan$unit))
+    )
+    kept <- times[scan$unit[times] %in% names(atlantis_seconds)]
+    for (k in setdiff(times, kept)) {
+      unit <- sub("\r$", "", scan$unit[k])
+      advice <- unit_advice(scan$unit[k])
+      findings[[length(findings) + 1]] <- check_finding(
+        file,
+        "units",
+        "error",
+        scan$key[k],
+        "line {scan$line[k]}: Atlantis ignores {.val {unit}} and reads
+        {scan$value[k]} s; {advice}."
+      )
+    }
+    if (length(kept)) {
+      with_unit <- paste(scan$key[kept], scan$value[kept], scan$unit[kept])
+      findings[[length(findings) + 1]] <- check_finding(
+        file,
+        "units",
+        "note",
+        "",
+        "{length(kept)} value{?s} followed by a time unit, which Atlantis
+        converts to seconds: {with_unit}."
+      )
+    }
     ref <- system.file("parameters", "run.yaml", package = "atlantio") |>
       yaml::read_yaml() |>
       vapply(\(x) x$Name, character(1))
     unknown <- setdiff(scan$key, ref)
     if (length(unknown)) {
       findings[[length(findings) + 1]] <- check_finding(
-        file, "unknown", "note", "",
+        file,
+        "unknown",
+        "note",
+        "",
         "{length(unknown)} key{?s} not in the run template: {.field {unknown}}."
       )
     }
@@ -690,7 +858,10 @@ check_stocking <- function(bio, bio_file, force, force_path) {
   flag_ts <- codes("flagrecruit", 18)
   for (g in intersect(flag_stock, flag_ts)) {
     findings[[length(findings) + 1]] <- check_finding(
-      bio_file, "stocked_twice", "error", g,
+      bio_file,
+      "stocked_twice",
+      "error",
+      g,
       "{.field flagstocking{g}} 1 and {.field flagrecruit{g}} 18 both add the
       MultRects series: the stocking is delivered twice."
     )
@@ -701,7 +872,10 @@ check_stocking <- function(bio, bio_file, force, force_path) {
   }
   if (isTRUE(prm_value(bio, "flagrandom") == 1)) {
     findings[[length(findings) + 1]] <- check_finding(
-      bio_file, "random_spawn", "warning", "flagrandom",
+      bio_file,
+      "random_spawn",
+      "warning",
+      "flagrandom",
       "1 moves the spawn day by up to 14 days, but the stocking series of
       {.field {stocked}} {?is/are} read on the spawn day only."
     )
@@ -722,7 +896,10 @@ check_stocking <- function(bio, bio_file, force, force_path) {
     }
     if (!file.exists(p)) {
       findings[[length(findings) + 1]] <<- check_finding(
-        basename(force_path), "spawn_day", "warning", f[1],
+        basename(force_path),
+        "spawn_day",
+        "warning",
+        f[1],
         "time series not found, stocking timing not checked."
       )
       return(NULL)
@@ -734,7 +911,9 @@ check_stocking <- function(bio, bio_file, force, force_path) {
   for (g in stocked) {
     spawn <- prm_value(bio, paste0(g, "_Time_Spawn"))
     series <- Filter(\(d) g %in% names(d), ts)
-    if (is.na(spawn) || !length(series)) next
+    if (is.na(spawn) || !length(series)) {
+      next
+    }
     stocked_years <- 0
     delivered <- 0
     for (d in series) {
@@ -760,8 +939,10 @@ check_stocking <- function(bio, bio_file, force, force_path) {
     }
     if (delivered < stocked_years) {
       findings[[length(findings) + 1]] <- check_finding(
-        basename(force_path), "spawn_day",
-        if (delivered == 0) "error" else "warning", g,
+        basename(force_path),
+        "spawn_day",
+        if (delivered == 0) "error" else "warning",
+        g,
         "{stocked_years - delivered} of {stocked_years} box-year{?s} of
         stocking {?has/have} no value on the spawn day ({spawn}), the only day
         the series is read: {if (delivered == 0) 'no fish is delivered' else

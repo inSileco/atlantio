@@ -33,8 +33,10 @@ The checks (column \code{check} of the result) are:
 \item \code{"incomplete"} (error): the main output stops before \code{tstop}.
 }
 
-\code{tstop} and \code{toutinc} are read with their units as Atlantis reads them
-(e.g. \verb{tstop 365 day}; a bare number is in seconds).
+\code{tstop} and \code{toutinc} are read as Atlantis reads them: in their unit if
+Atlantis knows it as written, in seconds otherwise. \verb{tstop 365 day} is 365
+days, but \verb{tstop 365 days} and \verb{tstop 365} are 365 seconds (see the
+\code{"units"} check of \code{\link[=check_prm]{check_prm()}}).
 }
 \examples{
 check_run(

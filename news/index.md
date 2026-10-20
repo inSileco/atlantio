@@ -1,6 +1,6 @@
 # Changelog
 
-## atlantio (development version)
+## atlantio 0.6.0
 
 - New
   [`write_run_script()`](https://insileco.io/atlantio/reference/write_run_script.md)

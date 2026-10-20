@@ -89,7 +89,7 @@ test_that("read_prm() reads arrays starting with a signed value", {
 
 
 test_that("write_prm() warns when it must", {
-  fl <- withr::local_file("filew.prm")
+  fl <- withr::local_tempfile(fileext = ".prm")
   expect_warning(
     system.file("mock", "prm", "partial_ok1.prm", package = "atlantio") |>
       read_prm() |>
@@ -101,7 +101,7 @@ test_that("write_prm() warns when it must", {
 
 
 test_that("write_prm() works", {
-  fl <- withr::local_file("file1.prm")
+  fl <- withr::local_tempfile(fileext = ".prm")
   system.file("mock", "prm", "partial_ok1.prm", package = "atlantio") |>
     read_prm() |>
     write_prm(fl)

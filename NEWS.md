@@ -1,3 +1,14 @@
+# atlantio (development version)
+
+* New `plot_foodweb()` draws the food web of a model with ggplot2: groups
+  placed by trophic level and habitat (pelagic, benthic), edges from prey to
+  predator with a width given by `pPREY`, and, when the biomass index is
+  loaded, node size and colour given by the initial biomass and the final /
+  initial ratio. `highlight` takes a table of links (`prey`, `predator`,
+  `colour`, optionally `pathway`) to highlight; links absent from the food
+  web are drawn dashed.
+
+
 # atlantio 0.5.0
 
 * The `run_model()` of the calibration article records a run whose scoring
@@ -89,6 +100,7 @@
 * `write_parameter_folder()` aborts rather than change a key given several
   times in its file, as Atlantis may read another occurrence than the one
   changed. It changed the last one.
+
 
 # atlantio 0.4.0
 

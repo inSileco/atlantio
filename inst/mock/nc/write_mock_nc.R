@@ -60,7 +60,12 @@ write_mock_output_truncated <- function(path) {
     seq(0, 50, by = 5) * 86400,
     unlim = TRUE
   )
-  var <- ncdf4::ncvar_def("Diatom_N", "mg N m-3", list(dim_b, dim_t), missval = 0)
+  var <- ncdf4::ncvar_def(
+    "Diatom_N",
+    "mg N m-3",
+    list(dim_b, dim_t),
+    missval = 0
+  )
   nc <- ncdf4::nc_create(path, list(var))
   ncdf4::ncvar_put(nc, "Diatom_N", array(50, c(3, 11)))
   ncdf4::nc_close(nc)
@@ -68,4 +73,9 @@ write_mock_output_truncated <- function(path) {
 }
 
 write_mock_init(file.path("inst", "mock", "nc", "init.nc"))
-write_mock_output_truncated(file.path("inst", "mock", "nc", "output_truncated.nc"))
+write_mock_output_truncated(file.path(
+  "inst",
+  "mock",
+  "nc",
+  "output_truncated.nc"
+))

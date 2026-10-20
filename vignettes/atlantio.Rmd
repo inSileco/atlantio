@@ -220,6 +220,30 @@ plot(
 ```
 
 
+## Plotting the food web
+
+`plot_foodweb()` draws the food web with ggplot2. Groups are placed by trophic level (y axis), computed from the `pPREY` values, with pelagic groups on the left and benthic groups (benthos, sediment bacteria and detritus) on the right. Edges go from prey to predator and their width is the largest `pPREY` value over the stages. As the system-wide biomass (`outputBiomIndx.txt`) is loaded, node size is the initial biomass and node colour the ratio of the final biomass (mean over the last two years) to the initial one: red groups grew, blue groups declined. Groups without biomass, such as the detritus in the sediment, are grey squares.
+
+```{r foodweb-ggplot, fig.height = 6, fig.width = 9, eval = requireNamespace("ggplot2", quietly = TRUE)}
+plot_foodweb(mod)
+```
+
+To follow pathways through the web, pass a table of links to `highlight`, with the columns `prey`, `predator` and `colour`, and optionally `pathway`, which names the pathways in the legend. Below, we highlight the pelagic and the benthic chains that lead to Walleye, and a link that the model does not have, Yellow Perch eating Gizzard Shad: links absent from the food web are dashed, which is handy to show a proposed diet change.
+
+```{r foodweb-highlight, fig.height = 6, fig.width = 9, eval = requireNamespace("ggplot2", quietly = TRUE)}
+pathways <- data.frame(
+  prey = c("DIA", "CAL", "GZS", "DL", "CHI", "RDG", "GZS"),
+  predator = c("CAL", "GZS", "WAE", "CHI", "RDG", "WAE", "YPH"),
+  pathway = c(rep("Pelagic", 3), rep("Benthic", 3), "Proposed")
+)
+pathways$colour <- c(
+  Pelagic = "#2166ac", Benthic = "#8c510a", Proposed = "#d73027"
+)[pathways$pathway]
+plot_foodweb(mod, highlight = pathways)
+```
+
+The result is a ggplot object, so titles, themes and `ggsave()` work as usual. Use `x_position` (a named vector of positions) to move some groups when the default layout is crowded.
+
 # Parameters, templates and calibration
 
 ## Listing Atlantis parameters

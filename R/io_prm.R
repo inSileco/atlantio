@@ -30,8 +30,10 @@
 #'  the last value is repeated to fill. `read_prm()` will throw an error instead.
 #'
 #' To be consistent with the Atlantis parser, lines with more than 4000
-#' characters (a lot, even for vectors) throw an error. Also, key duplicates will
-#' trigger warnings and the
+#' characters (a lot, even for vectors) throw an error. A key given several
+#' times triggers a warning, and its last occurrence is kept; Atlantis may
+#' read another one, e.g. the first for the keys of the run file (see
+#' [check_prm()]).
 #'
 #' @export
 
@@ -91,7 +93,10 @@ read_prm <- function(file) {
         )
       }
       if (nm %in% names(out)) {
-        cli::cli_warn("Duplicated key `{nm}`, using the last occurrence.")
+        cli::cli_warn(
+          "Duplicated key `{nm}`, using the last occurrence; Atlantis may read
+          another one (see {.fn check_prm})."
+        )
       }
       out[[nm]] <- val
       if (length(comments)) {

@@ -10,11 +10,19 @@
   against the seconds Atlantis reads (it converted these units). The
   `"units"` check now covers only the times of the run file, the only values
   Atlantis converts.
+* `check_prm()` reports a key given twice in the run file as an error:
+  Atlantis reads its first occurrence, while `read_prm()` keeps the last. In
+  the other files, the warning says that Atlantis may read another
+  occurrence. `check_run()` reads the first occurrence of `tstop` and
+  `toutinc`, as Atlantis does; it read the last.
 * `generate_file()` writes the time step as `dt 12 hour`. It wrote
   `dt 12 Hours`, which Atlantis reads as 12 seconds.
 * `read_prm()` also keeps the units `us`, `usec`, `ms` and `msec` after a
   value. It read them as comments, so `write_prm()` wrote the value without
   its unit.
+* `write_parameter_folder()` aborts rather than change a key given several
+  times in its file, as Atlantis may read another occurrence than the one
+  changed. It changed the last one.
 
 # atlantio 0.4.0
 

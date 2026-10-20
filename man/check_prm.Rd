@@ -29,7 +29,10 @@ The checks on every file (column \code{check} of the result) are:
 \item \code{"count"} (error): an array whose declared length differs from the
 number of values on the next line; Atlantis pads with the last value or
 ignores the extra values, \code{\link[=read_prm]{read_prm()}} aborts;
-\item \code{"duplicate"} (warning): a key given twice;
+\item \code{"duplicate"}: a key given twice. In the run file, an error: Atlantis
+reads the first occurrence (the last for the contaminant names and
+units), while \code{\link[=read_prm]{read_prm()}} keeps the last. In the other files, a
+warning: Atlantis may also read another occurrence than \code{\link[=read_prm]{read_prm()}};
 \item \code{"line_endings"} (warning): Windows (CRLF) line endings;
 \item \code{"tabs"} (note): tabs as separators.
 }

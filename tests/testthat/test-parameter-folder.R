@@ -11,7 +11,10 @@ load_tiny <- function() {
 
 test_that("apply_parameters() sets values on both scales", {
   mod <- load_tiny()
-  tbl <- generate_calibration_table(mod, atlantis_examples("calibrate", "mum.yaml"))
+  tbl <- generate_calibration_table(
+    mod,
+    atlantis_examples("calibrate", "mum.yaml")
+  )
   res <- apply_parameters(mod, tbl, log10(tbl$cur_value) - 1)
   gzs <- tbl$name == "mum_GZS"
   expect_equal(res@biology$mum_GZS[tbl$position[gzs]], tbl$cur_value[gzs] / 10)
@@ -62,10 +65,16 @@ test_that("write_parameter_folder() changes only the values that differ", {
   }
   run <- readLines(file.path(dir, "tiny_run.prm"))
   expect_match(run[startsWith(run, "tstop")], "^tstop\t730 day +# 1-year run")
-  expect_identical(nrow(compare_prm(mod@biology, file.path(dir, "tiny_biol.prm"))), 0L)
+  expect_identical(
+    nrow(compare_prm(mod@biology, file.path(dir, "tiny_biol.prm"))),
+    0L
+  )
 
   expect_error(write_parameter_folder(mod, dir), "not empty")
-  expect_identical(nrow(write_parameter_folder(load_tiny(), dir, overwrite = TRUE)), 0L) |>
+  expect_identical(
+    nrow(write_parameter_folder(load_tiny(), dir, overwrite = TRUE)),
+    0L
+  ) |>
     expect_message()
 
   # the files not loaded come from `from`
@@ -78,8 +87,14 @@ test_that("write_parameter_folder() changes only the values that differ", {
   suppressMessages(write_parameter_folder(mod, out, from = from))
   expect_true(file.exists(file.path(out, "physics.prm")))
   expect_true(file.exists(file.path(out, "inputs", "force.ts")))
-  expect_identical(nrow(compare_prm(mod@biology, file.path(out, "tiny_biol.prm"))), 0L)
-  expect_error(write_parameter_folder(mod, out, from = "nope", overwrite = TRUE), "Cannot find")
+  expect_identical(
+    nrow(compare_prm(mod@biology, file.path(out, "tiny_biol.prm"))),
+    0L
+  )
+  expect_error(
+    write_parameter_folder(mod, out, from = "nope", overwrite = TRUE),
+    "Cannot find"
+  )
 })
 
 test_that("patch_prm() keeps the layout and line endings", {
@@ -99,11 +114,22 @@ test_that("patch_prm() keeps the layout and line endings", {
   )
   prm$nope <- 1
   expect_error(patch_prm(src, prm, out), "not found")
+
+  # Atlantis may read either occurrence of a duplicated key
+  writeLines(c("flag 1", "rate 2", "flag 1"), src)
+  prm <- suppressWarnings(read_prm(src))
+  prm$rate[1] <- 3
+  expect_identical(patch_prm(src, prm, out)$key, "rate")
+  prm$flag[1] <- 0
+  expect_error(patch_prm(src, prm, out), "given 2 times")
 })
 
 test_that("compare_prm() compares by parameter name", {
   bio <- read_prm(atlantis_examples("inputs", "tiny_biol.prm"))
-  expect_identical(nrow(compare_prm(bio, atlantis_examples("inputs", "tiny_biol.prm"))), 0L)
+  expect_identical(
+    nrow(compare_prm(bio, atlantis_examples("inputs", "tiny_biol.prm"))),
+    0L
+  )
   new <- bio[rev(names(bio))]
   new$mum_GZS[2] <- 0.004
   new$flagnew <- 1

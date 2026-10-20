@@ -173,6 +173,30 @@ test_that("check_prm() reports the time units Atlantis ignores", {
   )
 })
 
+test_that("check_prm() says which occurrence of a duplicated key Atlantis reads", {
+  run <- withr::local_tempfile(fileext = ".prm")
+  writeLines(
+    c(
+      "tstop 100 day",
+      "dt 12 hour",
+      "tstop 200 day",
+      "contaminant_units 1",
+      "contaminant_units 2"
+    ),
+    run
+  )
+  res <- check_prm(run = run)
+  dup <- res[res$check == "duplicate", ]
+  expect_identical(dup$key, c("tstop", "contaminant_units"))
+  expect_identical(dup$severity, c("error", "warning"))
+  expect_match(
+    dup$message[1],
+    "lines 1 and 3\\): Atlantis reads the first, read_prm\\(\\) the last"
+  )
+  expect_match(dup$message[2], "may read another occurrence")
+  expect_identical(prm_seconds(run, "tstop"), 100 * 86400)
+})
+
 test_that("prm_seconds() reads times as Atlantis does", {
   run <- withr::local_tempfile(fileext = ".prm")
   # CRLF on the last two lines only

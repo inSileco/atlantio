@@ -1,4 +1,7 @@
 # atlantio
+
+# atlantio <a href="https://insileco.io/atlantio/"><img src="man/figures/logo.png" align="right" height="120" alt="atlantio website" /></a>
+
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/inSileco/atlantio/actions/workflows/R-CMD-check.yaml)
 [![pkgdown.yaml](https://github.com/inSileco/atlantio/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/inSileco/atlantio/actions/workflows/pkgdown.yaml)

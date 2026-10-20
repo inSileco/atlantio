@@ -25,9 +25,9 @@
 #' @param run `[list]`\cr
 #' Run configuration parameters from .prm file including simulation settings,
 #' timesteps, and output specifications.
-#' @param initial `[list]`\cr
-#' Initial conditions from .nc file specifying starting biomass, numbers, and
-#' other state variables for each functional group.
+#' @param initial `[ncdf4]`\cr
+#' Initial conditions: the open netCDF file (see [read_nc()]), to close with
+#' `ncdf4::nc_close()`.
 #' @param biology `[list]`\cr
 #' Biology parameters from .prm file including growth rates, mortality,
 #' recruitment, and physiological parameters for each functional group.
@@ -37,7 +37,7 @@
 #' @param forcing `[list]`\cr
 #' Environmental forcing data including temperature, salinity, and other
 #' physical drivers that vary through time.
-#' @param fisheries `[list]`\cr
+#' @param fisheries `[data.frame]`\cr
 #' Fisheries configuration and catch time series data for commercial and
 #' recreational fishing activities.
 #' @param harvest `[list]`\cr
@@ -46,35 +46,38 @@
 #' @param physics `[list]`\cr
 #' Physical oceanographic parameters including mixing, transport, and
 #' hydrodynamic processes.
-#' @param main_output `[data.frame]`\cr
-#' Primary model outputs including biomass and abundance time series for all
-#' functional groups aggregated across space.
-#' @param biomass_all `[array]`\cr
-#' Complete biomass snapshots at specific time points showing spatial
-#' distribution across all boxes and depth layers.
-#' @param biomass_box `[array]`\cr
-#' Biomass snapshots aggregated by box (spatial polygon) for each functional
-#' group and time point.
-#' @param biomass_age `[array]`\cr
-#' Age-structured biomass snapshots showing cohort dynamics for vertebrate
-#' functional groups.
-#' @param biomass_age_annual `[array]`\cr
-#' Annual summaries of age-structured biomass data for long-term trend analysis.
-#' @param diet `[matrix]`\cr
-#' Diet composition matrix showing predator-prey relationships and consumption
-#' rates between functional groups.
-#' @param diet_detailed `[array]`\cr
-#' Detailed diet matrices with temporal, spatial, and size-based resolution of
-#' predation interactions.
-#' @param yoy `[array]`\cr
-#' Snapshot of biomass of recruits per year.
-#' @param file_paths  `[dataframe]`\cr
-#' Data frame listing path to input and output files.
+#' @param main_output `[ncdf4]`\cr
+#' Main output: the open netCDF file of the run (see [read_nc()]), read by
+#' [create_time_series()] and [create_time_series_biomass()]; close it with
+#' `ncdf4::nc_close()`.
+#' @param biomass_all `[data.frame]`\cr
+#' Biomass of every group over the whole model domain (`BiomIndx.txt`).
+#' @param biomass_box `[data.frame]`\cr
+#' Biomass of every group per box (`BoxBiomass.txt`).
+#' @param biomass_age `[data.frame]`\cr
+#' Biomass per age class of the age-structured groups (`AgeBiomIndx.txt`).
+#' @param biomass_age_annual `[data.frame]`\cr
+#' The same, yearly (`AnnualAgeBiomIndx.txt`).
+#' @param diet `[data.frame]`\cr
+#' Diet composition of the predators (`DietCheck.txt`).
+#' @param diet_detailed `[data.frame]`\cr
+#' Diet composition per box and layer (`DetailedDietCheck.txt`).
+#' @param yoy `[data.frame]`\cr
+#' Biomass of recruits per year (`YOY.txt`).
+#' @param file_paths `[data.frame]`\cr
+#' The files: the rows of [input_files] with the path of each file loaded
+#' (`NA` otherwise).
 #' @param version `[character]`\cr
 #' Atlantis version used.
 #'
+#' @details
+#' [atlantis_load_files()] fills every property but `physics`, `forcing`,
+#' `fisheries` and `harvest`, which can be set by hand, e.g.
+#' `x@harvest <- read_prm("harvest.prm")`.
+#'
 #' @references
-#' Output list avaialbe here <https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/markdown_output/AtlantisUserGuide_PartI_CLEAN.html#simulation-outputs>
+#' The outputs are described in the Atlantis User's Guide Part I
+#' <https://research.csiro.au/atlantis/wp-content/uploads/sites/52/2025/05/AtlantisUserGuide_PartI.pdf>
 #'
 #' @export
 #'
@@ -112,7 +115,7 @@ Atlantis <- S7::new_class(
 #'
 #' @param ... Optional named arguments to initialize specific properties.
 #'   Property names should match those defined in the Atlantis class
-#'   (e.g., geometry, bio, run, etc.).
+#'   (e.g. geometry, biology, run).
 #'
 #' @return An Atlantis S7 object with all properties initialized to NULL
 #'   unless specified in the arguments.
@@ -125,7 +128,7 @@ Atlantis <- S7::new_class(
 #' # Create with some initial data
 #' atlantis <- new_atlantis(
 #'   geometry = my_geometry_data,
-#'   bio = my_biology_params
+#'   biology = my_biology_params
 #' )
 #' }
 #'
@@ -158,10 +161,11 @@ new_atlantis <- function(...) {
 #'   * An `atlantis_file` object (created by `read_atlantis_files()`)
 #'
 #'   Supported file types include:
-#'   * `.geometry` - Box Geometry Model files
+#'   * `.bgm` - Box Geometry Model files
 #'   * `.prm` - Parameter files (bio and run)
 #'   * `.nc` - NetCDF output files
-#'   * `.txt`, `.csv` - Diet and biomass snapshot files
+#'   * `.csv` - Groups file
+#'   * `.txt` - Diet and biomass outputs
 #' @param filenames file basenames (used as hints)
 #'
 #' @return Updated Atlantis S7 object with newly loaded data merged with

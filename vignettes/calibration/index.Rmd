@@ -2,6 +2,8 @@
 title: "Calibrating Atlantis model with atlantio and calibrar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: ../../inst/references.bib
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{Calibrating Atlantis model with atlantio and calibrar}
   %\VignetteEngine{knitr::rmarkdown}

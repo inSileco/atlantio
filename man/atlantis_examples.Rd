@@ -7,7 +7,7 @@
 atlantis_examples(...)
 }
 \arguments{
-\item{...}{further arguments passed to \verb{[system.file()]}}
+\item{...}{further arguments passed to \code{\link[=system.file]{system.file()}}}
 }
 \description{
 Helper function to quickly access example files.

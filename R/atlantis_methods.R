@@ -87,7 +87,7 @@ S7::method(print, Atlantis) <- function(x, ...) {
 #' * pPREY2XXX1: adult prey, juvenile predator
 #' * pPREY2XXX2: adult prey, adult predator
 #' where XXX denotes the code of the predator. Note that the realised diet
-#' in Atlantis will depend on other factor, for instance the coeficient `mum`,
+#' in Atlantis will depend on other factors, for instance the coefficient `mum`,
 #' assuming it is used by the functional response (see `predcase_XXXX`).
 #'
 #' @return A data frame with one row per `pPREY` key (a predator and the

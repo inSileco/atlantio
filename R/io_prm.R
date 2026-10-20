@@ -10,12 +10,12 @@
 #' @details
 #' .prm files are simple key-value text files:
 #' ```
-#'  #' Comments start with #
+#'  # Comments start with #
 #'  scalar_key  1.0
 #'  biosedprofile  gaussian
 #'  # Arrays: key followed by count, then values on next line
 #'  array_key 4
-#'  1.0 1.0 1.0 1.0.
+#'  1.0 1.0 1.0 1.0
 #' ```
 #' The key differences between `read_prm()` and the Atlantis parser are:
 #'  * Comments: lines starting with # are not skipped, they are collected and stored as
@@ -138,10 +138,10 @@ read_prm <- function(file) {
 #'
 #' @param x a list of key-value pairs.
 #' @param add_comments Should comments be added.
-#' @param sep the separation bewteen key and value.
+#' @param sep the separation between key and value.
 #'
 #' @return
-#' The prm file.
+#' `NULL`, invisibly: the parameters are written to `file`.
 #'
 #' @export
 write_prm <- function(x, file = stdout(), add_comments = TRUE, sep = " ") {

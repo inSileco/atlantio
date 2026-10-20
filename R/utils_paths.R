@@ -1,6 +1,6 @@
 #' Helper function to quickly access example files.
 #'
-#' @param ... further arguments passed to `[system.file()]`
+#' @param ... further arguments passed to [system.file()]
 #'
 #' @export
 #'

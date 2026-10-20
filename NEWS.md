@@ -1,4 +1,4 @@
-# atlantio (development version)
+# atlantio 0.5.0
 
 * The `run_model()` of the calibration article records a run whose scoring
   fails as failed. It saved it as completed, with the penalty score, so

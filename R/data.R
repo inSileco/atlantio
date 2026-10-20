@@ -27,7 +27,7 @@
 #'   `"<major_version>-<svn_revision>"` (e.g. `"3-6722"`),
 #' * release_date: release date of the version.
 #'
-#' @source Generated from `inst/raw-data/supported_version.R`.
+#' @source Generated from `data-raw/supported_version.R`.
 #'
 #' @seealso [list_atlantis_parameters()]
 

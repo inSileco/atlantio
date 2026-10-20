@@ -4,6 +4,9 @@
   fails as failed. It saved it as completed, with the penalty score, so
   `summarise_calibration()` counted it among the completed runs. It also
   closes the output it reads.
+* The example outputs that nothing used (`outputPROD.nc`, `outputTOT.nc`,
+  `export.ts`, `inputs.ts`, `tiny_groups.xml` and `tiny_run.xml`) are
+  removed: the package is 2 MB smaller.
 * Fewer messages. `read_atlantis_files()` no longer prints the column
   specification of every text output, nor an alert for a file it cannot
   read, which `atlantis_load_files()` reports: a missing file gives one

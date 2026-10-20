@@ -22,6 +22,7 @@ messages of atlantio, any other value (e.g. \code{"quiet"}) silences them.
 Useful links:
 \itemize{
   \item \url{https://github.com/inSileco/atlantio}
+  \item \url{https://insileco.io/atlantio/}
   \item Report bugs at \url{https://github.com/inSileco/atlantio/issues}
 }
 

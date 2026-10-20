@@ -1,5 +1,7 @@
 # atlantio
 
+# atlantio
+
 Read, write and manipulate
 [Atlantis](https://research.csiro.au/atlantis/) model inputs and
 outputs. `atlantio` provides an S7 class `Atlantis` that represents an

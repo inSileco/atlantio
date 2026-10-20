@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="atlantio-development-version">atlantio (development version)<a class="anchor" aria-label="anchor" href="#atlantio-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="atlantio-050">atlantio 0.5.0<a class="anchor" aria-label="anchor" href="#atlantio-050"></a></h2>
 <ul><li>The <code>run_model()</code> of the calibration article records a run whose scoring fails as failed. It saved it as completed, with the penalty score, so <code><a href="../reference/summarise_calibration.html">summarise_calibration()</a></code> counted it among the completed runs. It also closes the output it reads.</li>
 <li>The example outputs that nothing used (<code>outputPROD.nc</code>, <code>outputTOT.nc</code>, <code>export.ts</code>, <code>inputs.ts</code>, <code>tiny_groups.xml</code> and <code>tiny_run.xml</code>) are removed: the package is 2 MB smaller.</li>
 <li>Fewer messages. <code><a href="../reference/read_atlantis_files.html">read_atlantis_files()</a></code> no longer prints the column specification of every text output, nor an alert for a file it cannot read, which <code><a href="../reference/atlantis_load_files.html">atlantis_load_files()</a></code> reports: a missing file gives one warning (it gave three). <code><a href="../reference/create_time_series.html">create_time_series()</a></code> and <code><a href="../reference/create_time_series_biomass.html">create_time_series_biomass()</a></code> say that <code>layer</code> or <code>age</code> is ignored only when it was given. Printing an <code>Atlantis</code> object whose geometry has no depth no longer warns.</li>

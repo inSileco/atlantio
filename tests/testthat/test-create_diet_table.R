@@ -8,6 +8,8 @@ test_that("create_diet_table() works", {
   expect_true(inherits(res1, "data.frame"))
   expect_identical(dim(res1), c(20L, 18L))
   expect_snapshot(res2 <- atl2 |> create_diet_table())
+  expect_s3_class(res2, "data.frame")
+  expect_identical(dim(res2), dim(res1))
 
   # default column names in res2
   expect_false(identical(res1, res2))

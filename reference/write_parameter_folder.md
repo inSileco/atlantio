@@ -69,7 +69,7 @@ mod <- new_atlantis() |>
 mod@biology$mum_GZS[1] <- 0.04
 dir <- file.path(tempdir(), "params_v2")
 write_parameter_folder(mod, dir)
-#> ✔ 3 input files written to /tmp/RtmpqxPC65/params_v2,
+#> ✔ 3 input files written to /tmp/RtmpX2NSP0/params_v2,
 #> 1 value changed.
 list.files(dir)
 #> [1] "tiny_biol.prm"   "tiny_groups.csv" "tiny_run.prm"   

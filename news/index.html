@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,13 @@
       <small>Source: <a href="https://github.com/inSileco/atlantio/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="atlantio-development-version">atlantio (development version)<a class="anchor" aria-label="anchor" href="#atlantio-development-version"></a></h2>
+<ul><li>New <code><a href="../reference/write_run_script.html">write_run_script()</a></code> and <code><a href="../reference/run_atlantis.html">run_atlantis()</a></code> to run a model. <code><a href="../reference/write_run_script.html">write_run_script()</a></code> renders the Atlantis command line of a run directory from the template <code>inst/run_scripts/script.sh</code> (with the path to the binary if it is not on the PATH) and creates its output folder. <code><a href="../reference/run_atlantis.html">run_atlantis()</a></code> runs it, directly or in a Docker container (as the current user, with other folders mounted read-only), with a time limit (a container that reaches it is removed, as killing the Docker client leaves it running), and checks with <code><a href="../reference/check_run.html">check_run()</a></code> that it completed: Atlantis exits with status 0 after a fatal error. Its result adds <code>check</code> and <code>complete</code> to that of <code><a href="http://processx.r-lib.org/reference/run.html" class="external-link">processx::run()</a></code>. The calibration article uses them instead of its own copies.</li>
+<li>New <code><a href="../reference/plot_foodweb.html">plot_foodweb()</a></code> draws the food web of a model with ggplot2: groups placed by trophic level and habitat (pelagic, benthic), edges from prey to predator with a width given by <code>pPREY</code>, and, when the biomass index is loaded, node size and colour given by the initial biomass and the final / initial ratio. <code>highlight</code> takes a table of links (<code>prey</code>, <code>predator</code>, <code>colour</code>, optionally <code>pathway</code>) to highlight; links absent from the food web are drawn dashed. <code>focus</code> restricts the plot to some groups, the groups they interact with and the links involving them.</li>
+<li>
+<code><a href="../reference/check_prm.html">check_prm()</a></code> and <code><a href="../reference/check_run.html">check_run()</a></code> read a parameter file without keys (empty, or comments only). They failed with “arguments imply differing number of rows”; <code><a href="../reference/check_run.html">check_run()</a></code> now says that <code>tstop</code> is not found.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="atlantio-050">atlantio 0.5.0<a class="anchor" aria-label="anchor" href="#atlantio-050"></a></h2>
 <ul><li>The <code>run_model()</code> of the calibration article records a run whose scoring fails as failed. It saved it as completed, with the penalty score, so <code><a href="../reference/summarise_calibration.html">summarise_calibration()</a></code> counted it among the completed runs. It also closes the output it reads.</li>

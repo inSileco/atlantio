@@ -111,6 +111,8 @@ MIT
   : Create new Atlantis model object
 - [`parameters_hints`](https://insileco.io/atlantio/reference/parameters_hints.md)
   : Parameter Hints for Atlantis Model Configuration
+- [`plot_foodweb()`](https://insileco.io/atlantio/reference/plot_foodweb.md)
+  : Plot a food web
 - [`read_atlantis_files()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
   [`read_bgm()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
   [`read_nc()`](https://insileco.io/atlantio/reference/read_atlantis_files.md)
@@ -127,6 +129,8 @@ MIT
 - [`read_prm()`](https://insileco.io/atlantio/reference/read_prm.md)
   [`write_prm()`](https://insileco.io/atlantio/reference/read_prm.md) :
   Parse .prm file contents into structured list
+- [`run_atlantis()`](https://insileco.io/atlantio/reference/run_atlantis.md)
+  : Run Atlantis
 - [`score_table()`](https://insileco.io/atlantio/reference/score_table.md)
   [`compute_score()`](https://insileco.io/atlantio/reference/score_table.md)
   : Calibration objective: deviation from the initial state
@@ -140,6 +144,8 @@ MIT
   : Values of a series scored over the last years of a run
 - [`write_parameter_folder()`](https://insileco.io/atlantio/reference/write_parameter_folder.md)
   : Write a complete Atlantis parameter folder
+- [`write_run_script()`](https://insileco.io/atlantio/reference/write_run_script.md)
+  : Write the script that runs Atlantis
 
 # Articles
 

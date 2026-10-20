@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -238,52 +238,40 @@ layer) from a table, in place or in a copy of the file:</p>
 <div class="section level3">
 <h3 id="running-the-model">Running the model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
 </h3>
-<p><code>atlantio</code> ships a template of the Atlantis command line
-in <code>inst/run_scripts/script.sh</code>, with
-<code>{{placeholders}}</code> for the input files. Render it once per
-run directory:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">write_run_script</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"run_scripts"</span>, <span class="st">"script.sh"</span>, package <span class="op">=</span> <span class="st">"atlantio"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"init_file"</span> <span class="op">=</span> <span class="st">"init.nc"</span>,</span>
-<span>    <span class="st">"output_main"</span> <span class="op">=</span> <span class="st">"output.nc"</span>,</span>
-<span>    <span class="st">"run.prm"</span> <span class="op">=</span> <span class="st">"run.prm"</span>,</span>
-<span>    <span class="st">"force.prm"</span> <span class="op">=</span> <span class="st">"force.prm"</span>,</span>
-<span>    <span class="st">"physics.prm"</span> <span class="op">=</span> <span class="st">"physics.prm"</span>,</span>
-<span>    <span class="st">"biol.prm"</span> <span class="op">=</span> <span class="st">"biology.prm"</span>,</span>
-<span>    <span class="st">"groups.csv"</span> <span class="op">=</span> <span class="st">"groups.csv"</span>,</span>
-<span>    <span class="st">"fisheries.csv"</span> <span class="op">=</span> <span class="st">"fisheries.csv"</span>,</span>
-<span>    <span class="st">"output_dir"</span> <span class="op">=</span> <span class="st">"outputFolder"</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">key</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"{{"</span>, <span class="va">key</span>, <span class="st">"}}"</span><span class="op">)</span>, <span class="va">values</span><span class="op">[[</span><span class="va">key</span><span class="op">]</span><span class="op">]</span>, <span class="va">script</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"run.sh"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">script</span>, <span class="va">path</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">Sys.chmod</a></span><span class="op">(</span><span class="va">path</span>, <span class="st">"0755"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>The script is then executed with <code><a href="http://processx.r-lib.org/reference/run.html" class="external-link">processx::run()</a></code>, either
-directly (when <code>atlantisMerged</code> is installed in the same
-environment as R, as on most HPC clusters) or inside a Docker container
-with the run directory mounted as the working directory. Set a timeout:
+<p><code><a href="../../reference/write_run_script.html">write_run_script()</a></code> writes the Atlantis command line
+(<code>run.sh</code>, from the template
+<code>inst/run_scripts/script.sh</code>) for the input files of a run
+directory, and creates its output folder. <code><a href="../../reference/run_atlantis.html">run_atlantis()</a></code>
+runs it with the run directory as working directory, either directly
+(when <code>atlantisMerged</code> is installed in the same environment
+as R, as on most HPC clusters) or in a Docker container. Set a timeout:
 a full run can take hours.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/write_run_script.html">write_run_script</a></span><span class="op">(</span></span>
+<span>  <span class="va">run_dir</span>,</span>
+<span>  init <span class="op">=</span> <span class="st">"init.nc"</span>,</span>
+<span>  run <span class="op">=</span> <span class="st">"run.prm"</span>,</span>
+<span>  force <span class="op">=</span> <span class="st">"force.prm"</span>,</span>
+<span>  physics <span class="op">=</span> <span class="st">"physics.prm"</span>,</span>
+<span>  biology <span class="op">=</span> <span class="st">"biology.prm"</span>,</span>
+<span>  groups <span class="op">=</span> <span class="st">"groups.csv"</span>,</span>
+<span>  fisheries <span class="op">=</span> <span class="st">"fisheries.csv"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/run_atlantis.html">run_atlantis</a></span><span class="op">(</span><span class="va">run_dir</span>, timeout <span class="op">=</span> <span class="fl">86400</span><span class="op">)</span></span></code></pre></div>
+<p><code>binary</code> gives the path to <code>atlantisMerged</code>
+when it is not on the PATH. With Docker, give the image: the run
+directory is mounted as the working directory <code>/model</code>, other
+folders (e.g. forcing data shared by all runs, rather than copied into
+each) can be mounted read-only with <code>mounts</code>, and the
+container runs as the current user so that the files it writes remain
+owned by the R session.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">run_atlantis</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">processx</span><span class="fu">::</span><span class="fu"><a href="http://processx.r-lib.org/reference/run.html" class="external-link">run</a></span><span class="op">(</span></span>
-<span>    <span class="st">"bash"</span>, <span class="st">"run.sh"</span>,</span>
-<span>    wd <span class="op">=</span> <span class="va">run_dir</span>,</span>
-<span>    error_on_status <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    timeout <span class="op">=</span> <span class="fl">86400</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>With Docker, replace the command with
-<code>docker run --rm -v &lt;run_dir&gt;:/model -w /model &lt;image&gt; bash run.sh</code>,
-running the container as the current user so that the files it writes
-remain owned by the R session.</p>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/run_atlantis.html">run_atlantis</a></span><span class="op">(</span></span>
+<span>  <span class="va">run_dir</span>,</span>
+<span>  docker <span class="op">=</span> <span class="st">"atlantis"</span>,</span>
+<span>  mounts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/data/inputs"</span> <span class="op">=</span> <span class="st">"/model/inputs"</span><span class="op">)</span>,</span>
+<span>  timeout <span class="op">=</span> <span class="fl">86400</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="detecting-crashed-runs">Detecting crashed runs<a class="anchor" aria-label="anchor" href="#detecting-crashed-runs"></a>
@@ -305,7 +293,10 @@ and reads the value in seconds, as a bare number;
 table: empty when the run completed, otherwise one error,
 <code>"missing"</code> (no output), <code>"unreadable"</code> or
 <code>"incomplete"</code>, whose message gives the day the run stopped
-at.</p>
+at. <code><a href="../../reference/run_atlantis.html">run_atlantis()</a></code> runs it on the output and run file named
+in the script: its result holds the table as <code>check</code>, and
+<code>complete</code> is <code>TRUE</code> only if the run exited with
+status 0, within the time limit, and <code>check</code> is empty.</p>
 </div>
 </div>
 <div class="section level2">
@@ -488,15 +479,16 @@ their score, and remove the bulky run files.</li>
 <span>  <span class="va">run_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"run_"</span>, tmpdir <span class="op">=</span> <span class="va">results_dir</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../../reference/write_parameter_folder.html">write_parameter_folder</a></span><span class="op">(</span><span class="va">atlantis</span>, <span class="va">run_dir</span>, from <span class="op">=</span> <span class="va">base_dir</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="fu">write_run_script</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"outputFolder"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../../reference/write_run_script.html">write_run_script</a></span><span class="op">(</span><span class="va">run_dir</span>, init <span class="op">=</span> <span class="st">"init.nc"</span>, run <span class="op">=</span> <span class="st">"run.prm"</span>,</span>
+<span>    force <span class="op">=</span> <span class="st">"force.prm"</span>, physics <span class="op">=</span> <span class="st">"physics.prm"</span>, biology <span class="op">=</span> <span class="st">"biology.prm"</span>,</span>
+<span>    groups <span class="op">=</span> <span class="st">"groups.csv"</span>, fisheries <span class="op">=</span> <span class="st">"fisheries.csv"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># 3. model run; a zero exit status does not mean the run completed</span></span>
-<span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">run_atlantis</span><span class="op">(</span><span class="va">run_dir</span><span class="op">)</span></span>
+<span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/run_atlantis.html">run_atlantis</a></span><span class="op">(</span><span class="va">run_dir</span>, timeout <span class="op">=</span> <span class="fl">86400</span><span class="op">)</span></span>
 <span>  <span class="va">out_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"outputFolder"</span>, <span class="st">"output.nc"</span><span class="op">)</span></span>
-<span>  <span class="va">crash</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/check_run.html">check_run</a></span><span class="op">(</span><span class="va">out_file</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">run_dir</span>, <span class="st">"run.prm"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">status</span> <span class="op">!=</span> <span class="fl">0</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">crash</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">reason</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">crash</span><span class="op">)</span><span class="op">)</span> <span class="va">crash</span><span class="op">$</span><span class="va">message</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="kw">else</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">res</span><span class="op">$</span><span class="va">complete</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">reason</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">check</span><span class="op">)</span><span class="op">)</span> <span class="va">res</span><span class="op">$</span><span class="va">check</span><span class="op">$</span><span class="va">message</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="kw">else</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">timeout</span><span class="op">)</span> <span class="st">"time limit reached"</span> <span class="kw">else</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"exit status %s"</span>, <span class="va">res</span><span class="op">$</span><span class="va">status</span><span class="op">)</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">failed_run</span><span class="op">(</span><span class="va">run_dir</span>, <span class="va">par</span>, <span class="va">par_model</span>, <span class="va">res</span>, <span class="va">reason</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
@@ -599,7 +591,7 @@ and be able to run the model.</p>
 <span></span>
 <span><span class="co"># %dopar% ships the objective function to the workers, but not the global</span></span>
 <span><span class="co"># objects it relies on: export them and load the packages explicitly</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"write_run_script"</span>, <span class="st">"run_atlantis"</span>, <span class="st">"failed_run"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="st">"failed_run"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterEvalQ</a></span><span class="op">(</span><span class="va">cl</span>, <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/inSileco/atlantio" class="external-link">atlantio</a></span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Sensible controls for a first round: a population of one run per
 worker (<code>calibrar</code> raises it to its internal minimum if too

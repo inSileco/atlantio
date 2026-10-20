@@ -1,5 +1,44 @@
 # Changelog
 
+## atlantio (development version)
+
+- New
+  [`write_run_script()`](https://insileco.io/atlantio/reference/write_run_script.md)
+  and
+  [`run_atlantis()`](https://insileco.io/atlantio/reference/run_atlantis.md)
+  to run a model.
+  [`write_run_script()`](https://insileco.io/atlantio/reference/write_run_script.md)
+  renders the Atlantis command line of a run directory from the template
+  `inst/run_scripts/script.sh` (with the path to the binary if it is not
+  on the PATH) and creates its output folder.
+  [`run_atlantis()`](https://insileco.io/atlantio/reference/run_atlantis.md)
+  runs it, directly or in a Docker container (as the current user, with
+  other folders mounted read-only), with a time limit (a container that
+  reaches it is removed, as killing the Docker client leaves it
+  running), and checks with
+  [`check_run()`](https://insileco.io/atlantio/reference/check_run.md)
+  that it completed: Atlantis exits with status 0 after a fatal error.
+  Its result adds `check` and `complete` to that of
+  [`processx::run()`](http://processx.r-lib.org/reference/run.md). The
+  calibration article uses them instead of its own copies.
+- New
+  [`plot_foodweb()`](https://insileco.io/atlantio/reference/plot_foodweb.md)
+  draws the food web of a model with ggplot2: groups placed by trophic
+  level and habitat (pelagic, benthic), edges from prey to predator with
+  a width given by `pPREY`, and, when the biomass index is loaded, node
+  size and colour given by the initial biomass and the final / initial
+  ratio. `highlight` takes a table of links (`prey`, `predator`,
+  `colour`, optionally `pathway`) to highlight; links absent from the
+  food web are drawn dashed. `focus` restricts the plot to some groups,
+  the groups they interact with and the links involving them.
+- [`check_prm()`](https://insileco.io/atlantio/reference/check_prm.md)
+  and
+  [`check_run()`](https://insileco.io/atlantio/reference/check_run.md)
+  read a parameter file without keys (empty, or comments only). They
+  failed with “arguments imply differing number of rows”;
+  [`check_run()`](https://insileco.io/atlantio/reference/check_run.md)
+  now says that `tstop` is not found.
+
 ## atlantio 0.5.0
 
 - The `run_model()` of the calibration article records a run whose

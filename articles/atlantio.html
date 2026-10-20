@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">atlantio</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -422,9 +422,9 @@ predator to prey, ready for network analysis or plotting.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_foodweb.html">create_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="va">fw</span></span>
-<span><span class="co">#&gt; IGRAPH 94aae58 DNW- 18 62 -- </span></span>
+<span><span class="co">#&gt; IGRAPH cc4b6a5 DNW- 18 62 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 94aae58 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from cc4b6a5 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] WAE-&gt;WAE YPH-&gt;WAE WAE-&gt;YPH YPH-&gt;YPH WAE-&gt;GZS WAE-&gt;RDG YPH-&gt;RDG RDG-&gt;DRE</span></span>
 <span><span class="co">#&gt;  [9] WAE-&gt;DRE YPH-&gt;DRE GZS-&gt;CHI RDG-&gt;CHI WAE-&gt;CHI YPH-&gt;CHI CAL-&gt;DIA DRE-&gt;DIA</span></span>
 <span><span class="co">#&gt; [17] GZS-&gt;DIA ROT-&gt;DIA CAL-&gt;GRN DRE-&gt;GRN GZS-&gt;GRN ROT-&gt;GRN DRE-&gt;CAL GZS-&gt;CAL</span></span>
@@ -448,6 +448,47 @@ predator to prey, ready for network analysis or plotting.</p>
 <span>  edge.arrow.size <span class="op">=</span> <span class="fl">0.3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="atlantio_files/figure-html/foodweb-plot-1.png" class="r-plt" alt="" width="672"></p>
+<div class="section level3">
+<h3 id="plotting-the-food-web">Plotting the food web<a class="anchor" aria-label="anchor" href="#plotting-the-food-web"></a>
+</h3>
+<p><code><a href="../reference/plot_foodweb.html">plot_foodweb()</a></code> draws the food web with ggplot2. Groups
+are placed by trophic level (y axis), computed from the
+<code>pPREY</code> values, with pelagic groups on the left and benthic
+groups (benthos, sediment bacteria and detritus) on the right. Edges go
+from prey to predator and their width is the largest <code>pPREY</code>
+value over the stages. As the system-wide biomass
+(<code>outputBiomIndx.txt</code>) is loaded, node size is the initial
+biomass and node colour the ratio of the final biomass (mean over the
+last two years) to the initial one: red groups grew, blue groups
+declined. Groups without biomass, such as the detritus in the sediment,
+are grey squares.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_foodweb.html">plot_foodweb</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
+<p><img src="atlantio_files/figure-html/foodweb-ggplot-1.png" class="r-plt" alt="" width="864"></p>
+<p>To follow pathways through the web, pass a table of links to
+<code>highlight</code>, with the columns <code>prey</code>,
+<code>predator</code> and <code>colour</code>, and optionally
+<code>pathway</code>, which names the pathways in the legend. Below, we
+highlight the pelagic and the benthic chains that lead to Walleye, and a
+link that the model does not have, Yellow Perch eating Gizzard Shad:
+links absent from the food web are dashed, which is handy to show a
+proposed diet change.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pathways</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  prey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DIA"</span>, <span class="st">"CAL"</span>, <span class="st">"GZS"</span>, <span class="st">"DL"</span>, <span class="st">"CHI"</span>, <span class="st">"RDG"</span>, <span class="st">"GZS"</span><span class="op">)</span>,</span>
+<span>  predator <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CAL"</span>, <span class="st">"GZS"</span>, <span class="st">"WAE"</span>, <span class="st">"CHI"</span>, <span class="st">"RDG"</span>, <span class="st">"WAE"</span>, <span class="st">"YPH"</span><span class="op">)</span>,</span>
+<span>  pathway <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Pelagic"</span>, <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Benthic"</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"Proposed"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">pathways</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  Pelagic <span class="op">=</span> <span class="st">"#2166ac"</span>, Benthic <span class="op">=</span> <span class="st">"#8c510a"</span>, Proposed <span class="op">=</span> <span class="st">"#d73027"</span></span>
+<span><span class="op">)</span><span class="op">[</span><span class="va">pathways</span><span class="op">$</span><span class="va">pathway</span><span class="op">]</span></span>
+<span><span class="fu"><a href="../reference/plot_foodweb.html">plot_foodweb</a></span><span class="op">(</span><span class="va">mod</span>, highlight <span class="op">=</span> <span class="va">pathways</span><span class="op">)</span></span></code></pre></div>
+<p><img src="atlantio_files/figure-html/foodweb-highlight-1.png" class="r-plt" alt="" width="864"></p>
+<p>The result is a ggplot object, so titles, themes and
+<code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> work as usual. Use <code>x_position</code> (a
+named vector of positions) to move some groups when the default layout
+is crowded.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="parameters-templates-and-calibration">Parameters, templates and calibration<a class="anchor" aria-label="anchor" href="#parameters-templates-and-calibration"></a>
@@ -459,7 +500,7 @@ predator to prey, ready for network analysis or plotting.</p>
 the source code. <code><a href="../reference/list_atlantis_parameters.html">list_atlantis_parameters()</a></code> returns
 metadata about the Atlantis version and a list of parameters with their
 description, type and where they are read.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prm_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/list_atlantis_parameters.html">list_atlantis_parameters</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">prm_list</span><span class="op">$</span><span class="va">meta</span><span class="op">$</span><span class="va">atlantis_version</span></span>
 <span><span class="co">#&gt; [1] 3.6722</span></span>
@@ -511,10 +552,10 @@ parameter file with recommended values and comments. Values that need to
 be provided by the user are marked with
 <code>&lt;&lt;TO_EDIT&gt;&gt;</code>. Only the run file is supported for
 now.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">run_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_file.html">generate_file</a></span><span class="op">(</span><span class="st">"run"</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"run.prm"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">run_file</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "# Generated by atlantio 0.5.0"                                                                        </span></span>
+<span><span class="co">#&gt;  [1] "# Generated by atlantio 0.5.0.9000"                                                                   </span></span>
 <span><span class="co">#&gt;  [2] ""                                                                                                     </span></span>
 <span><span class="co">#&gt;  [3] "# ========= ContaminantSettings"                                                                      </span></span>
 <span><span class="co">#&gt;  [4] "track_contaminants 0  \t# Flag to turn on tracking of contaminants.."                                 </span></span>
@@ -534,7 +575,7 @@ now.</p>
 specification into the table of parameters to calibrate expected by
 <code>calibrar</code>: one row per parameter and position, with bounds,
 the transformation applied and the file the parameter belongs to.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="fu"><a href="../reference/atlantis_examples.html">atlantis_examples</a></span><span class="op">(</span><span class="st">"calibrate"</span>, <span class="st">"mum.yaml"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span>sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; - name: mum_&lt;GRP&gt;</span></span>
 <span><span class="co">#&gt;   GRP: [GZS, RDG, WAE]</span></span>
@@ -562,7 +603,7 @@ the transformation applied and the file the parameter belongs to.</p>
 <p><code><a href="../reference/transform_parameter_value.html">transform_parameter_value()</a></code> and
 <code><a href="../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value()</a></code> map values between the
 calibration scale and the scale used in the parameter file.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/transform_parameter_value.html">transform_parameter_value</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="st">"pow10"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.001</span></span>
 <span><span class="fu"><a href="../reference/inverse_transform_parameter_value.html">inverse_transform_parameter_value</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="st">"pow10"</span><span class="op">)</span></span>

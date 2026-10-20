@@ -1,5 +1,3 @@
-# atlantio
-
 # atlantio <a href="https://insileco.io/atlantio/"><img src="man/figures/logo.png" align="right" height="120" alt="atlantio website" /></a>
 
 <!-- badges: start -->

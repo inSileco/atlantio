@@ -118,8 +118,33 @@ test_that("run_atlantis() runs the script in docker", {
     fixed = TRUE
   )
   expect_match(args, "--user [0-9]+:[0-9]+")
+  expect_match(args, "--name atlantio_[[:alnum:]]+")
   expect_match(args, "-w /model --entrypoint bash leatl run.sh$")
   # nothing was written
   expect_false(res$complete)
   expect_error(run_atlantis(dir, docker = "leatl", mounts = "/x"), "named")
+
+  # without other folders, only the run directory is mounted
+  run_atlantis(dir, docker = "leatl")
+  expect_identical(sum(called$args == "-v"), 1L)
+  expect_false(any(grepl("::ro", called$args, fixed = TRUE)))
+})
+
+test_that("run_atlantis() stops the container at the time limit", {
+  skip_on_os("windows")
+  skip_if_not_installed("processx")
+  dir <- local_run_dir("exit 0")
+  calls <- list()
+  local_mocked_bindings(
+    run = function(command, args, ...) {
+      calls[[length(calls) + 1]] <<- args
+      list(status = NA_integer_, stdout = "", stderr = "", timeout = TRUE)
+    },
+    .package = "processx"
+  )
+  res <- run_atlantis(dir, docker = "leatl", timeout = 1)
+  expect_length(calls, 2)
+  name <- calls[[1]][match("--name", calls[[1]]) + 1]
+  expect_identical(calls[[2]], c("rm", "--force", name))
+  expect_false(res$complete)
 })

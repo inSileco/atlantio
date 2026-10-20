@@ -89,7 +89,8 @@ write_run_script <- function(
 #'
 #' With Docker, the run directory is mounted as the working directory
 #' `/model` of the container and the container runs as the current user, so
-#' that the files it writes can be removed by the R session.
+#' that the files it writes can be removed by the R session. A container
+#' still running at the time limit is removed.
 #'
 #' @param dir Run directory holding the script and the input files.
 #' @param script Name of the script.
@@ -130,6 +131,7 @@ run_atlantis <- function(
     cli::cli_abort("Cannot find the run script {.path {path}}.")
   }
   files <- script_files(path)
+  container <- NULL
   if (is.null(docker)) {
     command <- "bash"
     args <- script
@@ -138,13 +140,21 @@ run_atlantis <- function(
     if (length(mounts) && is.null(names(mounts))) {
       cli::cli_abort("{.arg mounts} must be named by the folders to mount.")
     }
-    volumes <- c(
-      paste0(dir, ":/model"),
-      paste0(normalizePath(names(mounts)), ":", mounts, ":ro")
-    )
+    volumes <- paste0(dir, ":/model")
+    if (length(mounts)) {
+      volumes <- c(
+        volumes,
+        paste0(normalizePath(names(mounts)), ":", mounts, ":ro")
+      )
+    }
+    # named, so that it can be stopped at the time limit: killing the docker
+    # client leaves the container running
+    container <- paste0("atlantio_", basename(tempfile("")))
     args <- c(
       "run",
       "--rm",
+      "--name",
+      container,
       if (.Platform$OS.type == "unix") c("--user", current_user()),
       rbind("-v", volumes),
       "-w",
@@ -162,6 +172,13 @@ run_atlantis <- function(
     error_on_status = FALSE,
     timeout = timeout
   )
+  if (isTRUE(res$timeout) && !is.null(container)) {
+    processx::run(
+      "docker",
+      c("rm", "--force", container),
+      error_on_status = FALSE
+    )
+  }
   res$check <- check_run(
     file.path(dir, files[["output_dir"]], files[["output"]]),
     file.path(dir, files[["run"]])

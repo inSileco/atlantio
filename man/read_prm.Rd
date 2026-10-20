@@ -16,14 +16,14 @@ write_prm(x, file = stdout(), add_comments = TRUE, sep = " ")
 
 \item{add_comments}{Should comments be added.}
 
-\item{sep}{the separation bewteen key and value.}
+\item{sep}{the separation between key and value.}
 }
 \value{
 A list made of key-value elements. The comments, the length of arrays and
 the time unit after a value are kept as the attributes \code{comments},
 \code{array_length} and \code{unit} of the elements.
 
-The prm file.
+\code{NULL}, invisibly: the parameters are written to \code{file}.
 }
 \description{
 Parse .prm file contents into structured list
@@ -31,12 +31,12 @@ Parse .prm file contents into structured list
 \details{
 .prm files are simple key-value text files:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{ #' Comments start with #
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ # Comments start with #
  scalar_key  1.0
  biosedprofile  gaussian
  # Arrays: key followed by count, then values on next line
  array_key 4
- 1.0 1.0 1.0 1.0.
+ 1.0 1.0 1.0 1.0
 }\if{html}{\out{</div>}}
 
 The key differences between \code{read_prm()} and the Atlantis parser are:

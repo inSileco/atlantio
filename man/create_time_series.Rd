@@ -36,12 +36,12 @@ my_model <- new_atlantis() |>
       system.file("examples", "outputs", "output.nc", package = "atlantio")
     )
   )
-my_model |> create_time_series(variable = "volume", box = 40)
+my_model |> create_time_series(variable = "volume", box = 5)
 
 library(ggplot2)
 my_model |>
   create_time_series(variable = "Walleye5_ResN") |>
-  ggplot(aes(x = Time, y = value, color = box)) +
+  ggplot(aes(x = time, y = value, color = box)) +
   geom_line()
 }
 }

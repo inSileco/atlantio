@@ -17,10 +17,11 @@ atlantis_load_files(atlantis, files, filenames = basename(files))
 
 Supported file types include:
 \itemize{
-\item \code{.geometry} - Box Geometry Model files
+\item \code{.bgm} - Box Geometry Model files
 \item \code{.prm} - Parameter files (bio and run)
 \item \code{.nc} - NetCDF output files
-\item \code{.txt}, \code{.csv} - Diet and biomass snapshot files
+\item \code{.csv} - Groups file
+\item \code{.txt} - Diet and biomass outputs
 }}
 
 \item{filenames}{file basenames (used as hints)}

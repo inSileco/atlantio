@@ -43,12 +43,13 @@
 #'   \item{run}{Character vector of run configuration parameter names:
 #'     \itemize{
 #'       \item \code{title} - Model run title/description
-#'       \item \code{dt} - Time step size (days)
-#'       \item \code{tstop} - End time of simulation (days)
-#'       \item \code{toutstart} - Start time for output (days)
-#'       \item \code{toutinc} - Output time increment (days)
-#'       \item \code{toutfinc} - Final output time increment (days)
+#'       \item \code{dt} - Time step
+#'       \item \code{tstop} - End time of simulation
+#'       \item \code{toutstart} - Start time for output
+#'       \item \code{toutinc} - Output time increment
+#'       \item \code{toutfinc} - Fisheries output time increment
 #'     }
+#'     The times are in seconds, unless a unit follows the value.
 #'   }
 #'   \item{bio}{Character vector of biology parameter names:
 #'     \itemize{
@@ -60,8 +61,6 @@
 #'   }
 #' }
 #'
-#'
-#' @source Generated from \code{inst/parameters/create_hints.R}
 #'
 #' @examples
 #' data(parameters_hints)

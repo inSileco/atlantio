@@ -52,11 +52,12 @@ for handling diverse Atlantis ecosystem model file formats. One or several
 files can be processed at once. Internally, the way files are processed is
 determined by file extension using a switch statement:
 \itemize{
-\item \code{.bgm}: Box geometry files → \verb{[read_bgm()]}
-\item \code{.nc}: NetCDF files → \verb{[read_nc()]}
-\item \code{.prm}: Parameter files → \verb{[read_prm_files()]}
-\item \code{.csv}: Group definition files → \verb{[read_group_file()]}
-\item \code{.txt}: Various output formats → \verb{[read_txt_files()]}
+\item \code{.bgm}: Box geometry files → \code{\link[=read_bgm]{read_bgm()}}
+\item \code{.nc}: NetCDF files → \code{\link[=read_nc]{read_nc()}}
+\item \code{.prm}: Parameter files → \code{\link[=read_prm_files]{read_prm_files()}}
+\item \code{.csv}: Group definition files → \code{\link[=read_group_file]{read_group_file()}}
+\item \code{.txt}: Various output formats → \code{\link[=read_txt_files]{read_txt_files()}}
+\item \code{.xml}: XML files → \code{\link[=read_xml]{read_xml()}}
 Basic examination of the content is done to determine the type of file and
 exhaustive validation is carried out if available.
 Note that unknown file types are marked as \code{"unknown"} rather than causing

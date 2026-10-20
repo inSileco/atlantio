@@ -9,7 +9,7 @@ new_atlantis(...)
 \arguments{
 \item{...}{Optional named arguments to initialize specific properties.
 Property names should match those defined in the Atlantis class
-(e.g., geometry, bio, run, etc.).}
+(e.g. geometry, biology, run).}
 }
 \value{
 An Atlantis S7 object with all properties initialized to NULL
@@ -28,7 +28,7 @@ atlantis <- new_atlantis()
 # Create with some initial data
 atlantis <- new_atlantis(
   geometry = my_geometry_data,
-  bio = my_biology_params
+  biology = my_biology_params
 )
 }
 

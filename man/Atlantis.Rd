@@ -35,9 +35,9 @@ domain as polygons with depth layers and connectivity.}
 Run configuration parameters from .prm file including simulation settings,
 timesteps, and output specifications.}
 
-\item{initial}{\verb{[list]}\cr
-Initial conditions from .nc file specifying starting biomass, numbers, and
-other state variables for each functional group.}
+\item{initial}{\verb{[ncdf4]}\cr
+Initial conditions: the open netCDF file (see \code{\link[=read_nc]{read_nc()}}), to close with
+\code{ncdf4::nc_close()}.}
 
 \item{biology}{\verb{[list]}\cr
 Biology parameters from .prm file including growth rates, mortality,
@@ -55,7 +55,7 @@ hydrodynamic processes.}
 Environmental forcing data including temperature, salinity, and other
 physical drivers that vary through time.}
 
-\item{fisheries}{\verb{[list]}\cr
+\item{fisheries}{\verb{[data.frame]}\cr
 Fisheries configuration and catch time series data for commercial and
 recreational fishing activities.}
 
@@ -63,38 +63,35 @@ recreational fishing activities.}
 Harvest policies and management scenarios including fishing mortality rates
 and selectivity patterns.}
 
-\item{main_output}{\verb{[data.frame]}\cr
-Primary model outputs including biomass and abundance time series for all
-functional groups aggregated across space.}
+\item{main_output}{\verb{[ncdf4]}\cr
+Main output: the open netCDF file of the run (see \code{\link[=read_nc]{read_nc()}}), read by
+\code{\link[=create_time_series]{create_time_series()}} and \code{\link[=create_time_series_biomass]{create_time_series_biomass()}}; close it with
+\code{ncdf4::nc_close()}.}
 
-\item{biomass_all}{\verb{[array]}\cr
-Complete biomass snapshots at specific time points showing spatial
-distribution across all boxes and depth layers.}
+\item{biomass_all}{\verb{[data.frame]}\cr
+Biomass of every group over the whole model domain (\code{BiomIndx.txt}).}
 
-\item{biomass_box}{\verb{[array]}\cr
-Biomass snapshots aggregated by box (spatial polygon) for each functional
-group and time point.}
+\item{biomass_box}{\verb{[data.frame]}\cr
+Biomass of every group per box (\code{BoxBiomass.txt}).}
 
-\item{biomass_age}{\verb{[array]}\cr
-Age-structured biomass snapshots showing cohort dynamics for vertebrate
-functional groups.}
+\item{biomass_age}{\verb{[data.frame]}\cr
+Biomass per age class of the age-structured groups (\code{AgeBiomIndx.txt}).}
 
-\item{biomass_age_annual}{\verb{[array]}\cr
-Annual summaries of age-structured biomass data for long-term trend analysis.}
+\item{biomass_age_annual}{\verb{[data.frame]}\cr
+The same, yearly (\code{AnnualAgeBiomIndx.txt}).}
 
-\item{diet}{\verb{[matrix]}\cr
-Diet composition matrix showing predator-prey relationships and consumption
-rates between functional groups.}
+\item{diet}{\verb{[data.frame]}\cr
+Diet composition of the predators (\code{DietCheck.txt}).}
 
-\item{diet_detailed}{\verb{[array]}\cr
-Detailed diet matrices with temporal, spatial, and size-based resolution of
-predation interactions.}
+\item{diet_detailed}{\verb{[data.frame]}\cr
+Diet composition per box and layer (\code{DetailedDietCheck.txt}).}
 
-\item{yoy}{\verb{[array]}\cr
-Snapshot of biomass of recruits per year.}
+\item{yoy}{\verb{[data.frame]}\cr
+Biomass of recruits per year (\code{YOY.txt}).}
 
-\item{file_paths}{\verb{[dataframe]}\cr
-Data frame listing path to input and output files.}
+\item{file_paths}{\verb{[data.frame]}\cr
+The files: the rows of \link{input_files} with the path of each file loaded
+(\code{NA} otherwise).}
 
 \item{version}{\verb{[character]}\cr
 Atlantis version used.}
@@ -104,6 +101,11 @@ An S7 class that serves as a comprehensive container for all components of an
 Atlantis ecosystem model, including input parameters, spatial geometry, and
 simulation outputs. This class provides a structured way to organize and access
 the various data types produced by Atlantis model runs.
+}
+\details{
+\code{\link[=atlantis_load_files]{atlantis_load_files()}} fills every property but \code{physics}, \code{forcing},
+\code{fisheries} and \code{harvest}, which can be set by hand, e.g.
+\code{x@harvest <- read_prm("harvest.prm")}.
 }
 \section{Model Components}{
 
@@ -125,5 +127,6 @@ The Atlantis class contains the following major component types:
 }
 
 \references{
-Output list avaialbe here \url{https://atlantis-ecosystem-model.github.io/AtlantisWiki/user_guides/markdown_output/AtlantisUserGuide_PartI_CLEAN.html#simulation-outputs}
+The outputs are described in the Atlantis User's Guide Part I
+\url{https://research.csiro.au/atlantis/wp-content/uploads/sites/52/2025/05/AtlantisUserGuide_PartI.pdf}
 }

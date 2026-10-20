@@ -37,7 +37,7 @@ first mature age group is given by \code{XXX_age_mat}. Therefore there are up to
 \item pPREY2XXX1: adult prey, juvenile predator
 \item pPREY2XXX2: adult prey, adult predator
 where XXX denotes the code of the predator. Note that the realised diet
-in Atlantis will depend on other factor, for instance the coeficient \code{mum},
+in Atlantis will depend on other factors, for instance the coefficient \code{mum},
 assuming it is used by the functional response (see \code{predcase_XXXX}).
 }
 }

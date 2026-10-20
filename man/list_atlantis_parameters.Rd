@@ -12,11 +12,13 @@ list_atlantis_parameters(version = "3-6722")
 \link{atlantis_supported_versions} for the list of supported versions.}
 }
 \value{
-A list of 2 elements:
+A list of 3 elements:
 \itemize{
 \item \code{meta}: metadata about the Atlantis code base the parameters were
 extracted from (\code{atlantis_source}, \code{atlantis_version}, \code{bm_struct}) and
 \code{files}, the list of parameter files declaring the parameters;
+\item \code{abbreviations}: the placeholders of the parameter names (e.g. \code{GRP} in
+\verb{mum_<GRP>}) and what they stand for;
 \item \code{parameters}: a list where every element describes one parameter with
 the following fields: \code{name}, \code{description}, \code{source_file}, \code{value_type},
 \code{dimension}, \code{units}, \code{bm_member}, \code{reader} and \code{conditional_on}.

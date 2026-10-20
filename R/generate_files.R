@@ -82,18 +82,14 @@ generate_run_file <- function(version, description, file, ...) {
   out <- split(tmp, (tmp |> lapply(\(y) y$Category) |> unlist()))
 
   file <- fs::path_ext_set(file, ".prm")
-  cat("# ", msg_generated_by(), "\n\n", file = file, append = FALSE, sep = "")
+  # LF line endings on every platform (see write_prm())
+  con <- file(file, "wb")
+  on.exit(close(con))
+  cat("# ", msg_generated_by(), "\n\n", file = con, sep = "")
 
   categ <- out |> names()
   for (i in seq_along(out)) {
-    cat(
-      "# ========= ",
-      categ[i],
-      "\n",
-      append = TRUE,
-      file = file,
-      sep = ""
-    )
+    cat("# ========= ", categ[i], "\n", file = con, sep = "")
     for (j in seq_along(out[[i]])) {
       prm <- out[[i]][[j]]
       value <- prm$RecommendedValue %||% "<<TO_EDIT>>"
@@ -112,12 +108,11 @@ generate_run_file <- function(version, description, file, ...) {
         ),
         "\n",
         values,
-        append = TRUE,
-        file = file,
+        file = con,
         sep = ""
       )
     }
-    cat("\n", append = TRUE, file = file)
+    cat("\n", file = con)
   }
 
   invisible(file)

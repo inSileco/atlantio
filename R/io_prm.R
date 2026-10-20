@@ -178,5 +178,11 @@ write_prm <- function(x, file = stdout(), add_comments = TRUE, sep = " ") {
       }
     }
   )
+  # LF line endings on every platform: Atlantis reads the carriage return of
+  # a CRLF line ending as part of a unit at the end of a line
+  if (is.character(file)) {
+    file <- file(file, "wb")
+    on.exit(close(file))
+  }
   unlist(out) |> writeLines(file)
 }

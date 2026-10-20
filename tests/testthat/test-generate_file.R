@@ -19,6 +19,12 @@ test_that("generate_file() creates run parameter file with default settings", {
   )
   # a unit Atlantis knows as written
   expect_match(grep("^dt ", content, value = TRUE), "^dt 12 hour ")
+  # LF line endings on every platform
+  expect_no_match(
+    rawToChar(readBin(temp_file, "raw", file.size(temp_file))),
+    "\r",
+    fixed = TRUE
+  )
 
   result <- generate_file(x = "run", file = temp_file, description = FALSE)
   content <- readLines(temp_file)
